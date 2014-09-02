@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Ruby2ch::VERSION
   spec.authors       = ["kit"]
   spec.email         = ["kit@mbp"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{A library to get 2ch bbs.}
+  spec.description   = spec.summary
   spec.homepage      = ""
   spec.license       = "MIT"
 
