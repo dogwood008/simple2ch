@@ -4,6 +4,7 @@ require 'spork'
 #require 'spork/ext/ruby-debug'
 require 'rubygems'
 require 'ruby2ch'
+require 'rspec'
 
 # カスタムマッチャを書きたかったらここに。
 RSpec::Matchers.define :my_matcher do |expected|
