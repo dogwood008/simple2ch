@@ -10,6 +10,17 @@ class Board
   def initialize(title, url)
     @url = validate_url url
     @title = title
+    @thres = []
+  end
+
+  # 板に属する全てのスレッドを返す
+  # @return [Array<Thre>] 板に属する全てのスレッド
+  def all_of_threads
+    if @thres.size > 0
+      @thres
+    else
+      fetch_all_thres
+    end
   end
 
   private
@@ -39,5 +50,16 @@ class Board
     else
       raise NotA2chUrlException
     end
+  end
+
+  # 板に属する全てのスレッドをsubject.txtから取得する
+  # @return [Array<Thre>] 板に属する全てのスレッド
+  def fetch_all_thres
+    subject_url = @url+'subject.txt'
+    subject_txt = open(subject_url){ |d| d.read.force_encoding("cp932") }
+    subject_txt.encode!('utf-8', :undef => :replace).each_line do |line|
+      @thres << Thre.new(line)
+    end
+    @thres
   end
 end
