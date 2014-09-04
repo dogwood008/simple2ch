@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake"
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "rspec-core"
+  spec.add_development_dependency 'rspec-its'
 #  spec.add_development_dependency 'spring'
 #  spec.add_development_dependency 'zeus'
 #  spec.add_development_dependency 'guard'
