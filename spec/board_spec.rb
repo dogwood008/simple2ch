@@ -13,32 +13,21 @@ describe Board do
   let(:board) { Board.new(title, url[:sc]) }
 
   context 'should get board title' do
-    subject do
-      board.title
-    end
+    subject { board.title }
     it { is_expected.to be_a_kind_of(String) }
     it { is_expected.to eq title }
   end
 
   context 'should get board url' do
-    subject do
-      board.url
-    end
+    subject { board.url }
     it { is_expected.to be_a_kind_of(URI) }
     it { is_expected.to eq URI.parse(url[:sc]) }
   end
-=begin
-  context 'should get list' do
-    subject do
-     Ruby2ch.get_board_list
-    end
-    #its('is_a?') { expect.to eq(Array) }
-    it { expect(subject.is_a?).to eq(Array) }
-    it do
-      subject.each do |b|
-        expect(b.is_a?).to eq(Board)
-      end
-    end
+
+  context 'should get all of thread' do
+    subject { board.all_of_threads }
+    it { is_expected.to be_a_kind_of(Array) }
+    it { subject.each{ |t| t is_expected.to be_a_kind_of(Thread) } }
+    its(:size) { is_expected.to > 0 }
   end
-=end
 end
