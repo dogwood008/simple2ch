@@ -4,6 +4,7 @@ require 'rubygems'
 require 'rubygems'
 require 'ruby2ch'
 require 'rspec'
+require 'rspec/its'
 
 # カスタムマッチャを書きたかったらここに。
 RSpec::Matchers.define :my_matcher do |expected|
