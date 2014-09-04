@@ -129,3 +129,7 @@ build/
 .idea/workspace.xml
 .idea/scopes/scope_settings.xml
 .rakeTasks
+.idea/runConfigurations/Guard.xml
+.idea/runConfigurations/RSpec_Board.xml
+.idea/runConfigurations/RSpec_Thread.xml
+.idea/runConfigurations/Zeus.xml
