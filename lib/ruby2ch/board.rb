@@ -55,8 +55,13 @@ class Board
   # 板に属する全てのスレッドをsubject.txtから取得する
   # @return [Array<Thre>] 板に属する全てのスレッド
   def fetch_all_thres
+    require 'net/http'
     subject_url = @url+'subject.txt'
-    subject_txt = open(subject_url){ |d| d.read.force_encoding("cp932") }
+    req = Net::HTTP::Get.new(subject_url.path)
+    res = Net::HTTP.start(subject_url.host, subject_url.port) {|http|
+      http.request(req)
+    }
+    subject_txt = res.body.force_encoding("cp932")
     subject_txt.encode!('utf-8', :undef => :replace).each_line do |line|
       @thres << Thre.new(line)
     end

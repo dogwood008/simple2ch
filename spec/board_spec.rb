@@ -27,7 +27,7 @@ describe Board do
   context 'should get all of thread' do
     subject { board.all_of_threads }
     it { is_expected.to be_a_kind_of(Array) }
-    it { subject.each{ |t| t is_expected.to be_a_kind_of(Thread) } }
-    its(:size) { is_expected.to > 0 }
+    it { subject.each{ |t| expect(t).to be_a_kind_of(Thre) } }
+    its(:size) { is_expected.to be > 0 }
   end
 end
