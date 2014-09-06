@@ -5,13 +5,14 @@ require 'rubygems'
 require 'ruby2ch'
 require 'rspec'
 require 'rspec/its'
+include Ruby2ch
 
 # カスタムマッチャを書きたかったらここに。
-RSpec::Matchers.define :my_matcher do |expected|
-  match do |actual|
-    true
-  end
-end
+#RSpec::Matchers.define :my_matcher do |expected|
+#  match do |actual|
+#    true
+#  end
+#end
 
 # --- Instructions ---
 # Sort the contents of this file into a Spork.prefork and a Spork.each_run
