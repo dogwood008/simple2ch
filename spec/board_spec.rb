@@ -7,7 +7,7 @@ describe Ruby2ch::Board do
     {
         sc: 'http://viper.2ch.sc/news4vip/',
         net: 'http://viper.2ch.net/news4vip/',
-        open: 'http://viper.open2ch.net/news4vip/',
+        #open: 'http://viper.open2ch.net/news4vip/', #TODO
         not_a_2ch_format: 'http://test.example.com/hoge/',
         invalid_url: 'http://abc_def.com/foobar/' # under score in host is invalid
     }
