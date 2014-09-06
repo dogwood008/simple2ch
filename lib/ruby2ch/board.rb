@@ -1,13 +1,18 @@
 class Board
   # @return [URI] 板のURL
   attr_reader :url
-  # @return [String] 板の名前
+  # @return [String] 板のタイトル
   attr_reader :title
+  # @return [String] サーバ名
+  attr_reader :server_name
+  # @return [String] 板の名前（コンピュータ名）
+  attr_reader :board_name
 
 
   # @param [String] tiitle 板の名前
   # @param [String] url 板のURL
   def initialize(title, url)
+    @server_name = @board_name = nil
     @url = validate_url url
     @title = title
     @thres = []
