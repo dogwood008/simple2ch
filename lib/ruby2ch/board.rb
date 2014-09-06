@@ -9,7 +9,7 @@ class Board
   attr_reader :board_name
 
 
-  # @param [String] tiitle 板の名前
+  # @param [String] title 板の名前
   # @param [String] url 板のURL
   def initialize(title, url)
     @server_name = @board_name = nil

@@ -16,7 +16,7 @@ module Ruby2ch
   end
 
   # HTTPでGETする
-  # @param [URI] URL
+  # @param [URI] url URL
   # @return [String] 取得本文
   def self.fetch(url)
     req = Net::HTTP::Get.new(url.path)

@@ -1,7 +1,8 @@
 class Dat
+  # @return [String] スレッドキー
   attr_reader :thread_key
 
-  # @param [Thre] スレッド
+  # @param [Thre] thre スレッド
   def initialize(thre)
     @thre = thre
     @thread_key = thre.thread_key
@@ -10,11 +11,13 @@ class Dat
     @f_kako_log = nil
   end
 
+  # Datを解析して、レスを返す
+  # @return [Array<Res>] レス
   def reses
     @reses || parse_dat[0]
   end
 
-  # 過去ログかどうかを返す
+  # Datを解析して過去ログかどうかを返す
   # @return [Boolean] 過去ログか否か
   def kako_log?
     @f_kako_log || parse_dat[1]
