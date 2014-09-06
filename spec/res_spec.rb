@@ -24,7 +24,6 @@ describe Res do
 
   context 'should have author_id' do
     subject { res[0].author_id }
-    it { pp res[0]}
     it { is_expected.to be_a_kind_of(String) }
     it { is_expected.not_to be eq nil }
   end
@@ -32,6 +31,12 @@ describe Res do
   context 'should have contents' do
     subject { res[0].contents }
     it { is_expected.to be_a_kind_of(String) }
+    it { is_expected.not_to be eq nil }
+  end
+
+  context 'should have date' do
+    subject { res[0].date }
+    it { is_expected.to be_a_kind_of(Time) }
     it { is_expected.not_to be eq nil }
   end
 end
