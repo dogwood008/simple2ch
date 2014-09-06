@@ -5,6 +5,8 @@ class Thre
   attr_reader :thread_key
   # @return [Fixnum] 返信の数
   attr_reader :num_of_response
+  attr_reader :board
+  attr_accessor :f_kako_log
 
   # @param [Board] board スレッドが属する板情報
   # @param [String] thread_data 0000000000.dat<>スレッドタイトル (レス数)
@@ -15,40 +17,7 @@ class Thre
     @title = $2
     @num_of_response = $3.to_i
     @reses = []
+    @kako_log = nil
   end
 
-  # スレッドに属する全てのレスを返す
-  # @return [Array<Res>] スレッドに属する全てのレス
-  def reses
-    if @reses.size > 0
-      @reses
-    else
-      @reses = parse_dat
-    end
-  end
-
-  private
-  # datのURLを返す
-  # @return [URI] datのURL
-  def dat_url
-    @board.url+'dat/'+@thread_key+'.dat'
-  end
-
-  # datファイルを取得する
-  # @return [String] 取得したdatファイルの中身
-  def fetch_dat
-    Ruby2ch.fetch dat_url
-  end
-
-  # datファイルを解析してResを作成する
-  # @return [Array<Res>] 全てのレス
-  def parse_dat
-    res_num = 0
-    tmp = []
-    fetch_dat.each_line do |l|
-      res_num += 1
-      tmp << Res.new(res_num, l)
-    end
-    tmp
-  end
 end
