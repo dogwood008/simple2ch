@@ -21,7 +21,7 @@ module Ruby2ch
 
     # 板に属する全てのスレッドを返す
     # @return [Array<Thre>] 板に属する全てのスレッド
-    def all_of_threads
+    def threads
       if @thres.size > 0
         @thres
       else
