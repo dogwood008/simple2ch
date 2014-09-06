@@ -1,6 +1,5 @@
 class Dat
   attr_reader :thread_key
-  attr_reader :f_kako_log
 
   # @param [Thre] スレッド
   def initialize(thre)
@@ -12,9 +11,13 @@ class Dat
   end
 
   def reses
-    @reses, @f_kako_log=parse_dat unless @reses
+    @reses || parse_dat[0]
+  end
 
-    @reses
+  # 過去ログかどうかを返す
+  # @return [Boolean] 過去ログか否か
+  def kako_log?
+    @f_kako_log || parse_dat[1]
   end
 
   private
@@ -44,6 +47,6 @@ class Dat
         f_kako_log = true
       end
     end
-    return tmp, f_kako_log
+    return @reses=tmp, @f_kako_log=f_kako_log
   end
 end

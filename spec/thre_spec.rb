@@ -24,9 +24,14 @@ describe Thre do
   end
 
   context 'should have responses' do
-    subject { thre.all_of_reses }
+    subject { thre.reses }
     it { is_expected.to be_a_kind_of(Array) }
     it { subject.each{ |r| expect(r).to be_a_kind_of(Res) } }
     its(:size) { is_expected.to be > 0 }
+  end
+
+  context 'should have if Kako log' do
+    subject { thre.kako_log? }
+    it { is_expected.to be_truthy }
   end
 end
