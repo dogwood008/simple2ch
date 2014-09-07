@@ -7,13 +7,13 @@ describe Simple2ch do
       board_name = 'ニュー速VIP'
       board_url = 'http://viper.2ch.sc/news4vip/'
       @board = Board.new board_name, board_url
-      @threads= @board.threads
+      @threads= @board.thres
       @res = @threads[0].reses[0]
     end
-    it{ expect(@board.threads).to be_a_kind_of Array }
+    it{ expect(@board.thres).to be_a_kind_of Array }
     it do
       #@threads = board.threads
-      expect(@board.threads.size).to be > 0
+      expect(@board.thres.size).to be > 0
     end
 
     it { expect(@threads[0]).to be_a_kind_of Thre }
