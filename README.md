@@ -17,8 +17,31 @@ Or install it yourself as:
     $ gem install simple2ch
 
 ## Usage
+* 初期化
+```ruby
+require 'simple2ch'
+```
 
-TODO: Write usage instructions here
+
+* スレ取得
+```ruby
+board = Simple2ch::Board.new('ニュー速VIP', 'http://viper.2ch.sc/news4vip/')
+board.thres #=>[#<Simple2ch::Thre>, ..., #<Simple2ch::Thre>]
+```
+
+* レス取得
+```ruby
+thre = board.thres[hoge] #=> #<Simple2ch::Thre>
+thre.reses #=> [#<Simple2ch::Res>, ..., #<Simple2ch::Res>]
+```
+
+* 書き込み内容取得
+```ruby
+res = thre.reses[foo] #=> #<Simple2ch::Res>
+res.author #=> "以下、＼(^o^)／でVIPがお送りします"
+res.contents #=> "hoge foo bar"
+```
+
 
 ## Contributing
 
