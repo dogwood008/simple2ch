@@ -1,6 +1,21 @@
 # Simple2ch
 
-2ch Japanese BBS simple reader.
+2ch Japanese BBS simple reader for Ruby.
+
+Ruby用の2chの簡易リーダーです。
+
+![gem version](https://badge.fury.io/rb/simple2ch.svg)
+
+## 更新内容
+[v0.0.2]
+* メソッド名の変更
+    * Board#threads から Board#thres に変更
+* ドキュメントの再生成
+    * モジュール名が誤っていたため
+* README.mdを修正
+    * 使用法などを追加
+
+
 
 ## Installation
 
