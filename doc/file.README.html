@@ -64,7 +64,21 @@
     <div id="content"><div id='filecontents'>
 <h1 id="label-Simple2ch">Simple2ch</h1>
 
-<p>2ch Japanese BBS simple reader.</p>
+<p>2ch Japanese BBS simple reader for Ruby.</p>
+
+<p>Ruby用の2chの簡易リーダーです。</p>
+
+<p><img src="https://badge.fury.io/rb/simple2ch.svg"> <a
+href="http://dogwood008.github.io/simple2ch/">リファレンス</a></p>
+
+<h2 id="label-%E6%9B%B4%E6%96%B0%E5%86%85%E5%AE%B9">更新内容</h2>
+
+<p>[v0.1.0] * メソッド名の変更  * Thre.new から Thre.parse に変更  * Thre.newは引数の数を変更  *
+この変更に伴い、v0.0.2以下とは一部互換性無し * バグ修正  * Time.parseの呼び出しに失敗する問題を修正  * その他 *
+その他微細な修正</p>
+
+<p>[v0.0.2] * メソッド名の変更  * Board#threads から Board#thres に変更 * ドキュメントの再生成  *
+モジュール名が誤っていたため * README.mdを修正  * 使用法などを追加  * yardの結果を追加</p>
 
 <h2 id="label-Installation">Installation</h2>
 
@@ -88,13 +102,13 @@
 &#39;http://viper.2ch.sc/news4vip/&#39;) board.thres
 #=&gt;[#&lt;Simple2ch::Thre&gt;, ..., #&lt;Simple2ch::Thre&gt;] </code></p>
 </li><li>
-<p>レス取得 <code>ruby thre = board.thres[hoge] #=&gt; #&lt;Simple2ch::Thre&gt;
-thre.reses #=&gt; [#&lt;Simple2ch::Res&gt;, ..., #&lt;Simple2ch::Res&gt;]
-</code></p>
+<p>レス取得 <code>ruby hoge = SUM_OF_NUMBER1 thre = board.thres[hoge] #=&gt;
+#&lt;Simple2ch::Thre&gt; thre.reses #=&gt; [#&lt;Simple2ch::Res&gt;, ...,
+#&lt;Simple2ch::Res&gt;] </code></p>
 </li><li>
-<p>書き込み内容取得 <code>ruby res = thre.reses[foo] #=&gt; #&lt;Simple2ch::Res&gt;
-res.author #=&gt; &quot;以下、＼(^o^)／でVIPがお送りします&quot; res.contents #=&gt;
-&quot;hoge foo bar&quot; </code></p>
+<p>書き込み内容取得 <code>ruby foo = SUM_OF_NUMBER2 res = thre.reses[foo] #=&gt;
+#&lt;Simple2ch::Res&gt; res.author #=&gt; &quot;以下、＼(^o^)／でVIPがお送りします&quot;
+res.contents #=&gt; &quot;hoge foo bar&quot; </code></p>
 </li></ul>
 
 <h2 id="label-Contributing">Contributing</h2>
@@ -115,7 +129,7 @@ feature&#39;</code>)</p>
 </div></div>
 
     <div id="footer">
-  Generated on Sun Sep  7 16:55:25 2014 by
+  Generated on Sun Sep  7 21:15:39 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.4 (ruby-2.1.2).
 </div>
