@@ -1,6 +1,6 @@
-# Ruby2ch
+# Simple2ch
 
-TODO: Write a gem description
+2ch Japanese BBS simple reader.
 
 ## Installation
 
