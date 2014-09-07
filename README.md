@@ -5,6 +5,7 @@
 Ruby用の2chの簡易リーダーです。
 
 ![gem version](https://badge.fury.io/rb/simple2ch.svg)
+[リファレンス](http://dogwood008.github.io/simple2ch/)
 
 ## 更新内容
 [v0.0.2]
@@ -14,6 +15,7 @@ Ruby用の2chの簡易リーダーです。
     * モジュール名が誤っていたため
 * README.mdを修正
     * 使用法などを追加
+    * yardの結果を追加
 
 
 
