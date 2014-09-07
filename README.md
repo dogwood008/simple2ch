@@ -8,6 +8,16 @@ Ruby用の2chの簡易リーダーです。
 [リファレンス](http://dogwood008.github.io/simple2ch/)
 
 ## 更新内容
+[v0.1.0]
+* メソッド名の変更
+    * Thre.new から Thre.parse に変更
+    * Thre.newは引数の数を変更
+    * この変更に伴い、v0.0.2以下とは一部互換性無し
+* バグ修正
+    * Time.parseの呼び出しに失敗する問題を修正
+    * その他
+* その他微細な修正
+
 [v0.0.2]
 * メソッド名の変更
     * Board#threads から Board#thres に変更
@@ -48,12 +58,14 @@ board.thres #=>[#<Simple2ch::Thre>, ..., #<Simple2ch::Thre>]
 
 * レス取得
 ```ruby
+hoge = SUM_OF_NUMBER1
 thre = board.thres[hoge] #=> #<Simple2ch::Thre>
 thre.reses #=> [#<Simple2ch::Res>, ..., #<Simple2ch::Res>]
 ```
 
 * 書き込み内容取得
 ```ruby
+foo = SUM_OF_NUMBER2
 res = thre.reses[foo] #=> #<Simple2ch::Res>
 res.author #=> "以下、＼(^o^)／でVIPがお送りします"
 res.contents #=> "hoge foo bar"
