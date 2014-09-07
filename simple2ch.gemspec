@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = Simple2ch::VERSION
   spec.authors       = ["dogwood008"]
   spec.email         = ["dogwood008+rubygems@gmail.com"]
-  spec.summary       = %q{A gem to read 2ch bbs.}
+  spec.summary       = %q{2ch Japanese BBS simple reader.}
   spec.description   = spec.summary
   spec.homepage      = "https://github.com/dogwood008/simple2ch"
   spec.license       = "MIT"
