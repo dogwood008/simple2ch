@@ -27,7 +27,7 @@ describe Simple2ch::Board do
   end
 
   context 'should get all of thread' do
-    subject { board.threads }
+    subject { board.thres }
     it { is_expected.to be_a_kind_of(Array) }
     it { subject.each{ |t| expect(t).to be_a_kind_of(Simple2ch::Thre) } }
     its(:size) { is_expected.to be > 0 }
