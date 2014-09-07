@@ -62,15 +62,15 @@
     <iframe id="search_frame"></iframe>
 
     <div id="content"><div id='filecontents'>
-<h1 id="label-Ruby2ch">Ruby2ch</h1>
+<h1 id="label-Simple2ch">Simple2ch</h1>
 
-<p>TODO: Write a gem description</p>
+<p>2ch Japanese BBS simple reader.</p>
 
 <h2 id="label-Installation">Installation</h2>
 
 <p>Add this line to your application&#39;s Gemfile:</p>
 
-<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_gem'>gem</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>ruby2ch</span><span class='tstring_end'>&#39;</span></span></code></pre>
+<pre class="code ruby"><code class="ruby"><span class='id identifier rubyid_gem'>gem</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>simple2ch</span><span class='tstring_end'>&#39;</span></span></code></pre>
 
 <p>And then execute:</p>
 
@@ -78,16 +78,29 @@
 
 <p>Or install it yourself as:</p>
 
-<pre class="code ruby"><code class="ruby">$ gem install ruby2ch</code></pre>
+<pre class="code ruby"><code class="ruby">$ gem install simple2ch</code></pre>
 
 <h2 id="label-Usage">Usage</h2>
-
-<p>TODO: Write usage instructions here</p>
+<ul><li>
+<p>初期化 <code>ruby require &#39;simple2ch&#39; </code></p>
+</li><li>
+<p>スレ取得 <code>ruby board = Simple2ch::Board.new(&#39;ニュー速VIP&#39;,
+&#39;http://viper.2ch.sc/news4vip/&#39;) board.thres
+#=&gt;[#&lt;Simple2ch::Thre&gt;, ..., #&lt;Simple2ch::Thre&gt;] </code></p>
+</li><li>
+<p>レス取得 <code>ruby thre = board.thres[hoge] #=&gt; #&lt;Simple2ch::Thre&gt;
+thre.reses #=&gt; [#&lt;Simple2ch::Res&gt;, ..., #&lt;Simple2ch::Res&gt;]
+</code></p>
+</li><li>
+<p>書き込み内容取得 <code>ruby res = thre.reses[foo] #=&gt; #&lt;Simple2ch::Res&gt;
+res.author #=&gt; &quot;以下、＼(^o^)／でVIPがお送りします&quot; res.contents #=&gt;
+&quot;hoge foo bar&quot; </code></p>
+</li></ul>
 
 <h2 id="label-Contributing">Contributing</h2>
 <ol><li>
 <p>Fork it ( <a
-href="https://github.com/[my-github-username]/ruby2ch/fork">github.com/[my-github-username]/ruby2ch/fork</a>
+href="https://github.com/dogwood008/simple2ch/fork">github.com/dogwood008/simple2ch/fork</a>
 )</p>
 </li><li>
 <p>Create your feature branch (<code>git checkout -b my-new-feature</code>)</p>
@@ -102,7 +115,7 @@ feature&#39;</code>)</p>
 </div></div>
 
     <div id="footer">
-  Generated on Sun Sep  7 11:29:29 2014 by
+  Generated on Sun Sep  7 16:55:25 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.4 (ruby-2.1.2).
 </div>

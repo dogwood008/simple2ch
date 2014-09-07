@@ -94,7 +94,7 @@
   
   
     <dt class="r2 last">Defined in:</dt>
-    <dd class="r2 last">lib/ruby2ch/board.rb</dd>
+    <dd class="r2 last">lib/simple2ch/board.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -264,7 +264,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#threads-instance_method" title="#threads (instance method)">- (Array&lt;Thre&gt;) <strong>threads</strong> </a>
+      <a href="#thres-instance_method" title="#thres (instance method)">- (Array&lt;Thre&gt;) <strong>thres</strong> </a>
     
 
     
@@ -361,7 +361,7 @@
 20</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/ruby2ch/board.rb', line 15</span>
+      <pre class="code"><span class="info file"># File 'lib/simple2ch/board.rb', line 15</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_title'>title</span><span class='comma'>,</span> <span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
   <span class='ivar'>@server_name</span> <span class='op'>=</span> <span class='ivar'>@board_name</span> <span class='op'>=</span> <span class='kw'>nil</span>
@@ -430,7 +430,7 @@
 12</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/ruby2ch/board.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'lib/simple2ch/board.rb', line 10</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_board_name'>board_name</span>
   <span class='ivar'>@board_name</span>
@@ -491,7 +491,7 @@
 10</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/ruby2ch/board.rb', line 8</span>
+      <pre class="code"><span class="info file"># File 'lib/simple2ch/board.rb', line 8</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_server_name'>server_name</span>
   <span class='ivar'>@server_name</span>
@@ -552,7 +552,7 @@
 8</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/ruby2ch/board.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/simple2ch/board.rb', line 6</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_title'>title</span>
   <span class='ivar'>@title</span>
@@ -613,7 +613,7 @@
 6</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/ruby2ch/board.rb', line 4</span>
+      <pre class="code"><span class="info file"># File 'lib/simple2ch/board.rb', line 4</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_url'>url</span>
   <span class='ivar'>@url</span>
@@ -631,9 +631,9 @@
 
     
       <div class="method_details first">
-  <h3 class="signature first" id="threads-instance_method">
+  <h3 class="signature first" id="thres-instance_method">
   
-    - (<tt>Array&lt;<span class='object_link'><a href="Thre.html" title="Simple2ch::Thre (class)">Thre</a></span>&gt;</tt>) <strong>threads</strong> 
+    - (<tt>Array&lt;<span class='object_link'><a href="Thre.html" title="Simple2ch::Thre (class)">Thre</a></span>&gt;</tt>) <strong>thres</strong> 
   
 
   
@@ -683,9 +683,9 @@
 30</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/ruby2ch/board.rb', line 24</span>
+      <pre class="code"><span class="info file"># File 'lib/simple2ch/board.rb', line 24</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_threads'>threads</span>
+<span class='kw'>def</span> <span class='id identifier rubyid_thres'>thres</span>
   <span class='kw'>if</span> <span class='ivar'>@thres</span><span class='period'>.</span><span class='id identifier rubyid_size'>size</span> <span class='op'>&gt;</span> <span class='int'>0</span>
     <span class='ivar'>@thres</span>
   <span class='kw'>else</span>
@@ -702,7 +702,7 @@
 </div>
 
     <div id="footer">
-  Generated on Sun Sep  7 11:29:29 2014 by
+  Generated on Sun Sep  7 16:55:25 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.4 (ruby-2.1.2).
 </div>
