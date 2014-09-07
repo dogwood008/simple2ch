@@ -9,6 +9,7 @@ module Simple2ch
   require 'simple2ch/res'
   require 'simple2ch/thre'
   require 'net/http'
+  require 'time'
   require 'pp' if DEBUG
 
   def self.root
