@@ -62,7 +62,7 @@ module Simple2ch
 
       subject_txt = Simple2ch.fetch(subject_url)
       subject_txt.each_line do |line|
-        @thres << Thre.new(self, line)
+        @thres << Thre.parse(self, line)
       end
       @thres
     end

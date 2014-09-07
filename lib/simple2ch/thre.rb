@@ -10,15 +10,29 @@ module Simple2ch
     attr_reader :board
 
     # @param [Board] board スレッドが属する板情報
-    # @param [String] thread_data 0000000000.dat<>スレッドタイトル (レス数)
-    def initialize(board, thread_data)
+    # @param [String] thread_key スレッドキー
+    # @param [String] title スレッド名
+    # @param [Fixnum] num_of_response 総書き込み数
+    def initialize(board, thread_key, title: '', num_of_response: '')
       @board = board
-      thread_data =~ /(\d{10})\.dat<>(.+) \((\d+)\)/
-      @thread_key = $1
-      @title = $2
-      @num_of_response = $3.to_i
+      @thread_key = thread_key
+      @title = title
+      @num_of_response = num_of_response
       @reses = nil
       @f_kako_log = nil
+    end
+
+    # 板オブジェクトとsubject.txtの1行データを渡すとスレオブジェクトを返す
+    # @param [Board] board スレッドが属する板情報
+    # @param [String] thread_data 0000000000.dat<>スレッドタイトル (レス数)
+    # @return [Thre] スレ
+    def self.parse(board, thread_data)
+      thread_data =~ /(\d{10})\.dat<>(.+) \((\d+)\)/
+      hash = {}
+      thread_key = $1
+      hash[:title] = $2
+      hash[:num_of_response] = $3.to_i
+      self.new board, thread_key, hash
     end
 
     # Datを解析して、レスを返す
