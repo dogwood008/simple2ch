@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Simple2ch::Dat do
   let(:board) { Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.2ch.sc/news4vip/' }
   let(:dat_data) { '1409796283.dat<>Ｃ言語の勉強始めたんだがな (144)' }
-  let(:thre) { Simple2ch::Thre.new(board, dat_data) }
+  let(:thre) { Simple2ch::Thre.parse(board, dat_data) }
   let(:thread_key) { '1409796283' }
   let(:dat) { Simple2ch::Dat.new thre }
 
