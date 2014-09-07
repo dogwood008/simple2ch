@@ -79,8 +79,8 @@
   
   
     <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">lib/ruby2ch.rb<span class="defines">,<br />
-  lib/ruby2ch/dat.rb,<br /> lib/ruby2ch/res.rb,<br /> lib/ruby2ch/thre.rb,<br /> lib/ruby2ch/board.rb,<br /> lib/ruby2ch/version.rb,<br /> lib/ruby2ch/simple2ch_exception.rb</span>
+    <dd class="r1 last">lib/simple2ch.rb<span class="defines">,<br />
+  lib/simple2ch/dat.rb,<br /> lib/simple2ch/res.rb,<br /> lib/simple2ch/thre.rb,<br /> lib/simple2ch/board.rb,<br /> lib/simple2ch/version.rb,<br /> lib/simple2ch/simple2ch_exception.rb</span>
 </dd>
   
 </dl>
@@ -109,7 +109,7 @@
         <dt id="VERSION-constant" class="">VERSION =
           
         </dt>
-        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>0.0.1</span><span class='tstring_end'>&quot;</span></span></pre></dd>
+        <dd><pre class="code"><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>0.0.2</span><span class='tstring_end'>&quot;</span></span></pre></dd>
       
     </dl>
   
@@ -256,7 +256,7 @@
 27</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/ruby2ch.rb', line 21</span>
+      <pre class="code"><span class="info file"># File 'lib/simple2ch.rb', line 21</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_fetch'>fetch</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_req'>req</span> <span class='op'>=</span> <span class='const'>Net</span><span class='op'>::</span><span class='const'>HTTP</span><span class='op'>::</span><span class='const'>Get</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='id identifier rubyid_url'>url</span><span class='period'>.</span><span class='id identifier rubyid_path'>path</span><span class='rparen'>)</span>
@@ -290,7 +290,7 @@
 16</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/ruby2ch.rb', line 14</span>
+      <pre class="code"><span class="info file"># File 'lib/simple2ch.rb', line 14</span>
 
 <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_root'>root</span>
   <span class='const'>File</span><span class='period'>.</span><span class='id identifier rubyid_dirname'>dirname</span> <span class='id identifier rubyid___dir__'>__dir__</span>
@@ -305,7 +305,7 @@
 </div>
 
     <div id="footer">
-  Generated on Sun Sep  7 11:29:29 2014 by
+  Generated on Sun Sep  7 16:55:25 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.4 (ruby-2.1.2).
 </div>
