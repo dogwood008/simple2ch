@@ -1,4 +1,4 @@
-module Ruby2ch
+module Simple2ch
   class Res
     # @return [Fixnum] レス番号
     attr_reader :res_num

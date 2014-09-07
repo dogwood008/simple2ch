@@ -1,4 +1,4 @@
-module Ruby2ch
+module Simple2ch
   class Dat
     # @return [String] スレッドキー
     attr_reader :thread_key
@@ -34,7 +34,7 @@ module Ruby2ch
     # datファイルを取得する
     # @return [String] 取得したdatファイルの中身
     def fetch_dat
-      @data || (@data = Ruby2ch.fetch dat_url)
+      @data || (@data = Simple2ch.fetch dat_url)
     end
 
     # datファイルを解析してResを作成する

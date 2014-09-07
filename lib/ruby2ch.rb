@@ -1,13 +1,13 @@
-require "ruby2ch/version"
+require "simple2ch/version"
 
-module Ruby2ch
+module Simple2ch
   DEBUG = true
 
-  require 'ruby2ch/ruby2ch_exception'
-  require 'ruby2ch/board'
-  require 'ruby2ch/dat'
-  require 'ruby2ch/res'
-  require 'ruby2ch/thre'
+  require 'simple2ch/simple2ch_exception'
+  require 'simple2ch/board'
+  require 'simple2ch/dat'
+  require 'simple2ch/res'
+  require 'simple2ch/thre'
   require 'net/http'
   require 'pp' if DEBUG
 

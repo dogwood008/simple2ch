@@ -1,7 +1,7 @@
 require 'rspec'
 require 'spec_helper'
 
-describe Ruby2ch do
+describe Simple2ch do
   context 'should get reses from board url' do
     before(:all) do
       board_name = 'ニュー速VIP'

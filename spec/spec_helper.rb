@@ -2,10 +2,10 @@ require 'rubygems'
 #uncomment the following line to use spork with the debugger
 #require 'spork/ext/ruby-debug'
 require 'rubygems'
-require 'ruby2ch'
+require 'simple2ch'
 require 'rspec'
 require 'rspec/its'
-include Ruby2ch
+include Simple2ch
 
 # カスタムマッチャを書きたかったらここに。
 #RSpec::Matchers.define :my_matcher do |expected|

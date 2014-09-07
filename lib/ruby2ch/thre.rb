@@ -1,4 +1,4 @@
-module Ruby2ch
+module Simple2ch
   class Thre
     # @return [String] スレッドの名前
     attr_reader :title

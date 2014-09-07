@@ -1,10 +1,10 @@
 require 'rspec'
 require 'spec_helper'
 
-describe Ruby2ch::Thre do
-  let(:board) { Ruby2ch::Board.new 'ニュース速報(VIP)', 'http://viper.2ch.sc/news4vip/'}
+describe Simple2ch::Thre do
+  let(:board) { Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.2ch.sc/news4vip/'}
   let(:dat_data) { '1409796283.dat<>Ｃ言語の勉強始めたんだがな (144)' }
-  let(:thre) { Ruby2ch::Thre.new(board, dat_data) }
+  let(:thre) { Simple2ch::Thre.new(board, dat_data) }
 
   context 'should have title' do
     subject { thre.title }
@@ -26,7 +26,7 @@ describe Ruby2ch::Thre do
   context 'should have responses' do
     subject { thre.reses }
     it { is_expected.to be_a_kind_of(Array) }
-    it { subject.each{ |r| expect(r).to be_a_kind_of(Ruby2ch::Res) } }
+    it { subject.each{ |r| expect(r).to be_a_kind_of(Simple2ch::Res) } }
     its(:size) { is_expected.to be > 0 }
   end
 

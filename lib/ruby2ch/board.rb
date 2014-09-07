@@ -1,4 +1,4 @@
-module Ruby2ch
+module Simple2ch
   class Board
     # @return [URI] 板のURL
     attr_reader :url
@@ -32,7 +32,7 @@ module Ruby2ch
     private
     # URLが正しいかバリデーションする
     # @param [URI] url
-    # @raise [Ruby2ch::NotA2chUrlException] 2chのフォーマットで無いURLを渡したときに発生
+    # @raise [Simple2ch::NotA2chUrlException] 2chのフォーマットで無いURLを渡したときに発生
     # @raise [URI::InvalidURIError] そもそもURLのフォーマットで無いときに発生
     def validate_url(url)
       sp_uri = URI.parse url
@@ -60,7 +60,7 @@ module Ruby2ch
     def fetch_all_thres
       subject_url = @url+'subject.txt'
 
-      subject_txt = Ruby2ch.fetch(subject_url)
+      subject_txt = Simple2ch.fetch(subject_url)
       subject_txt.each_line do |line|
         @thres << Thre.new(self, line)
       end
