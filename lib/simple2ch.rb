@@ -27,5 +27,3 @@ module Simple2ch
   end
 end
 
-#TODO: テストの用意。
-#TODO: コメントを書いてメソッドを整える。
