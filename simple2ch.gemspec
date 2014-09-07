@@ -4,13 +4,13 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'ruby2ch/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "ruby2ch"
-  spec.version       = Ruby2ch::VERSION
-  spec.authors       = ["kit"]
-  spec.email         = ["kit@mbp"]
-  spec.summary       = %q{A library to get 2ch bbs.}
+  spec.name          = "simple2ch"
+  spec.version       = Simple2ch::VERSION
+  spec.authors       = ["dogwood008"]
+  spec.email         = ["dogwood008+rubygems@gmail.com"]
+  spec.summary       = %q{A gem to read 2ch bbs.}
   spec.description   = spec.summary
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/dogwood008/simple2ch"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
