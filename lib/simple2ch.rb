@@ -1,7 +1,7 @@
 require "simple2ch/version"
 
 module Simple2ch
-  DEBUG = true
+  DEBUG = false
 
   require 'simple2ch/simple2ch_exception'
   require 'simple2ch/board'

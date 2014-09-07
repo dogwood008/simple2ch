@@ -43,7 +43,5 @@ module Simple2ch
       dat = nil
       return @reses, @f_kako_log
     end
-
-    #TODO: スコアリング
   end
 end
