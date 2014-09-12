@@ -10,6 +10,7 @@ module Simple2ch
   require 'simple2ch/thre'
   require 'net/http'
   require 'time'
+  require 'charwidth'
   require 'pp' if DEBUG
 
   def self.root
