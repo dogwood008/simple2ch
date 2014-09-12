@@ -8,6 +8,13 @@ Ruby用の2chの簡易リーダーです。
 [リファレンス](http://dogwood008.github.io/simple2ch/)
 
 ## 更新内容
+[v0.1.1]
+* メソッド追加
+  * Res#anchorsの追加
+    * レス中のアンカーを抽出する
+* 必要gemの追加
+  * Charwidthを追加
+
 [v0.1.0]
 * メソッド名の変更
     * Thre.new から Thre.parse に変更
@@ -17,15 +24,6 @@ Ruby用の2chの簡易リーダーです。
     * Time.parseの呼び出しに失敗する問題を修正
     * その他
 * その他微細な修正
-
-[v0.0.2]
-* メソッド名の変更
-    * Board#threads から Board#thres に変更
-* ドキュメントの再生成
-    * モジュール名が誤っていたため
-* README.mdを修正
-    * 使用法などを追加
-    * yardの結果を追加
 
 
 
