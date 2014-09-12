@@ -39,4 +39,60 @@ describe Simple2ch::Res do
     it { is_expected.to be_a_kind_of(Time) }
     it { is_expected.not_to be eq nil }
   end
+
+  describe '#anchors' do
+    shared_examples('have valid anchors') do
+      let(:res_num) { 100 }
+      subject { Res.new(res_num, contents: contents) }
+
+      describe 'that\'s anchored res is valid' do
+        its(:anchors) { is_expected.to be_a_kind_of Array }
+        its(:anchors) { is_expected.to be == anchor }
+        its('anchors.size') { is_expected.to be == anchor.size }
+      end
+    end
+    context 'when it have anchors separated commas' do
+      let(:contents) { %Q{&gt;&gt;1, 2,　3,12,　３４\n9} }
+      let(:anchor) { [1, 2, 3, 12, 34] }
+      it_behaves_like 'have valid anchors'
+    end
+    context 'when it have anchors separated commas & spaces' do
+      let(:contents) { %Q{&gt;&gt;1, 2,　3 4　5　６, １２、　３４\n9} }
+      let(:anchor) { [1, 2, 3, 4, 5, 6, 12, 34] }
+      it_behaves_like 'have valid anchors'
+    end
+    context 'when it have anchors range' do
+      let(:contents) { %Q{&gt;1-5\n9} }
+      let(:anchor) { (1..5).to_a }
+      it_behaves_like 'have valid anchors'
+    end
+    context 'when it have range and separated anchors pattern#1' do
+      let(:contents){%Q{&gt;1-5,6,8}}
+      let(:anchor) {[1,2,3,4,5,6,8]}
+      it_behaves_like 'have valid anchors'
+    end
+    context 'when it have range and separated anchors pattern#2' do
+      let(:contents){%Q{&gt;1,3, ９−１３\n25}}
+      let(:anchor) {[1,3,9,10,11,12,13]}
+      it_behaves_like 'have valid anchors'
+    end
+    context 'when it have ARASHI anchors' do
+      let(:contents) { %Q{>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,
+>52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,
+
+>>1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20
+　　∧＿∧
+　 (´･ω･｀)　　 　　n
+￣　..　 　 ＼　 　 （ E）
+ﾌ ア.フ.ィ /ヽ ヽ_／／
+>>21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40
+　　∧＿∧
+　 (´･ω･｀)　　 　　n
+￣　　 ..　 ＼　 　 （ E）
+ﾌ ア.フ.ィ /ヽ ヽ_／／
+>>41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60 } }
+      let(:anchor) { [] }
+      it_behaves_like 'have valid anchors'
+    end
+  end
 end

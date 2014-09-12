@@ -38,13 +38,44 @@ module Simple2ch
     # @raise [KakoLogException] 過去ログ情報をパースしようとした際に発生
     def self.parse(res_num, contents)
       unless contents.strip == KAKO_LOG_INFO
-        self.new res_num, self.parse_dat(contents)
+        return self.new(res_num, parse_dat(contents))
       else
         raise KakoLogException
       end
     end
 
+    # アンカーを抽出する　荒らしの場合は空配列を返す
+    # @return [Array<Fixnum>] 昇順ソート済みアンカー、荒らしの場合は空配列
+    def anchors
+      arashi_removal_regex = /(?:\d{1,4}(?:\]*>)?(?:>|\[＞,+-\]){1,2}){9}/
+      unless self.contents =~ arashi_removal_regex
+        splitter_regex = '[,、， 　]'
+        digit_regex = '(?:\d|[０-９])+'
+        hyphen_regex = '[−ｰー\-〜~〜]'
+        extracted = self.contents.scan /&gt;((?:#{digit_regex}(?:#{splitter_regex}|#{hyphen_regex})*)+)/
+        anchors = extracted.flatten.to_s.gsub(/[\"\[\]]/,'').split(/#{splitter_regex}/)
+        anchors.delete('')
+        anchors.map! do |a|
+          if a =~ /(#{digit_regex})#{hyphen_regex}(#{digit_regex})/
+            (Range.new parseInt($1), parseInt($2)).to_a
+          else
+            parseInt(a)
+          end
+        end
+        anchors.flatten.uniq.sort
+      else
+        []
+      end
+    end
+
     private
+    # 全角数字をFixnumへ変換する
+    # @param [String] strnum 全角数字
+    # @return [Fixnum] 数字
+    def parseInt(strnum)
+      (Charwidth.normalize strnum).to_i
+    end
+
     # Datの1行から各項目を分離して、Resオブジェクトを返すメソッドの実体
     # @param [String] dat datのデータ1行
     # @raise [DatParseException] Datのパースに失敗したときに発生
