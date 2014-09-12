@@ -50,7 +50,8 @@ module Simple2ch
     # 過去ログかどうかを返す
     # @return [Boolean] 過去ログか否か
     def kako_log?
-      @f_kako_log || fetch_dat
+      fetch_dat if @f_kako_log.nil?
+      @f_kako_log
     end
 
     private
