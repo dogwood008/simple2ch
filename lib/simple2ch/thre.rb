@@ -36,26 +36,31 @@ module Simple2ch
     end
 
     # Datを解析して、レスを返す
+    # @param [Array<Fixnum>] num_of_reses 取得したいレス番号
     # @return [Array<Res>] レスの配列
-    def reses
-      @reses || fetch_dat[0]
+    def reses(num_of_reses=nil)
+      fetch_dat unless @reses
+      if num_of_reses && num_of_reses.size > 0
+        @reses.select{|r| num_of_reses.index(r.res_num)}
+      else
+        @reses
+      end
     end
 
     # 過去ログかどうかを返す
     # @return [Boolean] 過去ログか否か
     def kako_log?
-      @f_kako_log || fetch_dat[1]
+      @f_kako_log || fetch_dat
     end
 
     private
     # Datを取ってきてレスと過去ログかどうかを返す
-    # @return [Array<Res>] reses レス
     # @return [Boolean] f_kako_log 過去ログか否か
     def fetch_dat
       dat = Dat.new(self)
       @reses, @f_kako_log = dat.reses, dat.kako_log?
       dat = nil
-      return @reses, @f_kako_log
+      @f_kako_log
     end
   end
 end
