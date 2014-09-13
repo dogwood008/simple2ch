@@ -67,13 +67,13 @@ describe Simple2ch::Res do
       it_behaves_like 'have valid anchors'
     end
     context 'when it have range and separated anchors pattern#1' do
-      let(:contents){%Q{&gt;1-5,6,8}}
-      let(:anchor) {[1,2,3,4,5,6,8]}
+      let(:contents) { %Q{&gt;1-5,6,8} }
+      let(:anchor) { [1, 2, 3, 4, 5, 6, 8] }
       it_behaves_like 'have valid anchors'
     end
     context 'when it have range and separated anchors pattern#2' do
-      let(:contents){%Q{&gt;1,3, ９−１３\n25}}
-      let(:anchor) {[1,3,9,10,11,12,13]}
+      let(:contents) { %Q{&gt;1,3, ９−１３\n25} }
+      let(:anchor) { [1, 3, 9, 10, 11, 12, 13] }
       it_behaves_like 'have valid anchors'
     end
     context 'when it have ARASHI anchors' do
