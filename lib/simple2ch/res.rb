@@ -86,7 +86,7 @@ module Simple2ch
       ret[:author] = split[0]
       ret[:mail] = split[1]
       date_and_author_id = split[2]
-      ret[:contents] = split[3].strip!
+      ret[:contents] = split[3].strip
 
       date_and_author_id =~ split_date_and_id_regex
       if !$1 || !$2
