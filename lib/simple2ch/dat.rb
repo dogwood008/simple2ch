@@ -47,7 +47,7 @@ module Simple2ch
       fetch_dat.each_line do |l|
         res_num += 1
         begin
-          @reses << Res.parse(res_num, l)
+          @reses << Res.parse(res_num, l, @thre)
         rescue KakoLogException
           @f_kako_log = true
         end
