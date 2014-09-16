@@ -67,13 +67,13 @@ describe Simple2ch::Res do
       it_behaves_like 'have valid anchors'
     end
     context 'when it have range and separated anchors pattern#1' do
-      let(:contents){%Q{&gt;1-5,6,8}}
-      let(:anchor) {[1,2,3,4,5,6,8]}
+      let(:contents) { %Q{&gt;1-5,6,8} }
+      let(:anchor) { [1, 2, 3, 4, 5, 6, 8] }
       it_behaves_like 'have valid anchors'
     end
     context 'when it have range and separated anchors pattern#2' do
-      let(:contents){%Q{&gt;1,3, ９−１３\n25}}
-      let(:anchor) {[1,3,9,10,11,12,13]}
+      let(:contents) { %Q{&gt;1,3, ９−１３\n25} }
+      let(:anchor) { [1, 3, 9, 10, 11, 12, 13] }
       it_behaves_like 'have valid anchors'
     end
     context 'when it have ARASHI anchors' do
@@ -95,4 +95,19 @@ describe Simple2ch::Res do
       it_behaves_like 'have valid anchors'
     end
   end
+
+  describe '#recepted_anchors' do
+    let(:board_name) { 'ニュー速VIP' }
+    let(:url) { 'http://viper.2ch.sc/news4vip/' }
+    let(:thread_key) { '1409796283' }
+    let(:board) { Board.new board_name, url }
+    let(:thre) { Thre.new board, thread_key }
+    let(:res) { thre.reses([40])[0] }
+    let(:input_thre) { res.thre = thre}
+    subject{ input_thre; res.received_anchors }
+    it { is_expected.to be_a_kind_of Array }
+    its(:size) { is_expected.to be == 4 }
+    it { is_expected.to be == [43, 44, 45, 54] }
+  end
+
 end

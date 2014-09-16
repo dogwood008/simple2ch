@@ -20,6 +20,7 @@ module Simple2ch
       @num_of_response = num_of_response
       @reses = nil
       @f_kako_log = nil
+      @received_anchors = nil
     end
 
     # 板オブジェクトとsubject.txtの1行データを渡すとスレオブジェクトを返す
@@ -36,26 +37,53 @@ module Simple2ch
     end
 
     # Datを解析して、レスを返す
+    # @param [Array<Fixnum>] num_of_reses 取得したいレス番号
     # @return [Array<Res>] レスの配列
-    def reses
-      @reses || fetch_dat[0]
+    def reses(num_of_reses=nil)
+      fetch_dat unless @reses
+      if num_of_reses && num_of_reses.size > 0
+        @reses.find_all{|r|
+          num_of_reses.index(r.res_num)
+        }
+      else
+        @reses
+      end
     end
 
     # 過去ログかどうかを返す
     # @return [Boolean] 過去ログか否か
     def kako_log?
-      @f_kako_log || fetch_dat[1]
+      fetch_dat if @f_kako_log.nil?
+      @f_kako_log
+    end
+
+    # 全てのレスに対し、あるレスへのアンカーが書き込まれているレス番号のハッシュを返す
+    # @return [Hash]{ res_num<Fixnum> => res_nums<Array<Fixnum>> } レス番号のハッシュ
+    def received_anchors
+      @received_anchors ||= calc_received_anchors
     end
 
     private
+    # 全てのレスに対し、あるレスへのアンカーが書き込まれているレス番号のハッシュを返す
+    # @return [Hash]{ res_num<Fixnum> => res_nums<Array<Fixnum>> } レス番号のハッシュ
+    def calc_received_anchors
+      ret = {}
+      reses.each do |res|
+        res.anchors.each do |anchor|
+          ret.store(anchor, ret.fetch(anchor, []).push(res.res_num))
+        end
+      end
+      ret
+    end
+
+
     # Datを取ってきてレスと過去ログかどうかを返す
-    # @return [Array<Res>] reses レス
     # @return [Boolean] f_kako_log 過去ログか否か
     def fetch_dat
       dat = Dat.new(self)
       @reses, @f_kako_log = dat.reses, dat.kako_log?
       dat = nil
-      return @reses, @f_kako_log
+      @f_kako_log
     end
   end
 end

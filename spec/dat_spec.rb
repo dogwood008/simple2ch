@@ -17,7 +17,8 @@ describe Simple2ch::Dat do
   context 'should have reses' do
     subject { dat.reses }
     it { is_expected.to be_a_kind_of(Array) }
-    its(:size) { is_expected.to be > 0 }
+    its(:size) { is_expected.to be == 144 }
+    it { expect(dat.kako_log?).to be == true }
     it do
       subject.each do |r|
         expect(r).to be_a_kind_of(Simple2ch::Res)
