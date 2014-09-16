@@ -1,3 +1,7 @@
+[v0.1.3]
+* デバッグ
+  * Res#received_anchors呼び出し時にNoThreGivenExceptionが起きる場合がある問題を修正
+
 [v0.1.2]
 * リファクタリングとデバッグ
 * メソッド修正
