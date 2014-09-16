@@ -3,6 +3,11 @@
 * メソッド修正
   * Thre#reses(Array<Fixnum>)で指定したレス番号のレスを取得
   * Thre#resesは今まで通り使用可能
+* メソッド追加
+  * Thre#received_anchors
+    * 全レスについて被レスを返す
+  * Res#received_anchors(Thre)
+    * 自レスへの被レスを返す
 
 [v0.1.1]
 * メソッド追加
