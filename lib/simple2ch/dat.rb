@@ -15,13 +15,15 @@ module Simple2ch
     # Datを解析して、レスを返す
     # @return [Array<Res>] レス
     def reses
-      @reses || parse_dat[0]
+      parse_dat unless @reses
+      @reses
     end
 
     # Datを解析して過去ログかどうかを返す
     # @return [Boolean] 過去ログか否か
     def kako_log?
-      @f_kako_log || parse_dat[1]
+      parse_dat if @f_kako_log.nil?
+      @f_kako_log
     end
 
     private
@@ -34,24 +36,22 @@ module Simple2ch
     # datファイルを取得する
     # @return [String] 取得したdatファイルの中身
     def fetch_dat
-      @data || (@data = Simple2ch.fetch dat_url)
+      @data ||= Simple2ch.fetch(dat_url)
     end
 
     # datファイルを解析してResを作成する
-    # @return [Array<Res>] 全てのレス
     def parse_dat
       res_num = 0
-      tmp = []
-      f_kako_log = false
+      @reses = []
+      @f_kako_log = false
       fetch_dat.each_line do |l|
         res_num += 1
         begin
-          tmp << Res.parse(res_num, l)
+          @reses << Res.parse(res_num, l)
         rescue KakoLogException
-          f_kako_log = true
+          @f_kako_log = true
         end
       end
-      return @reses=tmp, @f_kako_log=f_kako_log
     end
   end
 end
