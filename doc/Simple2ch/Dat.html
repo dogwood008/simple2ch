@@ -414,15 +414,17 @@
       <pre class="lines">
 
 
-23
 24
-25</pre>
+25
+26
+27</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/simple2ch/dat.rb', line 23</span>
+      <pre class="code"><span class="info file"># File 'lib/simple2ch/dat.rb', line 24</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_kako_log?'>kako_log?</span>
-  <span class='ivar'>@f_kako_log</span> <span class='op'>||</span> <span class='id identifier rubyid_parse_dat'>parse_dat</span><span class='lbracket'>[</span><span class='int'>1</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_parse_dat'>parse_dat</span> <span class='kw'>if</span> <span class='ivar'>@f_kako_log</span><span class='period'>.</span><span class='id identifier rubyid_nil?'>nil?</span>
+  <span class='ivar'>@f_kako_log</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -475,13 +477,15 @@
 
 17
 18
-19</pre>
+19
+20</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/simple2ch/dat.rb', line 17</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reses'>reses</span>
-  <span class='ivar'>@reses</span> <span class='op'>||</span> <span class='id identifier rubyid_parse_dat'>parse_dat</span><span class='lbracket'>[</span><span class='int'>0</span><span class='rbracket'>]</span>
+  <span class='id identifier rubyid_parse_dat'>parse_dat</span> <span class='kw'>unless</span> <span class='ivar'>@reses</span>
+  <span class='ivar'>@reses</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -493,7 +497,7 @@
 </div>
 
     <div id="footer">
-  Generated on Fri Sep 12 14:07:32 2014 by
+  Generated on Tue Sep 16 11:23:33 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.4 (ruby-2.1.2).
 </div>
