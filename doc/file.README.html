@@ -73,12 +73,11 @@ href="http://dogwood008.github.io/simple2ch/">リファレンス</a></p>
 
 <h2 id="label-%E6%9B%B4%E6%96%B0%E5%86%85%E5%AE%B9">更新内容</h2>
 
-<p>[v0.1.0] * メソッド名の変更  * Thre.new から Thre.parse に変更  * Thre.newは引数の数を変更  *
-この変更に伴い、v0.0.2以下とは一部互換性無し * バグ修正  * Time.parseの呼び出しに失敗する問題を修正  * その他 *
-その他微細な修正</p>
+<p>[v0.1.2] * リファクタリングとデバッグ * メソッド修正  *
+Thre#reses(Array&lt;Fixnum&gt;)で指定したレス番号のレスを取得  * Thre#resesは今まで通り使用可能</p>
 
-<p>[v0.0.2] * メソッド名の変更  * Board#threads から Board#thres に変更 * ドキュメントの再生成  *
-モジュール名が誤っていたため * README.mdを修正  * 使用法などを追加  * yardの結果を追加</p>
+<p>[v0.1.1] * メソッド追加  * Res#anchorsの追加  * レス中のアンカーを抽出する * 必要gemの追加  *
+Charwidthを追加</p>
 
 <h2 id="label-Installation">Installation</h2>
 
@@ -129,7 +128,7 @@ feature&#39;</code>)</p>
 </div></div>
 
     <div id="footer">
-  Generated on Fri Sep 12 14:07:32 2014 by
+  Generated on Tue Sep 16 11:23:33 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.7.4 (ruby-2.1.2).
 </div>
