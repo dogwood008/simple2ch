@@ -95,4 +95,19 @@ describe Simple2ch::Res do
       it_behaves_like 'have valid anchors'
     end
   end
+
+  describe '#recepted_anchors' do
+    let(:board_name) { 'ニュー速VIP' }
+    let(:url) { 'http://viper.2ch.sc/news4vip/' }
+    let(:thread_key) { '1409796283' }
+    let(:board) { Board.new board_name, url }
+    let(:thre) { Thre.new board, thread_key }
+    let(:res) { thre.reses([40])[0] }
+    let(:input_thre) { res.thre = thre}
+    subject{ input_thre; res.received_anchors }
+    it { is_expected.to be_a_kind_of Array }
+    its(:size) { is_expected.to be == 4 }
+    it { is_expected.to be == [43, 44, 45, 54] }
+  end
+
 end

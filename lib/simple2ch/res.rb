@@ -12,6 +12,8 @@ module Simple2ch
     attr_reader :mail
     # @return [String] 内容
     attr_reader :contents
+    # @attr_writer [Thre] thre スレッド
+    attr_writer :thre
 
     KAKO_LOG_INFO = '過去ログ ★<><>[過去ログ]<><em>■ このスレッドは過去ログ倉庫に格納されています</em><>'
 
@@ -22,13 +24,14 @@ module Simple2ch
     # @param [Time] date 書き込み日時
     # @param [String] mail メール欄
     # @param [String] contents 内容
-    def initialize(res_num, author: '', author_id: '', date: nil, mail: '', contents: '')
+    def initialize(res_num, author: '', author_id: '', date: nil, mail: '', contents: '', thre: nil)
       @res_num = res_num
       @author = author
       @author_id = author_id
       @date = date
       @mail = mail
       @contents = contents
+      @thre = thre
     end
 
     # Datの1行から各項目を分離して、Resオブジェクトを返す
@@ -36,9 +39,11 @@ module Simple2ch
     # @param [String] contents datのデータ1行
     # @return [Res] 新規Resオブジェクト
     # @raise [KakoLogException] 過去ログ情報をパースしようとした際に発生
-    def self.parse(res_num, contents)
+    def self.parse(res_num, contents, thre=nil)
       unless contents.strip == KAKO_LOG_INFO
-        return self.new(res_num, parse_dat(contents))
+        hash = parse_dat(contents)
+        hash[:thre] = thre if thre
+        return self.new(res_num, hash)
       else
         raise KakoLogException
       end
@@ -68,7 +73,25 @@ module Simple2ch
       end
     end
 
+    # 自レスへのアンカーが書き込まれているレス番号を返す
+    # @return Array<Fixnum> レス番号
+    def received_anchors
+      thre = get_thre
+      received_anchors = thre.received_anchors
+      received_anchors.fetch(@res_num, [])
+    end
+
     private
+    # スレッドを取得する
+    # @return [Thre] スレッド
+    def get_thre
+      if @thre
+        @thre
+      else
+        raise NoThreGivenException
+      end
+    end
+
     # 全角数字をFixnumへ変換する
     # @param [String] strnum 全角数字
     # @return [Fixnum] 数字

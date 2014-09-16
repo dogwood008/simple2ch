@@ -51,6 +51,10 @@ describe Simple2ch::Thre do
       let(:size){3}
       let(:specified_reses){[1,2,10]}
       it_behaves_like 'have specified reses'
+      it{
+        extracted_reses = thre.reses(specified_reses)
+        expect(extracted_reses[2]).to be == thre.reses.find{|r| r.res_num==10}
+      }
     end
   end
 end
