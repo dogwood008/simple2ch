@@ -20,6 +20,7 @@ module Simple2ch
       @num_of_response = num_of_response
       @reses = nil
       @f_kako_log = nil
+      @received_anchors = nil
     end
 
     # 板オブジェクトとsubject.txtの1行データを渡すとスレオブジェクトを返す
@@ -54,7 +55,26 @@ module Simple2ch
       @f_kako_log
     end
 
+    # 全てのレスに対し、あるレスへのアンカーが書き込まれているレス番号のハッシュを返す
+    # @return [Hash]{ res_num<Fixnum> => res_nums<Array<Fixnum>> } レス番号のハッシュ
+    def received_anchors
+      @received_anchors ||= calc_received_anchors
+    end
+
     private
+    # 全てのレスに対し、あるレスへのアンカーが書き込まれているレス番号のハッシュを返す
+    # @return [Hash]{ res_num<Fixnum> => res_nums<Array<Fixnum>> } レス番号のハッシュ
+    def calc_received_anchors
+      ret = {}
+      reses.each do |res|
+        res.anchors.each do |anchor|
+          ret.store(anchor, ret.fetch(anchor, []).push(res.res_num))
+        end
+      end
+      ret
+    end
+
+
     # Datを取ってきてレスと過去ログかどうかを返す
     # @return [Boolean] f_kako_log 過去ログか否か
     def fetch_dat
