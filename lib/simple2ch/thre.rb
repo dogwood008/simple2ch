@@ -42,7 +42,9 @@ module Simple2ch
     def reses(num_of_reses=nil)
       fetch_dat unless @reses
       if num_of_reses && num_of_reses.size > 0
-        @reses.select{|r| num_of_reses.index(r.res_num)}
+        @reses.find_all{|r|
+          num_of_reses.index(r.res_num)
+        }
       else
         @reses
       end
