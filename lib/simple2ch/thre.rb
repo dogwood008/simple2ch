@@ -37,16 +37,23 @@ module Simple2ch
     end
 
     # Datを解析して、レスを返す
-    # @param [Array<Fixnum>] num_of_reses 取得したいレス番号
+    # @param [Array<Fixnum>,Fixnum] num_of_reses 取得したいレス番号
     # @return [Array<Res>] レスの配列
     def reses(num_of_reses=nil)
       fetch_dat unless @reses
-      if num_of_reses && num_of_reses.size > 0
-        @reses.find_all{|r|
-          num_of_reses.index(r.res_num)
-        }
-      else
-        @reses
+      case num_of_reses
+        when Array
+          if num_of_reses.size > 0
+            @reses.find_all { |r|
+              num_of_reses.index(r.res_num)
+            }
+          else
+            raise 'Blank array was given.'
+          end
+        when Fixnum
+          @reses.find { |r| r.res_num == num_of_reses }
+        when NilClass
+          @reses
       end
     end
 
