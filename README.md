@@ -8,6 +8,10 @@ Ruby用の2chの簡易リーダーです。
 [リファレンス](http://dogwood008.github.io/simple2ch/)
 
 ## 更新内容
+[v0.1.3]
+* デバッグ
+  * Res#received_anchors呼び出し時にNoThreGivenExceptionが起きる場合がある問題を修正
+
 [v0.1.2]
 * リファクタリングとデバッグ
 * メソッド修正
@@ -19,12 +23,6 @@ Ruby用の2chの簡易リーダーです。
   * Res#received_anchors(Thre)
     * 自レスへの被レスを返す
 
-[v0.1.1]
-* メソッド追加
-  * Res#anchorsの追加
-    * レス中のアンカーを抽出する
-* 必要gemの追加
-  * Charwidthを追加
 
 ## Installation
 
