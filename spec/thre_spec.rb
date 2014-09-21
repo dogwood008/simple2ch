@@ -47,13 +47,24 @@ describe Simple2ch::Thre do
       it_behaves_like 'have specified reses'
     end
 
-    context 'when with res_num' do
+    context 'when with res_nums' do
       let(:size){3}
       let(:specified_reses){[1,2,10]}
       it_behaves_like 'have specified reses'
       it{
         extracted_reses = thre.reses(specified_reses)
         expect(extracted_reses[2]).to be == thre.reses.find{|r| r.res_num==10}
+      }
+    end
+
+    context 'when with only a res_num' do
+      let(:size){3}
+      let(:specified_res_num){10}
+      subject{thre.reses(specified_res_num)}
+      it{is_expected.to be_a_kind_of Res}
+      it{
+        extracted_res = thre.reses(specified_res_num)
+        expect(extracted_res).to be == thre.reses.find{|r| r.res_num==specified_res_num}
       }
     end
   end
