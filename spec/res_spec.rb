@@ -10,31 +10,31 @@ describe Simple2ch::Res do
 以下、＼(^o^)／でVIPがお送りします<><>2014/09/04(木) 18:47:41.41 ID:bHgEtoQU0.net<> 思い切り二次創作じゃねえか <br> PS4でやるんだっけ <>} }
   let(:res) { dat_data.split(/\n/).map.with_index(1) { |d, i| Simple2ch::Res.parse i, d } }
 
-  context 'should have res number' do
+  describe 'should have res number' do
     subject { res[0].res_num }
     it { is_expected.to be_a_kind_of(Numeric) }
     it { is_expected.to be > 0 }
   end
 
-  context 'should have author' do
+  describe 'should have author' do
     subject { res[0].author }
     it { is_expected.to be_a_kind_of(String) }
     it { is_expected.not_to be eq nil }
   end
 
-  context 'should have author_id' do
+  describe 'should have author_id' do
     subject { res[0].author_id }
     it { is_expected.to be_a_kind_of(String) }
     it { is_expected.not_to be eq nil }
   end
 
-  context 'should have contents' do
+  describe 'should have contents' do
     subject { res[0].contents }
     it { is_expected.to be_a_kind_of(String) }
     it { is_expected.not_to be eq nil }
   end
 
-  context 'should have date' do
+  describe 'should have date' do
     subject { res[0].date }
     it { is_expected.to be_a_kind_of(Time) }
     it { is_expected.not_to be eq nil }
