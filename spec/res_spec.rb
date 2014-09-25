@@ -103,8 +103,8 @@ describe Simple2ch::Res do
     let(:board) { Board.new board_name, url }
     let(:thre) { Thre.new board, thread_key }
     let(:res) { thre.reses([40])[0] }
-    let(:input_thre) { res.thre = thre}
-    subject{ input_thre; res.received_anchors }
+    let(:input_thre) { res.thre = thre }
+    subject { input_thre; res.received_anchors }
     it { is_expected.to be_a_kind_of Array }
     its(:size) { is_expected.to be == 4 }
     it { is_expected.to be == [43, 44, 45, 54] }
