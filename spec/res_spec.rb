@@ -94,6 +94,16 @@ describe Simple2ch::Res do
       let(:anchor) { [] }
       it_behaves_like 'have valid anchors'
     end
+    context 'when a thre have both id and non-id reses', force: true do
+      let(:board_name) { 'プログラム技術' }
+      let(:url) { 'http://toro.2ch.sc/tech/' }
+      let(:thread_key) { '1382307475' }
+      let(:board) { Board.new(board_name, url) }
+      let(:thre) { Thre.new(board, thread_key) }
+      subject{thre.reses}
+      it{ is_expected.to be_a_kind_of Array }
+    end
+
   end
 
   describe '#recepted_anchors' do
