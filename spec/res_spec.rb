@@ -100,8 +100,8 @@ describe Simple2ch::Res do
       let(:thread_key) { '1382307475' }
       let(:board) { Board.new(board_name, url) }
       let(:thre) { Thre.new(board, thread_key) }
-      subject{thre.reses}
-      it{ is_expected.to be_a_kind_of Array }
+      subject { thre.reses }
+      it { is_expected.to be_a_kind_of Array }
     end
 
   end
