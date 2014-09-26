@@ -56,6 +56,7 @@ module Simple2ch
           @reses
       end
     end
+    alias_method :res, :reses
 
     # 過去ログかどうかを返す
     # @return [Boolean] 過去ログか否か
