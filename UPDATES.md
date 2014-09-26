@@ -1,6 +1,8 @@
 [v0.1.4]
 * デバッグ
   * Thre#resesを実行した際に、IDを持たないレスがあれば、DatParseExceptionが起きる問題を修正
+* エイリアス追加
+  * Thre#resをThre#resesのエイリアスに設定
 
 [v0.1.3]
 * デバッグ
