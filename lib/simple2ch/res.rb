@@ -74,7 +74,7 @@ module Simple2ch
     end
 
     # 自レスへのアンカーが書き込まれているレス番号を返す
-    # @return Array<Fixnum> レス番号
+    # @return [Array<Fixnum>] レス番号
     def received_anchors
       thre = get_thre
       received_anchors = thre.received_anchors
