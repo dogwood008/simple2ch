@@ -74,7 +74,7 @@ module Simple2ch
     end
 
     # 自レスへのアンカーが書き込まれているレス番号を返す
-    # @return Array<Fixnum> レス番号
+    # @return [Array<Fixnum>] レス番号
     def received_anchors
       thre = get_thre
       received_anchors = thre.received_anchors
@@ -103,7 +103,7 @@ module Simple2ch
     # @param [String] dat datのデータ1行
     # @raise [DatParseException] Datのパースに失敗したときに発生
     def self.parse_dat(dat)
-      split_date_and_id_regex = /(^\d{4}\/\d{2}\/\d{2}\(.\) \d{2}:\d{2}:\d{2}\.\d{2}) ID:(\S+)$/
+      split_date_and_id_regex = /(^\d{4}\/\d{2}\/\d{2}\(.\) \d{2}:\d{2}:\d{2}\.\d{2})(?: ID:(\S+)$){0,1}/
       ret = {}
       split = dat.split('<>')
       ret[:author] = split[0]
@@ -112,7 +112,7 @@ module Simple2ch
       ret[:contents] = split[3].strip
 
       date_and_author_id =~ split_date_and_id_regex
-      if !$1 || !$2
+      if !$1
         raise DatParseException
       end
       ret[:date] = Time.parse $1

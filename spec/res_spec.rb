@@ -10,31 +10,31 @@ describe Simple2ch::Res do
 以下、＼(^o^)／でVIPがお送りします<><>2014/09/04(木) 18:47:41.41 ID:bHgEtoQU0.net<> 思い切り二次創作じゃねえか <br> PS4でやるんだっけ <>} }
   let(:res) { dat_data.split(/\n/).map.with_index(1) { |d, i| Simple2ch::Res.parse i, d } }
 
-  context 'should have res number' do
+  describe 'should have res number' do
     subject { res[0].res_num }
     it { is_expected.to be_a_kind_of(Numeric) }
     it { is_expected.to be > 0 }
   end
 
-  context 'should have author' do
+  describe 'should have author' do
     subject { res[0].author }
     it { is_expected.to be_a_kind_of(String) }
     it { is_expected.not_to be eq nil }
   end
 
-  context 'should have author_id' do
+  describe 'should have author_id' do
     subject { res[0].author_id }
     it { is_expected.to be_a_kind_of(String) }
     it { is_expected.not_to be eq nil }
   end
 
-  context 'should have contents' do
+  describe 'should have contents' do
     subject { res[0].contents }
     it { is_expected.to be_a_kind_of(String) }
     it { is_expected.not_to be eq nil }
   end
 
-  context 'should have date' do
+  describe 'should have date' do
     subject { res[0].date }
     it { is_expected.to be_a_kind_of(Time) }
     it { is_expected.not_to be eq nil }
@@ -94,6 +94,16 @@ describe Simple2ch::Res do
       let(:anchor) { [] }
       it_behaves_like 'have valid anchors'
     end
+    context 'when a thre have both id and non-id reses', force: true do
+      let(:board_name) { 'プログラム技術' }
+      let(:url) { 'http://toro.2ch.sc/tech/' }
+      let(:thread_key) { '1382307475' }
+      let(:board) { Board.new(board_name, url) }
+      let(:thre) { Thre.new(board, thread_key) }
+      subject { thre.reses }
+      it { is_expected.to be_a_kind_of Array }
+    end
+
   end
 
   describe '#recepted_anchors' do
@@ -103,8 +113,8 @@ describe Simple2ch::Res do
     let(:board) { Board.new board_name, url }
     let(:thre) { Thre.new board, thread_key }
     let(:res) { thre.reses([40])[0] }
-    let(:input_thre) { res.thre = thre}
-    subject{ input_thre; res.received_anchors }
+    let(:input_thre) { res.thre = thre }
+    subject { input_thre; res.received_anchors }
     it { is_expected.to be_a_kind_of Array }
     its(:size) { is_expected.to be == 4 }
     it { is_expected.to be == [43, 44, 45, 54] }
