@@ -8,6 +8,8 @@ module Simple2ch
     attr_reader :server_name
     # @return [String] 板の名前（コンピュータ名）
     attr_reader :board_name
+    # @return [Boolean] おーぷん2chか否か
+    attr_reader :open_flag
 
 
     # @param [String] title 板の名前
@@ -40,13 +42,15 @@ module Simple2ch
 
       if sp_uri.host.index '2ch'
         case url
-          when /http:\/\/(.+)\.2ch.(net|sc)\/test\/read.cgi\/(.+)\/([0-9]+)/,
-              /http:\/\/(.+)\.2ch\.(net|sc)\/(.+)\/subject\.txt/,
-              /http:\/\/(.+)\.2ch\.(net|sc)\/(.+)\//,
-              /http:\/\/(.+)\.2ch\.(net|sc)\/(\w+)/,
-              /http:\/\/(.+)\.2ch.(net|sc)\/(.+)\/dat\/([0-9]+)\.dat/
-            @server_name = $1; @board_name = $3
-            board_url = URI.parse("http://#{$1}.2ch.sc/#{$3}/")
+          when /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/test\/read.cgi\/(?<board_name>.+)\/(?<thread_key>[0-9]+)/,
+              /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(?<board_name>.+)\/subject\.txt/,
+              /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>.+)\//,
+              /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>\w+)/,
+              /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(.+)\/dat\/(?<thread_key>[0-9]+)\.dat/
+            @server_name = $~[:server_name]
+            @board_name = $~[:board_name]
+            @open_flag = ($~[:openflag] rescue false) && $~[:openflag]
+            board_url = URI.parse("http://#{server_name}.#{open_flag ? 'open' : ''}2ch.#{open_flag ? 'net' : 'sc'}/#{board_name}/")
           else
             raise NotA2chUrlException
         end
