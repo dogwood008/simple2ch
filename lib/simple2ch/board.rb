@@ -52,10 +52,10 @@ module Simple2ch
             @open_flag = ($~[:openflag] rescue false) && $~[:openflag]
             board_url = URI.parse("http://#{server_name}.#{open_flag ? 'open' : ''}2ch.#{open_flag ? 'net' : 'sc'}/#{board_name}/")
           else
-            raise NotA2chUrlException
+            raise NotA2chUrlException, "Given URL :#{url}"
         end
       else
-        raise NotA2chUrlException
+        raise NotA2chUrlException, "Given URL :#{url}"
       end
     end
 

@@ -113,7 +113,7 @@ module Simple2ch
 
       date_and_author_id =~ split_date_and_id_regex
       if !$1
-        raise DatParseException
+        raise DatParseException, "Parsed URL: #{thre.url}"
       end
       ret[:date] = Time.parse $1
       ret[:author_id] = $2
