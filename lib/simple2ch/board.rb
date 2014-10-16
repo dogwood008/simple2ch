@@ -8,8 +8,6 @@ module Simple2ch
     attr_reader :server_name
     # @return [String] 板の名前（コンピュータ名）
     attr_reader :board_name
-    # @return [Boolean] おーぷん2chか否か
-    attr_reader :open_flag
 
 
     # @param [String] title 板の名前
@@ -31,6 +29,12 @@ module Simple2ch
       end
     end
 
+    # おーぷん2chか否かを返す
+    # @return [Boolean] おーぷん2chか否か
+    def open2ch?
+      @f_open2ch && true
+    end
+
     private
     # URLが正しいかバリデーションする
     # @param [URI] url
@@ -49,8 +53,8 @@ module Simple2ch
               /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(.+)\/dat\/(?<thread_key>[0-9]+)\.dat/
             @server_name = $~[:server_name]
             @board_name = $~[:board_name]
-            @open_flag = ($~[:openflag] rescue false) && $~[:openflag]
-            board_url = URI.parse("http://#{server_name}.#{open_flag ? 'open' : ''}2ch.#{open_flag ? 'net' : 'sc'}/#{board_name}/")
+            @f_open2ch = ($~[:openflag] rescue false) && $~[:openflag]
+            board_url = URI.parse("http://#{server_name}.#{@f_open2ch ? 'open' : ''}2ch.#{@f_open2ch ? 'net' : 'sc'}/#{board_name}/")
           else
             raise NotA2chUrlException, "Given URL :#{url}"
         end
