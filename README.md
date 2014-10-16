@@ -8,15 +8,18 @@ Ruby用の2chの簡易リーダーです。
 [リファレンス](http://dogwood008.github.io/simple2ch/)
 
 ## 更新内容
+[v0.1.5]
+* デバッグ
+  * StandardErrorで例外を捕縛できない問題を修正
+  * DatParseException, NotA2chUrlException発生時に与えられたURLを表示するよう変更
+* 機能追加
+  * おーぷん２ちゃんねる対応
+
 [v0.1.4]
 * デバッグ
   * Thre#resesを実行した際に、IDを持たないレスがあれば、DatParseExceptionが起きる問題を修正
 * エイリアス追加
   * Thre#resをThre#resesのエイリアスに設定
-
-[v0.1.3]
-* デバッグ
-  * Res#received_anchors呼び出し時にNoThreGivenExceptionが起きる場合がある問題を修正
 
 
 ## Installation
