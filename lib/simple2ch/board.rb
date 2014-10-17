@@ -53,7 +53,7 @@ module Simple2ch
               /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(.+)\/dat\/(?<thread_key>[0-9]+)\.dat/
             @server_name = $~[:server_name]
             @board_name = $~[:board_name]
-            @f_open2ch = ($~[:openflag] rescue false) && $~[:openflag]
+            @f_open2ch = ($~[:openflag] rescue false) && !$~[:openflag].empty? && true
             board_url = URI.parse("http://#{server_name}.#{@f_open2ch ? 'open' : ''}2ch.#{@f_open2ch ? 'net' : 'sc'}/#{board_name}/")
           else
             raise NotA2chUrlException, "Given URL :#{url}"
