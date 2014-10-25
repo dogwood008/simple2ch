@@ -103,7 +103,7 @@ module Simple2ch
     # @param [String] dat datのデータ1行
     # @raise [DatParseException] Datのパースに失敗したときに発生
     def self.parse_dat(dat)
-      split_date_and_id_regex = /(^\d{4}\/\d{2}\/\d{2}\(.\) \d{2}:\d{2}:\d{2}\.\d{2})(?: ID:(\S+)$){0,1}/
+      split_date_and_id_regex = /(?<time>^\d{4}\/\d{2}\/\d{2}\(.\) ?\d{2}:\d{2}:\d{2}(\.\d{2})?)(?: ID:(?<author_id>\S+)$){0,1}/
       ret = {}
       split = dat.split('<>')
       ret[:author] = split[0]
@@ -111,12 +111,12 @@ module Simple2ch
       date_and_author_id = split[2]
       ret[:contents] = split[3].strip
 
-      date_and_author_id =~ split_date_and_id_regex
-      if !$1
-        raise DatParseException
+      if split_date_and_id_regex =~ date_and_author_id
+        ret[:date] = Time.parse $~[:time]
+        ret[:author_id] = $~[:author_id]
+      else
+        raise DatParseException, "Data didn't match regex. Data:#{date_and_author_id}"
       end
-      ret[:date] = Time.parse $1
-      ret[:author_id] = $2
 
       ret
     end
