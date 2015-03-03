@@ -21,6 +21,16 @@ describe Simple2ch do
       let(:site) { :net }
       include_examples 'get board list from bbsmenu'
     end
+    context 'from 2ch.sc' do
+      let(:bbsmenu_url) { board_list_url[:sc] }
+      let(:site) { :sc }
+      include_examples 'get board list from bbsmenu'
+    end
+    context 'from open2ch.net' do
+      let(:bbsmenu_url) { board_list_url[:open] }
+      let(:site) { :open }
+      include_examples 'get board list from bbsmenu'
+    end
   end
 
   context 'should get reses from board url' do
