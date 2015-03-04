@@ -1,5 +1,4 @@
 # Simple2ch
-
 2ch Japanese BBS simple reader for Ruby.
 
 Ruby用の2chの簡易リーダーです。
@@ -8,18 +7,15 @@ Ruby用の2chの簡易リーダーです。
 [リファレンス](http://dogwood008.github.io/simple2ch/)
 
 ## 更新内容
-[v0.1.5]
-* デバッグ
-  * StandardErrorで例外を捕縛できない問題を修正
-  * DatParseException, NotA2chUrlException発生時に与えられたURLを表示するよう変更
-* 機能追加
-  * おーぷん２ちゃんねる対応
 
-[v0.1.4]
-* デバッグ
-  * Thre#resesを実行した際に、IDを持たないレスがあれば、DatParseExceptionが起きる問題を修正
-* エイリアス追加
-  * Thre#resをThre#resesのエイリアスに設定
+* [v0.1.6]
+  * 板一覧の取得に対応
+* [v0.1.5]
+  * デバッグ
+    * StandardErrorで例外を捕縛できない問題を修正
+    * DatParseException, NotA2chUrlException発生時に与えられたURLを表示するよう変更
+  * 機能追加
+    * おーぷん２ちゃんねる対応
 
 
 ## Installation
@@ -37,26 +33,30 @@ Or install it yourself as:
     $ gem install simple2ch
 
 ## Usage
-* 初期化
+初期化:
+
 ```ruby
 require 'simple2ch'
 ```
 
 
-* スレ取得
+スレ取得:
+
 ```ruby
 board = Simple2ch::Board.new('ニュー速VIP', 'http://viper.2ch.sc/news4vip/')
 board.thres #=>[#<Simple2ch::Thre>, ..., #<Simple2ch::Thre>]
 ```
 
-* レス取得
+レス取得:
+
 ```ruby
 hoge = SUM_OF_NUMBER1
 thre = board.thres[hoge] #=> #<Simple2ch::Thre>
 thre.reses #=> [#<Simple2ch::Res>, ..., #<Simple2ch::Res>]
 ```
 
-* 書き込み内容取得
+書き込み内容取得:
+
 ```ruby
 foo = SUM_OF_NUMBER2
 res = thre.reses[foo] #=> #<Simple2ch::Res>
