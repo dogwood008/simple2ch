@@ -3,7 +3,7 @@ require 'spec_helper'
 
 RSpec::Matchers.define :have_news4vip do
   match do |boards|
-    boards.find{|b| b.title == 'ニュー速VIP'}
+    (news4vip = boards.find{|b| b.title == 'ニュー速VIP'}) && news4vip.url.to_s.index('news4vip')
   end
 end
 
