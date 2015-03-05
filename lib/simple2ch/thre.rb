@@ -71,6 +71,12 @@ module Simple2ch
       @received_anchors ||= calc_received_anchors
     end
 
+    # 2chタイプ名の取得
+    # @return [Symbol] 2chタイプ名(:net, :sc, :open)
+    def type_of_2ch
+      @board ? @board.type_of_2ch : nil
+    end
+
     private
     # 全てのレスに対し、あるレスへのアンカーが書き込まれているレス番号のハッシュを返す
     # @return [Hash]{ res_num<Fixnum> => res_nums<Array<Fixnum>> } レス番号のハッシュ
