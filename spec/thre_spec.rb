@@ -6,6 +6,25 @@ describe Simple2ch::Thre do
   let(:dat_data) { '1409796283.dat<>Ｃ言語の勉強始めたんだがな (144)' }
   let(:thre) { Simple2ch::Thre.parse(board, dat_data) }
 
+  describe 'should have a type of 2ch' do
+    subject{ Simple2ch::Thre.new(board, thread_key) }
+    context '2ch.net' do
+      let!(:board){ Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.2ch.net/news4vip/' }
+      let(:thread_key){ board.thres[0].thread_key }
+      its(:type_of_2ch) { is_expected.to eq :net }
+    end
+    context '2ch.sc' do
+      let!(:board){ Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.2ch.sc/news4vip/' }
+      let(:thread_key){ board.thres[0].thread_key }
+      its(:type_of_2ch) { is_expected.to eq :sc }
+    end
+    context '2ch.net' do
+      let!(:board){ Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.open2ch.net/news4vip/' }
+      let(:thread_key){ board.thres[0].thread_key }
+      its(:type_of_2ch) { is_expected.to eq :open }
+    end
+  end
+
   describe 'should have title' do
     subject { thre.title }
     it { is_expected.to be_a_kind_of(String) }

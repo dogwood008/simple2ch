@@ -35,6 +35,8 @@ module Simple2ch
         res.body.force_encoding("cp932").encode!('utf-8', :undef => :replace)
       when :open
         res.body.force_encoding("utf-8")
+      else
+        raise RuntimeError, "Invalid type of 2ch was given: #{site}"
     end
   end
 
@@ -42,7 +44,7 @@ module Simple2ch
   # @param [String] bbsmenu_url bbs_menuのURL
   # @param [Symbol] site :net, :sc, :openのいずれか．(2ch.net or 2ch.sc or open2ch.net)
   # @return [Array<Simple2ch::Board>] 板リスト
-  def self.board_lists(bbsmenu_url=nil, site=nil)
+  def self.board_lists(bbsmenu_url=nil)
     if bbsmenu_url
       @@bbsmenu_url = bbsmenu_url
       # http://www.rubular.com/r/u1TJbQAULD
@@ -50,7 +52,9 @@ module Simple2ch
 
       data = nil
       boards_array = []
-      raise RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(@@bbsmenu_url), site)).empty?
+
+      type_of_2ch = self.type_of_2ch(@@bbsmenu_url)
+      raise RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(@@bbsmenu_url), type_of_2ch)).empty?
       raise RuntimeError, "Failed to parse #{url}" if (boards_array=data.scan(board_extract_regex).uniq).empty?
     end
 
@@ -59,6 +63,23 @@ module Simple2ch
       @@boards << Simple2ch::Board.new(b[4],"http://#{b[0]}.#{b[1]}2ch.#{b[2]}/#{b[3]}/")
     end
     @@boards
+  end
+
+  # 2chのタイプを返す
+  # @param [String] url URL
+  # @return [Symbol] :open or :net or :sc
+  def self.type_of_2ch(url)
+    if /http:\/\/(?:\w+\.|)(?<openflag>open|)2ch.(?<tld>sc|net).+/ =~ url
+      if openflag=='open' && tld=='net'
+        :open
+      elsif openflag && tld=='net'
+        :net
+      elsif openflag && tld=='sc'
+        :sc
+      else
+        nil
+      end
+    end
   end
 end
 
