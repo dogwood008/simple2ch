@@ -12,10 +12,15 @@ module Simple2ch
 
     # @param [String] title 板の名前
     # @param [String] url 板のURL
-    def initialize(title, url)
+    # @option [Boolean] fetch_title 板の名前を自動取得するか
+    def initialize(title, url, fetch_title:nil)
       @server_name = @board_name = nil
       @url = validate_url url
-      @title = title
+      @title = if fetch_title
+                 (b=Simple2ch.boards(url).find{|bb| bb.url.to_s == @url.to_s}) &&  b.class!=Array ? b.title : nil
+               else
+                 title
+               end
       @thres = []
     end
 
