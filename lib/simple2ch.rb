@@ -46,14 +46,17 @@ module Simple2ch
   # @return [Array<Simple2ch::Board>] 板リスト
   def self.boards(bbsmenu_url=nil)
     if bbsmenu_url
-      @@bbsmenu_url = bbsmenu_url
+      bbsmenu_urls = {
+        net: 'http://menu.2ch.net/bbsmenu.html', sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/menu/pc_menu.html'
+      }
       # http://www.rubular.com/r/u1TJbQAULD
       board_extract_regex = /<A HREF=http:\/\/(?<subdomain>\w+).(?<openflag>open|)2ch.(?<tld>sc|net)\/(?<board_name>\w+)\/>(?<board_name_ja>.+)<\/A>/
+      type_of_2ch = self.type_of_2ch(bbsmenu_url)
+      @@bbsmenu_url = bbsmenu_urls[type_of_2ch]
 
       data = nil
       boards_array = []
 
-      type_of_2ch = self.type_of_2ch(@@bbsmenu_url)
       raise RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(@@bbsmenu_url), type_of_2ch)).empty?
       raise RuntimeError, "Failed to parse #{url}" if (boards_array=data.scan(board_extract_regex).uniq).empty?
     end
