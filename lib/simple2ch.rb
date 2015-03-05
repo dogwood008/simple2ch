@@ -35,6 +35,8 @@ module Simple2ch
         res.body.force_encoding("cp932").encode!('utf-8', :undef => :replace)
       when :open
         res.body.force_encoding("utf-8")
+      else
+        raise RuntimeError, "Invalid type of 2ch was given: #{site}"
     end
   end
 
