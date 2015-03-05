@@ -60,5 +60,22 @@ module Simple2ch
     end
     @@boards
   end
+
+  # 2chのタイプを返す
+  # @param [String] url URL
+  # @return [Symbol] :open or :net or :sc
+  def self.type_of_2ch(url)
+    if /http:\/\/(?:\w+\.|)(?<openflag>open|)2ch.(?<tld>sc|net).+/ =~ url
+      if openflag=='open' && tld=='net'
+        :open
+      elsif openflag && tld=='net'
+        :net
+      elsif openflag && tld=='sc'
+        :sc
+      else
+        nil
+      end
+    end
+  end
 end
 
