@@ -42,7 +42,6 @@ module Simple2ch
 
   # bbsmenuのURLが渡されればセットして，板リストを返す
   # @param [String] bbsmenu_url bbs_menuのURL
-  # @param [Symbol] site :net, :sc, :openのいずれか．(2ch.net or 2ch.sc or open2ch.net)
   # @return [Array<Simple2ch::Board>] 板リスト
   def self.boards(bbsmenu_url=nil)
     if bbsmenu_url
