@@ -11,24 +11,21 @@ describe Simple2ch do
   describe 'should get board from board list' do
     let(:board_list_url) { {net: 'http://menu.2ch.net/bbsmenu.html', sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/menu/pc_menu.html' } }
     shared_examples 'get board list from bbsmenu' do
-      subject{ Simple2ch.board_lists(bbsmenu_url, site) }
+      subject{ Simple2ch.board_lists(bbsmenu_url) }
       it{ is_expected.not_to be_empty }
       it{ is_expected.to have_news4vip}
     end
 
     context 'from 2ch.net' do
       let(:bbsmenu_url) { board_list_url[:net] }
-      let(:site) { :net }
       include_examples 'get board list from bbsmenu'
     end
     context 'from 2ch.sc' do
       let(:bbsmenu_url) { board_list_url[:sc] }
-      let(:site) { :sc }
       include_examples 'get board list from bbsmenu'
     end
     context 'from open2ch.net' do
       let(:bbsmenu_url) { board_list_url[:open] }
-      let(:site) { :open }
       include_examples 'get board list from bbsmenu'
     end
   end

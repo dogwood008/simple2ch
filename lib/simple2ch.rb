@@ -44,7 +44,7 @@ module Simple2ch
   # @param [String] bbsmenu_url bbs_menuのURL
   # @param [Symbol] site :net, :sc, :openのいずれか．(2ch.net or 2ch.sc or open2ch.net)
   # @return [Array<Simple2ch::Board>] 板リスト
-  def self.board_lists(bbsmenu_url=nil, site=nil)
+  def self.board_lists(bbsmenu_url=nil)
     if bbsmenu_url
       @@bbsmenu_url = bbsmenu_url
       # http://www.rubular.com/r/u1TJbQAULD
@@ -52,7 +52,9 @@ module Simple2ch
 
       data = nil
       boards_array = []
-      raise RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(@@bbsmenu_url), site)).empty?
+
+      type_of_2ch = self.type_of_2ch(@@bbsmenu_url)
+      raise RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(@@bbsmenu_url), type_of_2ch)).empty?
       raise RuntimeError, "Failed to parse #{url}" if (boards_array=data.scan(board_extract_regex).uniq).empty?
     end
 
