@@ -44,7 +44,7 @@ module Simple2ch
   # @param [String] bbsmenu_url bbs_menuのURL
   # @param [Symbol] site :net, :sc, :openのいずれか．(2ch.net or 2ch.sc or open2ch.net)
   # @return [Array<Simple2ch::Board>] 板リスト
-  def self.board_lists(bbsmenu_url=nil)
+  def self.boards(bbsmenu_url=nil)
     if bbsmenu_url
       @@bbsmenu_url = bbsmenu_url
       # http://www.rubular.com/r/u1TJbQAULD

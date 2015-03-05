@@ -11,7 +11,7 @@ describe Simple2ch do
   describe 'should get board from board list' do
     let(:board_list_url) { {net: 'http://menu.2ch.net/bbsmenu.html', sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/menu/pc_menu.html' } }
     shared_examples 'get board list from bbsmenu' do
-      subject{ Simple2ch.board_lists(bbsmenu_url) }
+      subject{ Simple2ch.boards(bbsmenu_url) }
       it{ is_expected.not_to be_empty }
       it{ is_expected.to have_news4vip}
     end
