@@ -35,6 +35,12 @@ module Simple2ch
       @f_open2ch && true
     end
 
+    # 2chタイプ名の取得
+    # @return [Symbol] 2chタイプ名(:net, :sc, :open)
+    def type_of_2ch
+      Simple2ch.type_of_2ch(@url.to_s)
+    end
+
     private
     # URLが正しいかバリデーションする
     # @param [URI] url
