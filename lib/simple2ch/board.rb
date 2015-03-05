@@ -54,7 +54,8 @@ module Simple2ch
             @server_name = $~[:server_name]
             @board_name = $~[:board_name]
             @f_open2ch = ($~[:openflag] rescue false) && !$~[:openflag].empty? && true
-            board_url = URI.parse("http://#{server_name}.#{@f_open2ch ? 'open' : ''}2ch.#{@f_open2ch ? 'net' : 'sc'}/#{board_name}/")
+            @tld = $~[:tld]
+            board_url = URI.parse("http://#{server_name}.#{@f_open2ch ? 'open' : ''}2ch.#{@tld}/#{board_name}/")
           else
             raise NotA2chUrlException, "Given URL :#{url}"
         end
