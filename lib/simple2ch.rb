@@ -22,11 +22,10 @@ module Simple2ch
 
   # HTTPでGETする
   # @param [URI] url URL
-  # @param [Symbol] site :net, :sc, :openのいずれか．(2ch.net or 2ch.sc or open2ch.net)
   # @return [String] 取得本文
-  def self.fetch(url, site=:sc)
+  def self.fetch(url)
     res = OpenURI.open_uri(url){|text| text.read }
-    case site
+    case self.type_of_2ch url
       when :net, :sc
         res.force_encoding("cp932").encode!('utf-8', :undef => :replace)
       when :open
