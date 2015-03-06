@@ -62,9 +62,8 @@ module Simple2ch
         end
         @@boards[type_of_2ch] = boards
       end
-    else
-      @@boards[type_of_2ch]
     end
+    @@boards[type_of_2ch]
   end
 
   # 2chのタイプを返す
