@@ -42,7 +42,7 @@ module Simple2ch
   def self.boards(bbsmenu_url=nil, force_refresh:nil)
     if bbsmenu_url
       bbsmenu_urls = {
-        net: 'http://menu.2ch.net/bbsmenu.html', sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/menu/pc_menu.html'
+        net: 'http://menu.2ch.net/bbsmenu.html', sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/bbsmenu.html'
       }
       # http://www.rubular.com/r/u1TJbQAULD
       board_extract_regex = /<A HREF=http:\/\/(?<subdomain>\w+).(?<openflag>open|)2ch.(?<tld>sc|net)\/(?<board_name>\w+)\/>(?<board_name_ja>.+)<\/A>/
