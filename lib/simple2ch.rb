@@ -61,9 +61,9 @@ module Simple2ch
           boards << Simple2ch::Board.new(b[4],"http://#{b[0]}.#{b[1]}2ch.#{b[2]}/#{b[3]}/")
         end
         @@boards[type_of_2ch] = boards
-      else
-        @@boards[type_of_2ch]
       end
+    else
+      @@boards[type_of_2ch]
     end
   end
 
