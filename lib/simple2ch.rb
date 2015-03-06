@@ -8,7 +8,7 @@ module Simple2ch
   require 'simple2ch/dat'
   require 'simple2ch/res'
   require 'simple2ch/thre'
-  require 'net/http'
+  require 'open-uri'
   require 'time'
   require 'charwidth'
   require 'pp' if DEBUG
@@ -26,15 +26,12 @@ module Simple2ch
   # @param [Symbol] site :net, :sc, :openのいずれか．(2ch.net or 2ch.sc or open2ch.net)
   # @return [String] 取得本文
   def self.fetch(url, site=:sc)
-    req = Net::HTTP::Get.new(url.path)
-    res = Net::HTTP.start(url.host, url.port) {|http|
-      http.request(req)
-    }
+    res = OpenURI.open_uri(url){|text| text.read }
     case site
       when :net, :sc
-        res.body.force_encoding("cp932").encode!('utf-8', :undef => :replace)
+        res.force_encoding("cp932").encode!('utf-8', :undef => :replace)
       when :open
-        res.body.force_encoding("utf-8")
+        res.force_encoding("utf-8")
       else
         raise RuntimeError, "Invalid type of 2ch was given: #{site}"
     end
