@@ -9,13 +9,15 @@ Ruby用の2chの簡易リーダーです。
 ## 更新内容
 
 * [v0.1.6]
-  * 板一覧の取得に対応
+	* 機能追加
+		* 板一覧の取得に対応
+		* URLからスレの取得に対応
 * [v0.1.5]
-  * デバッグ
-    * StandardErrorで例外を捕縛できない問題を修正
-    * DatParseException, NotA2chUrlException発生時に与えられたURLを表示するよう変更
-  * 機能追加
-    * おーぷん２ちゃんねる対応
+	* デバッグ
+		* StandardErrorで例外を捕縛できない問題を修正
+		* DatParseException, NotA2chUrlException発生時に与えられたURLを表示するよう変更
+	* 機能追加
+		* おーぷん２ちゃんねる対応
 
 
 ## Installation
@@ -33,35 +35,60 @@ Or install it yourself as:
     $ gem install simple2ch
 
 ## Usage
-初期化:
+### 初期化
 
 ```ruby
 require 'simple2ch'
 ```
 
-
-スレ取得:
+### Simple2ch
 
 ```ruby
-board = Simple2ch::Board.new('ニュー速VIP', 'http://viper.2ch.sc/news4vip/')
-board.thres #=>[#<Simple2ch::Thre>, ..., #<Simple2ch::Thre>]
+boards = Simple2ch.boards 'http://open2ch.net' #=> [#<Simple2ch::Board>, ..., #<Simple2ch::Board>]
 ```
 
-レス取得:
-
+### Simple2ch::Board
 ```ruby
-hoge = SUM_OF_NUMBER1
-thre = board.thres[hoge] #=> #<Simple2ch::Thre>
-thre.reses #=> [#<Simple2ch::Res>, ..., #<Simple2ch::Res>]
+board = boards.find{|b| b.title == 'プログラム'} #=> #<Simple2ch::Board>
+board.title #=> "プログラム"
+board.thres #=> [#<Simple2ch::Thre>, ..., #<Simple2ch::Thre>]
 ```
 
-書き込み内容取得:
+### Simple2ch::Thre
 
 ```ruby
-foo = SUM_OF_NUMBER2
-res = thre.reses[foo] #=> #<Simple2ch::Res>
-res.author #=> "以下、＼(^o^)／でVIPがお送りします"
-res.contents #=> "hoge foo bar"
+thre = board.thres.find{|t| t.title == 'さぁRubyはじめるよ'} #=> #<Simple2ch::Thre>
+reses = thre.reses #=> [#<Simple2ch::Res>, ..., #<Simple2ch::Res>]
+```
+
+#### URLを直接指定して取得
+
+```ruby
+thre = Simple2ch::Thre.create_from_url('http://toro.open2ch.net/test/read.cgi/tech/1371956681/l50') #=> #<Simple2ch::Thre>
+thre.title #=> "さぁRubyはじめるよ"
+reses = thre.reses
+```
+
+#### 板を指定して取得
+
+```ruby
+board = Simple2ch::Board.new('ニュー速VIP', 'http://viper.open2ch.net/news4vip/')
+thres = board.thres #=>[#<Simple2ch::Thre>, ..., #<Simple2ch::Thre>]
+thre = thres.find{|t| t.title == 'プログラム'}
+reses = thre.reses
+```
+
+
+### Simple2ch::Res
+
+```ruby
+res = reses[0] #=> #<Simple2ch::Res>
+res.res_num #=> 1
+res.contents #=> "Ruby覚えたいなぁ"
+res.author #=> "s"
+res.author_id #=> "R/Yck7smD"
+res.date #=> 2013-06-23 12:04:41 +0900
+res.mail #=> ""
 ```
 
 
@@ -72,3 +99,4 @@ res.contents #=> "hoge foo bar"
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
