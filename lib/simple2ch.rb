@@ -70,6 +70,7 @@ module Simple2ch
   # 2chのタイプを返す
   # @param [String] url URL
   # @return [Symbol] :open or :net or :sc
+  # @raise [NotA2chUrlException] 2chのURLでないURLが与えられた際に発生
   def self.type_of_2ch(url)
     parsed_url = self.parse_url(url)
     openflag = parsed_url[:openflag]
@@ -81,7 +82,7 @@ module Simple2ch
     elsif !openflag && tld=='sc'
       :sc
     else
-      nil
+      raise NotA2chUrlException, "Given URL: #{url}"
     end
   end
 
