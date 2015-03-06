@@ -25,13 +25,10 @@ module Simple2ch
   # @return [String] 取得本文
   def self.fetch(url)
     res = OpenURI.open_uri(url){|text| text.read }
-    case self.type_of_2ch url.to_s
-      when :net, :sc
-        res.force_encoding("cp932").encode!('utf-8', :undef => :replace)
-      when :open
-        res.force_encoding("utf-8")
-      else
-        raise RuntimeError, "Invalid type of 2ch was given: #{site}"
+    if url.to_s.index('subject.txt') || url.to_s.index('.dat') || url.to_s.index('bbsmenu')
+      res.force_encoding("cp932").encode!('utf-8', :undef => :replace, replace: '?')
+    else
+      res.force_encoding("utf-8")
     end
   end
 
