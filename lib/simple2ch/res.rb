@@ -115,7 +115,17 @@ module Simple2ch
         ret[:date] = Time.parse $~[:time]
         ret[:author_id] = $~[:author_id]
       else
-        raise DatParseException, "Data didn't match regex. Data:#{date_and_author_id}"
+        if dat.index 'あぼーん'
+          {
+              author: 'あぼーん',
+              mail: 'あぼーん',
+              contents: 'あぼーん',
+              date: 'あぼーん',
+              author_id: 'あぼーん',
+          }
+        else
+          raise DatParseException, "Data didn't match regex. Data:#{date_and_author_id}"
+        end
       end
 
       ret

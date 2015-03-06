@@ -36,6 +36,15 @@ module Simple2ch
       self.new board, thread_key, hash
     end
 
+    # スレのURLからスレオブジェクトを生成して返す
+    # @param [String] url URL
+    # @return [Thre] スレ
+    def self.create_from_url(url)
+      board = Simple2ch::Board.new('', url, fetch_title: true)
+      thread_key = Simple2ch.parse_url(url)[:thread_key]
+      board.thres.find{|t| t.thread_key == thread_key}
+    end
+
     # Datを解析して、レスを返す
     # @param [Array<Fixnum>,Fixnum] num_of_reses 取得したいレス番号
     # @return [Array<Res>] レスの配列
@@ -69,6 +78,12 @@ module Simple2ch
     # @return [Hash]{ res_num<Fixnum> => res_nums<Array<Fixnum>> } レス番号のハッシュ
     def received_anchors
       @received_anchors ||= calc_received_anchors
+    end
+
+    # 2chタイプ名の取得
+    # @return [Symbol] 2chタイプ名(:net, :sc, :open)
+    def type_of_2ch
+      @board ? @board.type_of_2ch : nil
     end
 
     private

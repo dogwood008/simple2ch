@@ -14,6 +14,22 @@ describe Simple2ch::Board do
   end
   let(:board) { Simple2ch::Board.new(title, url[:sc]) }
 
+  describe 'have a type of 2ch' do
+    subject{ Simple2ch::Board.new(title, given_url) }
+    context 'when 2ch.net' do
+      let(:given_url){ url[:net] }
+      its(:type_of_2ch){ is_expected.to eq :net }
+    end
+    context 'when 2ch.sc' do
+      let(:given_url){ url[:sc] }
+      its(:type_of_2ch){ is_expected.to eq :sc }
+    end
+    context 'when open2ch.net' do
+      let(:given_url){ url[:open] }
+      its(:type_of_2ch){ is_expected.to eq :open }
+    end
+  end
+
   context 'should get board title' do
     subject { board.title }
     it { is_expected.to be_a_kind_of(String) }
