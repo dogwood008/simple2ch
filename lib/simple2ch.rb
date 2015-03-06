@@ -25,7 +25,7 @@ module Simple2ch
   # @return [String] 取得本文
   def self.fetch(url)
     res = OpenURI.open_uri(url){|text| text.read }
-    case self.type_of_2ch url
+    case self.type_of_2ch url.to_s
       when :net, :sc
         res.force_encoding("cp932").encode!('utf-8', :undef => :replace)
       when :open
@@ -92,7 +92,7 @@ module Simple2ch
   # @raise [NotA2chUrlException] 2chのURLでないURLが与えられた際に発生
   def self.parse_url(url)
     # http://www.rubular.com/r/h63xdfmQIH
-    case url
+    case url.to_s
       when /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/test\/read.cgi\/(?<board_name>.+)\/(?<thread_key>[0-9]+)/,
           /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(?<board_name>.+)\/subject\.txt/,
           /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>.+)\//,
