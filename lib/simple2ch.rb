@@ -97,13 +97,12 @@ module Simple2ch
           /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>.+)\//,
           /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>\w+)/,
           /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(.+)\/dat\/(?<thread_key>[0-9]+)\.dat/,
-          /http:\/\/(?:(?<server_name>\w*)\.)?(?<openflag>open)?2ch\.(?<tld>sc|net)/
-        { server_name: ($~[:server_name] rescue nil),
-          board_name: ($~[:board_name] rescue nil),
-          openflag: ($~[:openflag] rescue nil),
-          tld: $~[:tld],
-          thread_key: ($~[:thread_key] rescue nil)
-        }
+          /http:\/\/(?:(?<server_name>.*)\.)?(?:(?<openflag>open)?)2ch\.(?<tld>sc|net)/
+        {server_name: ($~[:server_name] rescue nil),
+         board_name: ($~[:board_name] rescue nil),
+         openflag: ($~[:openflag] rescue nil),
+         tld: $~[:tld],
+         thread_key: ($~[:thread_key] rescue nil) }
       else
         raise NotA2chUrlException, "Given URL: #{url}"
     end
