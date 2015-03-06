@@ -25,13 +25,10 @@ module Simple2ch
   # @return [String] 取得本文
   def self.fetch(url)
     res = OpenURI.open_uri(url){|text| text.read }
-    case self.type_of_2ch url
-      when :net, :sc
-        res.force_encoding("cp932").encode!('utf-8', :undef => :replace)
-      when :open
-        res.force_encoding("utf-8")
-      else
-        raise RuntimeError, "Invalid type of 2ch was given: #{site}"
+    if url.to_s.index('subject.txt') || url.to_s.index('.dat') || url.to_s.index('bbsmenu')
+      res.force_encoding("cp932").encode!('utf-8', :undef => :replace, replace: '?')
+    else
+      res.force_encoding("utf-8")
     end
   end
 
@@ -42,7 +39,7 @@ module Simple2ch
   def self.boards(bbsmenu_url=nil, force_refresh:nil)
     if bbsmenu_url
       bbsmenu_urls = {
-        net: 'http://menu.2ch.net/bbsmenu.html', sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/menu/pc_menu.html'
+        net: 'http://menu.2ch.net/bbsmenu.html', sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/bbsmenu.html'
       }
       # http://www.rubular.com/r/u1TJbQAULD
       board_extract_regex = /<A HREF=http:\/\/(?<subdomain>\w+).(?<openflag>open|)2ch.(?<tld>sc|net)\/(?<board_name>\w+)\/>(?<board_name_ja>.+)<\/A>/
@@ -54,22 +51,22 @@ module Simple2ch
         data = nil
         boards_array = []
 
-        raise RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(prepared_bbsmenu_url), type_of_2ch)).empty?
+        raise RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(prepared_bbsmenu_url))).empty?
         raise RuntimeError, "Failed to parse #{url}" if (boards_array=data.scan(board_extract_regex).uniq).empty?
 
         boards_array.each do |b|
           boards << Simple2ch::Board.new(b[4],"http://#{b[0]}.#{b[1]}2ch.#{b[2]}/#{b[3]}/")
         end
         @@boards[type_of_2ch] = boards
-      else
-        @@boards[type_of_2ch]
       end
     end
+    @@boards[type_of_2ch]
   end
 
   # 2chのタイプを返す
   # @param [String] url URL
   # @return [Symbol] :open or :net or :sc
+  # @raise [NotA2chUrlException] 2chのURLでないURLが与えられた際に発生
   def self.type_of_2ch(url)
     parsed_url = self.parse_url(url)
     openflag = parsed_url[:openflag]
@@ -81,7 +78,7 @@ module Simple2ch
     elsif !openflag && tld=='sc'
       :sc
     else
-      nil
+      raise NotA2chUrlException, "Given URL: #{url}"
     end
   end
 
@@ -91,19 +88,18 @@ module Simple2ch
   # @raise [NotA2chUrlException] 2chのURLでないURLが与えられた際に発生
   def self.parse_url(url)
     # http://www.rubular.com/r/h63xdfmQIH
-    case url
+    case url.to_s
       when /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/test\/read.cgi\/(?<board_name>.+)\/(?<thread_key>[0-9]+)/,
           /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(?<board_name>.+)\/subject\.txt/,
           /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>.+)\//,
           /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>\w+)/,
           /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(.+)\/dat\/(?<thread_key>[0-9]+)\.dat/,
-          /http:\/\/(?:(?<server_name>\w*)\.)?(?<openflag>open)?2ch\.(?<tld>sc|net)/
-        { server_name: ($~[:server_name] rescue nil),
-          board_name: ($~[:board_name] rescue nil),
-          openflag: ($~[:openflag] rescue nil),
-          tld: $~[:tld],
-          thread_key: ($~[:thread_key] rescue nil)
-        }
+          /http:\/\/(?:(?<server_name>.*)\.)?(?:(?<openflag>open)?)2ch\.(?<tld>sc|net)/
+        {server_name: ($~[:server_name] rescue nil),
+         board_name: ($~[:board_name] rescue nil),
+         openflag: ($~[:openflag] rescue nil),
+         tld: $~[:tld],
+         thread_key: ($~[:thread_key] rescue nil) }
       else
         raise NotA2chUrlException, "Given URL: #{url}"
     end
