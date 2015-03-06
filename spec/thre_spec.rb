@@ -40,15 +40,30 @@ describe Simple2ch::Thre do
   end
 
   describe 'should be created from URL' do
-    let(:url) {'http://peace.2ch.net/test/read.cgi/tech/1158807229/l50'}
-    let(:thre) { Simple2ch::Thre.create_from_url(url) }
-    let(:kako_log){ be_falsey }
-    subject{ thre }
-    it{ is_expected.to be_a_kind_of Simple2ch::Thre }
-    its(:board) { is_expected.to be_a_kind_of Simple2ch::Board }
-    its('board.title') { is_expected.not_to be_empty }
-    its(:title){ is_expected.not_to be_empty }
-    include_examples 'should be valid'
+    shared_examples 'create from URL' do
+      let(:thre) { Simple2ch::Thre.create_from_url(url) }
+      subject{ thre }
+      it{ is_expected.to be_a_kind_of Simple2ch::Thre }
+      its(:board) { is_expected.to be_a_kind_of Simple2ch::Board }
+      its('board.title') { is_expected.not_to be_empty }
+      its(:title){ is_expected.not_to be_empty }
+      include_examples 'should be valid'
+    end
+    context 'from 2ch.net URL' do
+      let(:url) {'http://peace.2ch.net/test/read.cgi/tech/1158807229/l50'}
+      let(:kako_log){ be_falsey }
+      include_examples 'create from URL'
+    end
+    context 'from 2ch.sc URL' do
+      let(:url) {'http://peace.2ch.sc/test/read.cgi/tech/1158807229/l50'}
+      let(:kako_log){ be_falsey }
+      include_examples 'create from URL'
+    end
+    context 'from open2ch.net URL' do
+      let(:url) {'http://toro.open2ch.net/test/read.cgi/tech/1371956681/l50'}
+      let(:kako_log){ be_falsey }
+      include_examples 'create from URL'
+    end
   end
 
   describe 'should have a type of 2ch' do
