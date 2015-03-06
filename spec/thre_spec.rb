@@ -2,9 +2,54 @@ require 'rspec'
 require 'spec_helper'
 
 describe Simple2ch::Thre do
-  let(:board) { Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.2ch.sc/news4vip/' }
-  let(:dat_data) { '1409796283.dat<>Ｃ言語の勉強始めたんだがな (144)' }
-  let(:thre) { Simple2ch::Thre.parse(board, dat_data) }
+  shared_examples 'have specified reses' do
+    subject { thre.reses(specified_reses) }
+    it { is_expected.to be_a_kind_of Array }
+    its(:size) { is_expected.to be == size }
+  end
+  shared_examples 'should be valid' do
+    describe 'should have title' do
+      subject { thre.title }
+      it { is_expected.to be_a_kind_of(String) }
+    end
+
+    describe 'should have thread key' do
+      subject { thre.thread_key }
+      it { is_expected.to be_a_kind_of(String) }
+      it { is_expected.to match /\d{10}/ }
+    end
+
+    describe 'should have numbers of responses' do
+      subject { thre.num_of_response }
+      it { is_expected.to be_a_kind_of(Fixnum) }
+      it { is_expected.to be > 0 }
+    end
+
+    describe 'should have responses' do
+      subject { thre.reses }
+      it { is_expected.to be_a_kind_of(Array) }
+      it { subject.each { |r| expect(r).to be_a_kind_of(Simple2ch::Res) } }
+      its(:size) { is_expected.to be > 0 }
+    end
+
+    describe 'should have if Kako log' do
+      subject { thre.kako_log? }
+      it { is_expected.to kako_log }
+    end
+
+  end
+
+  describe 'should be created from URL' do
+    let(:url) {'http://peace.2ch.net/test/read.cgi/tech/1158807229/l50'}
+    let(:thre) { Simple2ch::Thre.create_from_url(url) }
+    let(:kako_log){ be_falsey }
+    subject{ thre }
+    it{ is_expected.to be_a_kind_of Simple2ch::Thre }
+    its(:board) { is_expected.to be_a_kind_of Simple2ch::Board }
+    its('board.title') { is_expected.not_to be_empty }
+    its(:title){ is_expected.not_to be_empty }
+    include_examples 'should be valid'
+  end
 
   describe 'should have a type of 2ch' do
     subject{ Simple2ch::Thre.new(board, thread_key) }
@@ -25,41 +70,13 @@ describe Simple2ch::Thre do
     end
   end
 
-  describe 'should have title' do
-    subject { thre.title }
-    it { is_expected.to be_a_kind_of(String) }
-  end
+  describe 'is valid' do
+    let(:board) { Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.2ch.sc/news4vip/' }
+    let(:dat_data) { '1409796283.dat<>Ｃ言語の勉強始めたんだがな (144)' }
+    let(:thre) { Simple2ch::Thre.parse(board, dat_data) }
+    let(:kako_log) { be_truthy }
+    include_examples 'should be valid'
 
-  describe 'should have thread key' do
-    subject { thre.thread_key }
-    it { is_expected.to be_a_kind_of(String) }
-    it { is_expected.to match /\d{10}/ }
-  end
-
-  describe 'should have numbers of responses' do
-    subject { thre.num_of_response }
-    it { is_expected.to be_a_kind_of(Fixnum) }
-    it { is_expected.to be > 0 }
-  end
-
-  describe 'should have responses' do
-    subject { thre.reses }
-    it { is_expected.to be_a_kind_of(Array) }
-    it { subject.each { |r| expect(r).to be_a_kind_of(Simple2ch::Res) } }
-    its(:size) { is_expected.to be > 0 }
-  end
-
-  describe 'should have if Kako log' do
-    subject { thre.kako_log? }
-    it { is_expected.to be_truthy }
-  end
-
-  describe '#reses' do
-    shared_examples 'have specified reses' do
-      subject { thre.reses(specified_reses) }
-      it { is_expected.to be_a_kind_of Array }
-      its(:size) { is_expected.to be == size }
-    end
     context 'when without res_num' do
       let(:size) { 144 }
       let(:specified_reses) { nil }
