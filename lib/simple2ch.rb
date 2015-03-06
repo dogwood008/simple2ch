@@ -54,7 +54,7 @@ module Simple2ch
         data = nil
         boards_array = []
 
-        raise RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(prepared_bbsmenu_url), type_of_2ch)).empty?
+        raise RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(prepared_bbsmenu_url))).empty?
         raise RuntimeError, "Failed to parse #{url}" if (boards_array=data.scan(board_extract_regex).uniq).empty?
 
         boards_array.each do |b|
