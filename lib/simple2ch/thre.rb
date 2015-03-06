@@ -36,6 +36,15 @@ module Simple2ch
       self.new board, thread_key, hash
     end
 
+    # スレのURLからスレオブジェクトを生成して返す
+    # @param [String] url URL
+    # @return [Thre] スレ
+    def self.create_from_url(url)
+      board = Simple2ch::Board.new('', url, fetch_title: true)
+      thread_key = Simple2ch.parse_url(url)[:thread_key]
+      board.thres.find{|t| t.thread_key == thread_key}
+    end
+
     # Datを解析して、レスを返す
     # @param [Array<Fixnum>,Fixnum] num_of_reses 取得したいレス番号
     # @return [Array<Res>] レスの配列

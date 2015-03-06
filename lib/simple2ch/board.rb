@@ -53,23 +53,13 @@ module Simple2ch
     # @raise [URI::InvalidURIError] そもそもURLのフォーマットで無いときに発生
     def validate_url(url)
       sp_uri = URI.parse url
-      board_url = ''
-
       if sp_uri.host.index '2ch'
-        case url
-          when /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/test\/read.cgi\/(?<board_name>.+)\/(?<thread_key>[0-9]+)/,
-              /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(?<board_name>.+)\/subject\.txt/,
-              /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>.+)\//,
-              /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>\w+)/,
-              /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(.+)\/dat\/(?<thread_key>[0-9]+)\.dat/
-            @server_name = $~[:server_name]
-            @board_name = $~[:board_name]
-            @f_open2ch = ($~[:openflag] rescue false) && !$~[:openflag].empty? && true
-            @tld = $~[:tld]
-            board_url = URI.parse("http://#{server_name}.#{@f_open2ch ? 'open' : ''}2ch.#{@tld}/#{board_name}/")
-          else
-            raise NotA2chUrlException, "Given URL :#{url}"
-        end
+        parsed_url = Simple2ch.parse_url(url.to_s)
+        @server_name = parsed_url[:server_name]
+        @board_name = parsed_url[:board_name]
+        @f_open2ch = !(parsed_url[:openflag].to_s.empty?)
+        @tld = parsed_url[:tld]
+        URI.parse("http://#{server_name}.#{parsed_url[:openflag]}2ch.#{@tld}/#{board_name}/")
       else
         raise NotA2chUrlException, "Given URL :#{url}"
       end

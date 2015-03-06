@@ -71,16 +71,39 @@ module Simple2ch
   # @param [String] url URL
   # @return [Symbol] :open or :net or :sc
   def self.type_of_2ch(url)
-    if /http:\/\/(?:\w+\.|)(?<openflag>open|)2ch.(?<tld>sc|net).+/ =~ url
-      if openflag=='open' && tld=='net'
-        :open
-      elsif openflag && tld=='net'
-        :net
-      elsif openflag && tld=='sc'
-        :sc
+    parsed_url = self.parse_url(url)
+    openflag = parsed_url[:openflag]
+    tld = parsed_url[:tld]
+    if openflag && tld=='net'
+      :open
+    elsif !openflag && tld=='net'
+      :net
+    elsif !openflag && tld=='sc'
+      :sc
+    else
+      nil
+    end
+  end
+
+  # URLを分解する
+  # @param [String] url URL
+  # @return [Array<String>] 結果(thread_key等が該当無しの場合，nilを返す)
+  # @raise [NotA2chUrlException] 2chのURLでないURLが与えられた際に発生
+  def self.parse_url(url)
+    case url
+      when /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/test\/read.cgi\/(?<board_name>.+)\/(?<thread_key>[0-9]+)/,
+          /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(?<board_name>.+)\/subject\.txt/,
+          /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>.+)\//,
+          /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>\w+)/,
+          /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(.+)\/dat\/(?<thread_key>[0-9]+)\.dat/
+        { server_name: $~[:server_name],
+          board_name: $~[:board_name],
+          openflag: ($~[:openflag] rescue nil),
+          tld: $~[:tld],
+          thread_key: ($~[:thread_key] rescue nil)
+        }
       else
-        nil
-      end
+        raise NotA2chUrlException, "Given URL :#{url}"
     end
   end
 end
