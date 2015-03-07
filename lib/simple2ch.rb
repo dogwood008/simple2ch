@@ -24,12 +24,12 @@ module Simple2ch
   # @param [URI] url URL
   # @return [String] 取得本文
   def self.fetch(url)
-    read_option = if url.to_s.index('subject.txt') || url.to_s.index('.dat') || url.to_s.index('bbsmenu')
-                    'r:SHIFT_JIS'
+    encode = if url.to_s.index('subject.txt') || url.to_s.index('.dat') || url.to_s.index('bbsmenu')
+                    'SHIFT_JIS'
                   else
-                    'r:UTF-8'
+                    'UTF-8'
                   end
-    open(url, read_option).read.encode('UTF-8', invalid: :replace, replace: '〓', undef: :replace)
+    OpenURI.open_uri(url, 'r:binary').read.force_encoding(encode).encode('utf-8', undef: :replace, invalid: :replace, replace: '〓')
   end
 
   # bbsmenuのURLが渡されればセットして，板リストを返す
