@@ -42,7 +42,12 @@ module Simple2ch
     def self.create_from_url(url)
       board = Simple2ch::Board.new('', url, fetch_title: true)
       thread_key = Simple2ch.parse_url(url)[:thread_key]
-      board.thres.find{|t| t.thread_key == thread_key}
+      thre = board.thres.find{|t| t.thread_key == thread_key}
+      unless thre
+        thre = Thre.new board, thread_key
+        thre.reses
+      end
+      thre
     end
 
     # Datを解析して、レスを返す
@@ -113,12 +118,14 @@ module Simple2ch
       ret
     end
 
-
     # Datを取ってきてレスと過去ログかどうかを返す
     # @return [Boolean] f_kako_log 過去ログか否か
     def fetch_dat
       dat = Dat.new(self)
-      @reses, @f_kako_log = dat.reses, dat.kako_log?
+      @reses = dat.reses
+      @num_of_response = @reses.size
+      @f_kako_log = dat.kako_log?
+      @title =  dat.title if !@title || @title.empty?
       dat = nil
       @f_kako_log
     end
