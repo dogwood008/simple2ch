@@ -42,7 +42,12 @@ module Simple2ch
     def self.create_from_url(url)
       board = Simple2ch::Board.new('', url, fetch_title: true)
       thread_key = Simple2ch.parse_url(url)[:thread_key]
-      board.thres.find{|t| t.thread_key == thread_key}
+      thre = board.thres.find{|t| t.thread_key == thread_key}
+      unless thre
+        thre = Thre.new board, thread_key
+        thre.reses
+      end
+      thre
     end
 
     # Datを解析して、レスを返す
@@ -86,6 +91,20 @@ module Simple2ch
       @board ? @board.type_of_2ch : nil
     end
 
+    # スレのURLを返す
+    # @return [String] スレのURL
+    def url
+      tld = type_of_2ch == :sc ? :sc : :net
+      "http://#{@board.server_name}.#{type_of_2ch==:open ? 'open' : ''}2ch.#{tld}/test/read.cgi/#{@board.board_name}/#{@thread_key}/"
+    end
+
+    # スレのdatURLを返す
+    # @return [String] スレのdatURL
+    def dat_url
+      tld = type_of_2ch == :sc ? :sc : :net
+      "http://#{@board.server_name}.#{type_of_2ch==:open ? 'open' : ''}2ch.#{tld}/#{@board.board_name}/dat/#{@thread_key}.dat"
+    end
+
     private
     # 全てのレスに対し、あるレスへのアンカーが書き込まれているレス番号のハッシュを返す
     # @return [Hash]{ res_num<Fixnum> => res_nums<Array<Fixnum>> } レス番号のハッシュ
@@ -99,12 +118,14 @@ module Simple2ch
       ret
     end
 
-
     # Datを取ってきてレスと過去ログかどうかを返す
     # @return [Boolean] f_kako_log 過去ログか否か
     def fetch_dat
       dat = Dat.new(self)
-      @reses, @f_kako_log = dat.reses, dat.kako_log?
+      @reses = dat.reses
+      @num_of_response = @reses.size
+      @f_kako_log = dat.kako_log?
+      @title =  dat.title if !@title || @title.empty?
       dat = nil
       @f_kako_log
     end

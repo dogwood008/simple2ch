@@ -8,17 +8,15 @@ Ruby用の2chの簡易リーダーです。
 
 ## 更新内容
 
+* [v0.1.7]
+	* 機能追加
+		* Thre#url, Thre#dat_urlの追加
+	* バグ修正
+		* エンコーディング関連
 * [v0.1.6]
 	* 機能追加
 		* 板一覧の取得に対応
 		* URLからスレの取得に対応
-* [v0.1.5]
-	* デバッグ
-		* StandardErrorで例外を捕縛できない問題を修正
-		* DatParseException, NotA2chUrlException発生時に与えられたURLを表示するよう変更
-	* 機能追加
-		* おーぷん２ちゃんねる対応
-
 
 ## Installation
 

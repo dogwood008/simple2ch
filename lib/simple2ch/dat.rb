@@ -2,6 +2,8 @@ module Simple2ch
   class Dat
     # @return [String] スレッドキー
     attr_reader :thread_key
+    # @return [String] タイトル
+    attr_reader :title
 
     # @param [Thre] thre スレッド
     def initialize(thre)
@@ -47,6 +49,10 @@ module Simple2ch
       fetch_dat.each_line do |l|
         res_num += 1
         begin
+          if res_num==1
+            title = l.split('<>').pop
+            @title = title unless @title
+          end
           @reses << Res.parse(res_num, l, @thre)
         rescue KakoLogException
           @f_kako_log = true
