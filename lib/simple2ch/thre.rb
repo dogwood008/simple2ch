@@ -86,6 +86,20 @@ module Simple2ch
       @board ? @board.type_of_2ch : nil
     end
 
+    # スレのURLを返す
+    # @return [String] スレのURL
+    def url
+      tld = type_of_2ch == :sc ? :sc : :net
+      "http://#{@board.server_name}.#{type_of_2ch==:open ? 'open' : ''}2ch.#{tld}/test/read.cgi/#{@board.board_name}/#{@thread_key}/"
+    end
+
+    # スレのdatURLを返す
+    # @return [String] スレのdatURL
+    def dat_url
+      tld = type_of_2ch == :sc ? :sc : :net
+      "http://#{@board.server_name}.#{type_of_2ch==:open ? 'open' : ''}2ch.#{tld}/#{@board.board_name}/dat/#{@thread_key}.dat"
+    end
+
     private
     # 全てのレスに対し、あるレスへのアンカーが書き込まれているレス番号のハッシュを返す
     # @return [Hash]{ res_num<Fixnum> => res_nums<Array<Fixnum>> } レス番号のハッシュ
