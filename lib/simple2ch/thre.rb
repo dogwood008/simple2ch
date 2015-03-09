@@ -1,7 +1,5 @@
 module Simple2ch
   class Thre
-    # @return [String] スレッドの名前
-    attr_reader :title
     # @return [String] スレッドキー(Unix time)
     attr_reader :thread_key
     # @return [Fixnum] 返信の数
@@ -103,6 +101,15 @@ module Simple2ch
     def dat_url
       tld = type_of_2ch == :sc ? :sc : :net
       "http://#{@board.server_name}.#{type_of_2ch==:open ? 'open' : ''}2ch.#{tld}/#{@board.board_name}/dat/#{@thread_key}.dat"
+    end
+
+    # タイトルを返す
+    # @return [String] スレッドの名前
+    def title
+      unless @title
+        fetch_dat
+      end
+      @title
     end
 
     private
