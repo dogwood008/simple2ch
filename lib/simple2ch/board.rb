@@ -46,6 +46,22 @@ module Simple2ch
       Simple2ch.type_of_2ch(@url.to_s)
     end
 
+    # SETTING.TXTの情報を取得する
+    def setting(param)
+      unless @setting_txt
+        @setting_txt = {}
+        parsed_url = @url
+        url = "http://#{@server_name}.#{open2ch? ? 'open':'' }2ch.net/#{@board_name}/SETTING.TXT"
+        data = Simple2ch.fetch url
+        data.each_line do |d|
+          if (split = d.split('=')).size == 2
+            @setting_txt[split[0].to_sym] = split[1].chomp
+          end
+        end
+      end
+      @setting_txt[param.to_sym]
+    end
+
     private
     # URLが正しいかバリデーションする
     # @param [URI] url

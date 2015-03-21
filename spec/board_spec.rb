@@ -14,6 +14,11 @@ describe Simple2ch::Board do
   end
   let(:board) { Simple2ch::Board.new(title, url[:sc]) }
 
+  describe '#setting_txt', 'should fetch SETTING.TXT' do
+    subject{board.setting :BBS_TITLE}
+    it{ is_expected.to eq 'ニュース速報(VIP)＠２ちゃんねる'}
+  end
+
   describe 'have a type of 2ch' do
     subject{ Simple2ch::Board.new(title, given_url) }
     context 'when 2ch.net' do

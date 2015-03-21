@@ -81,6 +81,12 @@ module Simple2ch
       received_anchors.fetch(@res_num, [])
     end
 
+    # あぼーんレスか否か
+    # @return [Boolean] あぼーんならtrue
+    def abone?
+      @date=='あぼーん'
+    end
+
     private
     # スレッドを取得する
     # @return [Thre] スレッド

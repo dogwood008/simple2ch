@@ -24,7 +24,7 @@ module Simple2ch
   # @param [URI] url URL
   # @return [String] 取得本文
   def self.fetch(url)
-    encode = if url.to_s.index('subject.txt') || url.to_s.index('.dat') || url.to_s.index('bbsmenu')
+    encode = if url.to_s.index('subject.txt') || url.to_s.index('SETTING.TXT') || url.to_s.index('.dat') || url.to_s.index('bbsmenu')
                     'SHIFT_JIS'
                   else
                     'UTF-8'
