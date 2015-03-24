@@ -93,7 +93,7 @@ module Simple2ch
     def contents_text
       require 'htmlentities'
       @htmlentities ||= HTMLEntities.new
-      @htmlentities.decode(@contents).gsub('<br>', "\n")
+      @htmlentities.decode(@contents).gsub('<br>', "\n").gsub(/<\/?b>/, '')
     end
 
     private
