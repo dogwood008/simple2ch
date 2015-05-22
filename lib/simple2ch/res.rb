@@ -96,6 +96,14 @@ module Simple2ch
       @htmlentities.decode(@contents).gsub('<br>', "\n").gsub(/<\/?b>/, '')
     end
 
+    # HTMLタグを取り除いた投稿者名
+    # @return <String> HTMLタグを取り除いた投稿者名
+    def res_author_text
+      require 'htmlentities'
+      @htmlentities ||= HTMLEntities.new
+      @htmlentities.decode(@author).gsub('<br>', "\n").gsub(/<\/?b>/, '')
+    end
+
     private
     # スレッドを取得する
     # @return [Thre] スレッド
