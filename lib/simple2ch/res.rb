@@ -87,6 +87,23 @@ module Simple2ch
       @date=='あぼーん'
     end
 
+
+    # レスの内容をテキスト情報で得る。&nbsp, &lt, &gt, <br>はそれぞれ「 」、「<」、「>」、「(改行)」に置換される。
+    # @return [String] テキスト情報でのレスの内容
+    def contents_text
+      require 'htmlentities'
+      @htmlentities ||= HTMLEntities.new
+      @htmlentities.decode(@contents).gsub('<br>', "\n").gsub(/<\/?b>/, '')
+    end
+
+    # HTMLタグを取り除いた投稿者名
+    # @return <String> HTMLタグを取り除いた投稿者名
+    def res_author_text
+      require 'htmlentities'
+      @htmlentities ||= HTMLEntities.new
+      @htmlentities.decode(@author).gsub('<br>', "\n").gsub(/<\/?b>/, '')
+    end
+
     private
     # スレッドを取得する
     # @return [Thre] スレッド
