@@ -127,7 +127,7 @@ module Simple2ch
     # @param [String] dat datのデータ1行
     # @raise [DatParseException] Datのパースに失敗したときに発生
     def self.parse_dat(dat)
-      split_date_and_id_regex = /(?<time>^\d{4}\/\d{2}\/\d{2}\(.\) ?\d{2}:\d{2}:\d{2}(\.\d{2})?)(?: ID:(?<author_id>\S+)$){0,1}/
+      split_date_and_id_regex = /(?<time>^\d{4}\/\d{2}\/\d{2}\(.\) ?\d{2}:\d{2}:\d{2}(\.\d{2,3})?)(?: ID:(?<author_id>(\S|.)+)$)?/
       ret = {}
       split = dat.split('<>')
       ret[:author] = split[0]
