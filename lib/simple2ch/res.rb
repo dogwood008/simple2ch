@@ -92,8 +92,9 @@ module Simple2ch
     # @return [String] テキスト情報でのレスの内容
     def contents_text
       require 'htmlentities'
+      anchor_regex = /<a href="\.\.\/test\/read.cgi\/livejupiter\/\d{10}\/\d{1,4}" target="_blank">(>>\d{1,4})<\/a>/
       @htmlentities ||= HTMLEntities.new
-      @htmlentities.decode(@contents).gsub('<br>', "\n").gsub(/<\/?b>/, '')
+      @htmlentities.decode(@contents).gsub('<br>', "\n").gsub(/<\/?b>/, '').gsub(anchor_regex, '\1')
     end
 
     # HTMLタグを取り除いた投稿者名
@@ -146,6 +147,8 @@ module Simple2ch
               date: 'あぼーん',
               author_id: 'あぼーん',
           }
+        elsif dat.index 'Over 1000 Thread'
+          # do nothing
         else
           raise DatParseException, "Data didn't match regex. Data:#{date_and_author_id}"
         end
