@@ -28,8 +28,11 @@ module Simple2ch
                     'SHIFT_JIS'
                   else
                     'UTF-8'
-                  end
-    OpenURI.open_uri(url, 'r:binary').read.force_encoding(encode).encode('utf-8', undef: :replace, invalid: :replace, replace: '〓')
+             end
+    Retryable.retryable(tries: 5, on: OpenURI::HTTPError, sleep: 3) do
+      result = OpenURI.open_uri(url, 'r:binary').read.force_encoding(encode).encode('utf-8', undef: :replace, invalid: :replace, replace: '〓')
+    end
+    result
   end
 
   # bbsmenuのURLが渡されればセットして，板リストを返す
