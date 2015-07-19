@@ -51,7 +51,7 @@ module Simple2ch
       unless @setting_txt
         @setting_txt = {}
         parsed_url = @url
-        url = "http://#{@server_name}.#{open2ch? ? 'open':'' }2ch.net/#{@board_name}/SETTING.TXT"
+        url = "http://#{@server_name}.#{open2ch? ? 'open':'' }2ch.#{tld}/#{@board_name}/SETTING.TXT"
         data = Simple2ch.fetch url
         data.each_line do |d|
           if (split = d.split('=')).size == 2
@@ -60,6 +60,12 @@ module Simple2ch
         end
       end
       @setting_txt[param.to_sym]
+    end
+
+    # TLDを返す
+    # @return [Symbol] TLD. :net or :sc
+    def tld
+      @tld
     end
 
     private

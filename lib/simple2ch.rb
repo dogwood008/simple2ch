@@ -11,6 +11,7 @@ module Simple2ch
   require 'open-uri'
   require 'time'
   require 'charwidth'
+  require 'retryable'
   require 'pp' if DEBUG
 
   def self.root
@@ -28,8 +29,11 @@ module Simple2ch
                     'SHIFT_JIS'
                   else
                     'UTF-8'
-                  end
-    OpenURI.open_uri(url, 'r:binary').read.force_encoding(encode).encode('utf-8', undef: :replace, invalid: :replace, replace: '〓')
+             end
+    Retryable.retryable(tries: 5, on: [OpenURI::HTTPError, Zlib::BufError], sleep: 3) do
+      got_binary = OpenURI.open_uri(url, 'r:binary').read
+      got_string = got_binary.force_encoding(encode).encode('utf-8', undef: :replace, invalid: :replace, replace: '〓')
+    end
   end
 
   # bbsmenuのURLが渡されればセットして，板リストを返す
