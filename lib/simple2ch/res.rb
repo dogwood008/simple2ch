@@ -92,7 +92,7 @@ module Simple2ch
     # @return [String] テキスト情報でのレスの内容
     def contents_text
       require 'htmlentities'
-      anchor_regex = /<a href="\.\.\/test\/read.cgi\/livejupiter\/\d{10}\/\d{1,4}" target="_blank">(>>\d{1,4})<\/a>/
+      anchor_regex = /<a href="\.\.\/test\/read.cgi\/.+\/\d{10}\/\d{1,4}" target="_blank">(>>\d{1,4})<\/a>/
       @htmlentities ||= HTMLEntities.new
       @htmlentities.decode(@contents).gsub('<br>', "\n").gsub(/<\/?b>/, '').gsub(anchor_regex, '\1')
     end
