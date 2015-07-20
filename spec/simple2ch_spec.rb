@@ -38,24 +38,14 @@ describe Simple2ch do
       @threads= @board.thres
       @res = @threads[0].reses[0]
     end
-    it{ expect(@board.thres).to be_a_kind_of Array }
-    it do
-      #@threads = board.threads
-      expect(@board.thres.size).to be > 0
-    end
+    it { expect(@board.thres).to be_a_kind_of Array }
+    it { expect(@board.thres.size).to be > 0 }
 
     it { expect(@threads[0]).to be_a_kind_of Thre }
     it { expect(@threads[0].reses).to be_a_kind_of Array }
 
-    it do
-      #@res = @threads[0].reses[0]
-      expect(@res).to be_a_kind_of Res
-    end
+    it { expect(@res).to be_a_kind_of Res }
     it { expect(@res.date).to be < Time.now }
     it { expect(@res.author_id.size).to be > 0 }
-
   end
-
-
-#its(:reses){ is_expected.to be a_kind_of Array}
 end
