@@ -30,8 +30,8 @@ describe Simple2ch do
     end
   end
 
-  context 'should get reses from board url' do
-    before(:all) do
+  describe 'should get reses from board url' do
+    before do
       board_name = 'ニュー速VIP'
       board_url = 'http://viper.2ch.sc/news4vip/'
       @board = Board.new board_name, board_url
