@@ -1,4 +1,4 @@
-require "simple2ch/version"
+require 'simple2ch/version'
 
 module Simple2ch
   DEBUG = false
