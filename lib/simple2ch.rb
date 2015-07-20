@@ -1,6 +1,8 @@
 require 'simple2ch/version'
+require 'singleton'
 
 module Simple2ch
+  include Singleton
   DEBUG = false
 
   require 'simple2ch/simple2ch_exception'
