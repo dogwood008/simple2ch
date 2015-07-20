@@ -30,7 +30,7 @@ module Simple2ch
                   else
                     'UTF-8'
              end
-    Retryable.retryable(tries: 5, on: [OpenURI::HTTPError, Zlib::BufError], sleep: 3) do
+    Retryable.retryable(tries: 5, on: [OpenURI::HTTPError], sleep: 3) do
       got_binary = OpenURI.open_uri(url, 'r:binary').read
       got_string = got_binary.force_encoding(encode).encode('utf-8', undef: :replace, invalid: :replace, replace: '〓')
     end
