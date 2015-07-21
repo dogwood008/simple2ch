@@ -3,34 +3,36 @@ require 'spec_helper'
 
 RSpec::Matchers.define :have_news4vip do
   match do |boards|
-    (news4vip = boards.find{|b| b.title == 'ニュー速VIP'}) && news4vip.url.to_s.index('news4vip')
+    !boards.nil? && (news4vip = boards.find { |b| b.title == 'ニュー速VIP' }) && news4vip.url.to_s.index('news4vip')
   end
 end
 
 describe Simple2ch do
   describe 'should get board from board list' do
-    let(:board_list_url) { {net: 'http://menu.2ch.net/bbsmenu.html', sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/menu/pc_menu.html' } }
+    #let(:board_list_url) { { sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/menu/pc_menu.html' } }
     shared_examples 'get board list from bbsmenu' do
-      subject{ Simple2ch.boards(bbsmenu_url) }
-      it{ is_expected.not_to be_empty }
-      it{ is_expected.to have_news4vip}
+      before(:all) { @sc = Simple2ch::Simple2ch.new(:sc) }
+      before(:all) { @open = Simple2ch::Simple2ch.new(:open) }
+      subject { smpl.boards type_of_2ch }
+      it { is_expected.not_to be_empty }
+      it { is_expected.to have_news4vip }
     end
 
-    context 'from 2ch.net' do
-      let(:bbsmenu_url) { board_list_url[:net] }
-      include_examples 'get board list from bbsmenu'
-    end
     context 'from 2ch.sc' do
-      let(:bbsmenu_url) { board_list_url[:sc] }
+      let(:smpl) { @sc }
+      let(:type_of_2ch) { :sc }
       include_examples 'get board list from bbsmenu'
     end
     context 'from open2ch.net' do
-      let(:bbsmenu_url) { board_list_url[:open] }
+      let(:smpl) { @open }
+      let(:type_of_2ch) { :sc }
+      let(:type_of_2ch) { :open }
       include_examples 'get board list from bbsmenu'
     end
   end
 
   describe 'should get reses from board url' do
+    pending 'TODO'
     before do
       board_name = 'ニュー速VIP'
       board_url = 'http://viper.2ch.sc/news4vip/'
