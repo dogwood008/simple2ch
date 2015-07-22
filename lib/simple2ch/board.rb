@@ -26,12 +26,17 @@ module Simple2ch
 
     # 板に属する全てのスレッドを返す
     # @return [Array<Thre>] 板に属する全てのスレッド
-    def thres
+    def threads
       if @thres.size > 0
         @thres
       else
         fetch_all_thres
       end
+    end
+
+    def thres
+      warn "[Deprecated] Board#thres was called: #{caller_locations(1).first.label}"
+      threads
     end
 
     # おーぷん2chか否かを返す

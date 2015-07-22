@@ -60,11 +60,20 @@ describe Simple2ch::Board do
   end
 
   skip 'ここから未完'
-  context 'should get all of thread' do
-    subject { board.thres }
-    it { is_expected.to be_a_kind_of(Array) }
-    it { subject.each{ |t| expect(t).to be_a_kind_of(Simple2ch::Thre) } }
-    its(:size) { is_expected.to be > 0 }
+  describe '#threads' do
+    shared_examples '#threads' do
+      let(:board) { Simple2ch::Board.new(title, url) }
+      subject { board.threads }
+      it { is_expected.to be_a_kind_of(Array) }
+      it { subject.each { |t| expect(t).to be_a_kind_of(Simple2ch::Thre) } } #TODO Thre->Thread
+      its(:size) { is_expected.to be > 0 }
+    end
+    include_examples '#threads' do
+      let(:url) { urls[:sc] }
+    end
+    include_examples '#threads' do
+      let(:url) { urls[:open] }
+    end
   end
 
   context 'should be a valid Simple2ch::Board object' do
@@ -75,12 +84,12 @@ describe Simple2ch::Board do
   end
 
   context 'should raise NotA2chUrlException if URL is not a 2ch format' do
-    subject { lambda{ Simple2ch::Board.new(title, url[:not_a_2ch_format]) } }
+    subject { lambda { Simple2ch::Board.new(title, url[:not_a_2ch_format]) } }
     it { is_expected.to raise_error Simple2ch::NotA2chUrlException }
   end
 
   context 'should raise URI::InvalidURL if URL is invalid format' do
-    subject { lambda{ Simple2ch::Board.new(title, url[:invalid_url]) } }
+    subject { lambda { Simple2ch::Board.new(title, url[:invalid_url]) } }
     it { is_expected.to raise_error URI::InvalidURIError }
   end
 
