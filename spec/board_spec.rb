@@ -31,19 +31,35 @@ describe Simple2ch::Board do
     end
   end
 
-  skip 'ここから未完'
   describe '#title' do
-    subject { board.title }
-    it { is_expected.to be_a_kind_of(String) }
-    it { is_expected.to eq title }
+    shared_examples '#title' do
+      subject { board.title }
+      it { is_expected.to be_a_kind_of(String) }
+      it { is_expected.to eq title }
+    end
+    include_examples '#title' do
+      let(:url) { urls[:sc] }
+    end
+    include_examples '#title' do
+      let(:url) { urls[:open] }
+    end
   end
 
   describe '#url' do
-    subject { board.url }
-    it { is_expected.to be_a_kind_of(URI) }
-    it { is_expected.to eq URI.parse(url[:sc]) }
+    shared_examples '#url' do
+      subject { board.url }
+      it { is_expected.to be_a_kind_of(URI) }
+      it { is_expected.to eq URI.parse(url) }
+    end
+    include_examples '#url' do
+      let(:url) { urls[:sc] }
+    end
+    include_examples '#url' do
+      let(:url) { urls[:open] }
+    end
   end
 
+  skip 'ここから未完'
   context 'should get all of thread' do
     subject { board.thres }
     it { is_expected.to be_a_kind_of(Array) }
