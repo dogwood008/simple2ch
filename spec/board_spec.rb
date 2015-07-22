@@ -2,9 +2,13 @@ require 'rspec'
 require 'spec_helper'
 
 describe Simple2ch::Board do
+  before(:all) do
+    @sc = Simple2ch::BBS.new(:sc)
+    @open = Simple2ch::BBS.new(:open)
+  end
 
   let(:title) { 'ニュー速VIP' }
-  let(:url) do
+  let(:urls) do
     {
         sc: 'http://viper.2ch.sc/news4vip/',
         open: 'http://viper.open2ch.net/news4vip/',
@@ -12,20 +16,29 @@ describe Simple2ch::Board do
         invalid_url: 'http://abc_def.com/foobar/' # under score in host is invalid
     }
   end
-  let(:board) { Simple2ch::Board.new(title, url[:sc]) }
+  let(:board) { Simple2ch::Board.new(title, url) }
 
   describe '#setting_txt' do
-    subject{board.setting :BBS_TITLE}
-    it{ is_expected.to eq 'ニュース速報(VIP)＠２ちゃんねる'}
+    shared_examples '#setting_txt' do
+      subject { board.setting :BBS_TITLE }
+      it { is_expected.to eq title }
+    end
+    include_examples '#setting_txt' do
+      let(:url) { urls[:sc] }
+    end
+    include_examples '#setting_txt' do
+      let(:url) { urls[:open] }
+    end
   end
 
+  skip 'ここから未完'
   describe '#title' do
     subject { board.title }
     it { is_expected.to be_a_kind_of(String) }
     it { is_expected.to eq title }
   end
 
-  context 'should get board url' do
+  describe '#url' do
     subject { board.url }
     it { is_expected.to be_a_kind_of(URI) }
     it { is_expected.to eq URI.parse(url[:sc]) }
