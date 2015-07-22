@@ -92,7 +92,7 @@ module Simple2ch
     def fetch_all_thres
       subject_url = @url+'subject.txt'
 
-      subject_txt = Simple2ch.fetch(subject_url)
+      subject_txt = Simple2ch::BBS.fetch(subject_url)
       subject_txt.each_line do |line|
         @thres << Thre.parse(self, line)
       end
