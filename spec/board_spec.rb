@@ -2,11 +2,11 @@ require 'rspec'
 require 'spec_helper'
 
 describe Simple2ch::Board do
+
   let(:title) { 'ニュー速VIP' }
   let(:url) do
     {
         sc: 'http://viper.2ch.sc/news4vip/',
-        net: 'http://viper.2ch.net/news4vip/',
         open: 'http://viper.open2ch.net/news4vip/',
         not_a_2ch_format: 'http://test.example.com/hoge/',
         invalid_url: 'http://abc_def.com/foobar/' # under score in host is invalid
@@ -14,28 +14,12 @@ describe Simple2ch::Board do
   end
   let(:board) { Simple2ch::Board.new(title, url[:sc]) }
 
-  describe '#setting_txt', 'should fetch SETTING.TXT' do
+  describe '#setting_txt' do
     subject{board.setting :BBS_TITLE}
     it{ is_expected.to eq 'ニュース速報(VIP)＠２ちゃんねる'}
   end
 
-  describe 'have a type of 2ch' do
-    subject{ Simple2ch::Board.new(title, given_url) }
-    context 'when 2ch.net' do
-      let(:given_url){ url[:net] }
-      its(:type_of_2ch){ is_expected.to eq :net }
-    end
-    context 'when 2ch.sc' do
-      let(:given_url){ url[:sc] }
-      its(:type_of_2ch){ is_expected.to eq :sc }
-    end
-    context 'when open2ch.net' do
-      let(:given_url){ url[:open] }
-      its(:type_of_2ch){ is_expected.to eq :open }
-    end
-  end
-
-  context 'should get board title' do
+  describe '#title' do
     subject { board.title }
     it { is_expected.to be_a_kind_of(String) }
     it { is_expected.to eq title }
@@ -70,4 +54,29 @@ describe Simple2ch::Board do
     subject { lambda{ Simple2ch::Board.new(title, url[:invalid_url]) } }
     it { is_expected.to raise_error URI::InvalidURIError }
   end
+
+=begin
+
+  describe Simple2ch::Board do
+    describe '#responses' do
+      skip 'TODO'
+      let(:sc) { @sc }
+      let(:board_name) { 'ニュー速VIP' }
+      let(:board_url) { 'http://viper.2ch.sc/news4vip/' }
+      let(:board) { Board.new board_name, board_url }
+      let(:threads) { board.threads }
+      let(:res) { threads[0].responses[0] }
+
+      it { expect(board.threads).to be_a_kind_of Array }
+      it { expect(board.threads.size).to be > 0 }
+
+      it { expect(threads[0]).to be_a_kind_of Thre }
+      it { expect(threads[0].reses).to be_a_kind_of Array }
+
+      it { expect(res).to be_a_kind_of Res }
+      it { expect(res.date).to be < Time.now }
+      it { expect(res.author_id.size).to be > 0 }
+    end
+  end
+=end
 end

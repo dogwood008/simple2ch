@@ -14,11 +14,14 @@ module Simple2ch
   require 'retryable'
 
   class BBS
+    attr_reader :type_of_2ch, :boards
+
     def initialize(type_of_2ch)
       @boards = {}
       case type_of_2ch
         when :sc, :open
-          @boards[type_of_2ch] = boards(type_of_2ch)
+          @type_of_2ch = type_of_2ch
+          @boards = boards @type_of_2ch
         else
           fail RuntimeError, %Q{Invalid "type_of_2ch" given: #{type_of_2ch} (:sc or :open is correct.)}
       end
@@ -35,28 +38,23 @@ module Simple2ch
     # @param [Symbol] type_of_2ch :sc or :open
     # @option [Boolean] force_refresh キャッシュを利用せず板リストを再取得する
     # @return [Array<Simple2ch::Board>] 板リスト
-    def boards(type_of_2ch, force_refresh:nil)
+    def boards(type_of_2ch, force_refresh: nil)
       fail RuntimeError, '"type_of_2ch" is nil.' unless type_of_2ch
       bbsmenu_urls = {
           sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/bbsmenu.html'
       }
 
-      if force_refresh || (!@boards.nil? && ((@boards.fetch(type_of_2ch, [])).size == 0))
+      if force_refresh || (!@boards.nil? && @boards.size == 0)
         prepared_bbsmenu_url = bbsmenu_urls[type_of_2ch]
 
         fail RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(prepared_bbsmenu_url))).empty?
         fail RuntimeError, "Failed to parse #{url}" if (scaned_data=data.scan(Regex::BOARD_EXTRACT_REGEX).uniq).empty?
 
-        boards = scaned_data.map do |b|
-          Simple2ch::Board.new(b[4],"http://#{b[0]}.#{b[1]}2ch.#{b[2]}/#{b[3]}/")
+        @boards = scaned_data.map do |b|
+          Simple2ch::Board.new(b[4], "http://#{b[0]}.#{b[1]}2ch.#{b[2]}/#{b[3]}/")
         end
-      else
-        @boards[type_of_2ch]
       end
-    end
-
-    def types_of_2ch
-      @boards.keys
+      @boards
     end
   end
 
@@ -107,11 +105,11 @@ module Simple2ch
           /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>\w+)/,
           /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(.+)\/dat\/(?<thread_key>[0-9]+)\.dat/,
           /http:\/\/(?:(?<server_name>.*)\.)?(?:(?<openflag>open)?)2ch\.(?<tld>sc|net)/
-        {server_name: ($~[:server_name] rescue nil),
-         board_name: ($~[:board_name] rescue nil),
-         openflag: ($~[:openflag] rescue nil),
-         tld: $~[:tld],
-         thread_key: ($~[:thread_key] rescue nil) }
+        { server_name: ($~[:server_name] rescue nil),
+          board_name: ($~[:board_name] rescue nil),
+          openflag: ($~[:openflag] rescue nil),
+          tld: $~[:tld],
+          thread_key: ($~[:thread_key] rescue nil) }
       else
         raise NotA2chUrlException, "Given URL: #{url}"
     end
