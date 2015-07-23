@@ -59,14 +59,16 @@ describe Simple2ch::Board do
     end
   end
 
-  skip 'ここから未完'
   describe '#threads' do
     shared_examples '#threads' do
       let(:board) { Simple2ch::Board.new(title, url) }
       subject { board.threads }
       it { is_expected.to be_a_kind_of(Array) }
       it { subject.each { |t| expect(t).to be_a_kind_of(Simple2ch::Thre) } } #TODO Thre->Thread
-      its(:size) { is_expected.to be > 0 }
+      it { expect(board.threads.size).to be > 0 }
+      it { expect(board.title).to be_a_kind_of String }
+      it { expect(board.title).to be == title }
+      it { expect(board.url.to_s).to be == url }
     end
     include_examples '#threads' do
       let(:url) { urls[:sc] }
@@ -76,13 +78,7 @@ describe Simple2ch::Board do
     end
   end
 
-  context 'should be a valid Simple2ch::Board object' do
-    subject { Simple2ch::Board.new(title, url[:open]) }
-    its(:title) { is_expected.to be_a_kind_of String }
-    its(:title) { is_expected.to be == title }
-    its('url.to_s') { is_expected.to be == url[:open] }
-  end
-
+  skip 'ここから未完'
   context 'should raise NotA2chUrlException if URL is not a 2ch format' do
     subject { lambda { Simple2ch::Board.new(title, url[:not_a_2ch_format]) } }
     it { is_expected.to raise_error Simple2ch::NotA2chUrlException }
