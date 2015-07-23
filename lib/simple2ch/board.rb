@@ -39,6 +39,13 @@ module Simple2ch
       threads
     end
 
+    # Simple2ch::BBSオブジェクトを返す
+    # @return [BBS]
+    def bbs
+      # FIXME:
+      fail 'Please implement me. Simple2ch::Board#bbs'
+    end
+
     # おーぷん2chか否かを返す
     # @return [Boolean] おーぷん2chか否か
     def open2ch?
