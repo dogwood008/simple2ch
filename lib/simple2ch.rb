@@ -13,6 +13,8 @@ module Simple2ch
   require 'charwidth'
   require 'retryable'
 
+  @@bbs = {}
+
   class BBS
     attr_reader :type_of_2ch, :boards
 
@@ -21,10 +23,11 @@ module Simple2ch
       case type_of_2ch
         when :sc, :open
           @type_of_2ch = type_of_2ch
-          @boards = boards @type_of_2ch
+          @boards = get_boards_by_type_of_2ch @type_of_2ch
         else
           fail RuntimeError, %Q{Invalid "type_of_2ch" given: #{type_of_2ch} (:sc or :open is correct.)}
       end
+      @@bbs[type_of_2ch] = self
     end
 
     def root
@@ -36,25 +39,26 @@ module Simple2ch
 
     # bbsmenuのURLが渡されればセットして，板リストを返す
     # @param [Symbol] type_of_2ch :sc or :open
-    # @option [Boolean] force_refresh キャッシュを利用せず板リストを再取得する
+    # @option [Boolean] force_reload キャッシュを利用せず板リストを再取得する
     # @return [Array<Simple2ch::Board>] 板リスト
-    def boards(type_of_2ch, force_refresh: nil)
-      fail RuntimeError, '"type_of_2ch" is nil.' unless type_of_2ch
-      bbsmenu_urls = {
-          sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/bbsmenu.html'
-      }
+    def get_boards_by_type_of_2ch(type_of_2ch, force_reload: nil)
+      if force_reload || @@bbs.fetch(type_of_2ch, nil).nil?
+        fail RuntimeError, '"type_of_2ch" is nil.' unless type_of_2ch
+        bbsmenu_urls = {
+            sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/bbsmenu.html'
+        }
 
-      if force_refresh || (!@boards.nil? && @boards.size == 0)
         prepared_bbsmenu_url = bbsmenu_urls[type_of_2ch]
 
         fail RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(prepared_bbsmenu_url))).empty?
         fail RuntimeError, "Failed to parse #{url}" if (scaned_data=data.scan(Regex::BOARD_EXTRACT_REGEX).uniq).empty?
 
-        @boards = scaned_data.map do |b|
+        scaned_data.map do |b|
           Simple2ch::Board.new(b[4], "http://#{b[0]}.#{b[1]}2ch.#{b[2]}/#{b[3]}/")
         end
+      else
+        @@bbs[type_of_2ch].boards
       end
-      @boards
     end
   end
 
