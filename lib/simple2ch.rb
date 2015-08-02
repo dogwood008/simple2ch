@@ -16,7 +16,9 @@ module Simple2ch
   @@bbs = {}
 
   class BBS
-    attr_reader :type_of_2ch, :boards
+    attr_reader :type_of_2ch, :boards, :updated_at
+    # class variables
+    @boards = {}
 
     def initialize(type_of_2ch)
       @boards = {}
@@ -28,14 +30,32 @@ module Simple2ch
           fail RuntimeError, %Q{Invalid "type_of_2ch" given: #{type_of_2ch} (:sc or :open is correct.)}
       end
       @@bbs[type_of_2ch] = self
+      @updated_at = Time.now
     end
 
     def root
       File.dirname __dir__
     end
 
-    # Module variables
-    @boards = {}
+
+    # titleに合致する板取得する
+    # @param [String] title タイトル
+    # @return [Board] タイトルが合致した板 or nil
+    def find(title)
+      boards.find{|b|b.title==title}
+    end
+
+    # titleに合致する板取得する
+    # @param [String] title タイトル
+    # @return [Board] タイトルが合致した板 or nil
+    alias_method :[], :find
+
+    # titleに合致する板を全て取得する
+    # @param [String] title タイトル
+    # @return [Array<Board>] タイトルが合致した板の配列
+    def find_all(title)
+      boards.find_all { |b| b.title==title }
+    end
 
     # bbsmenuのURLが渡されればセットして，板リストを返す
     # @param [Symbol] type_of_2ch :sc or :open
@@ -118,6 +138,16 @@ module Simple2ch
         raise NotA2chUrlException, "Given URL: #{url}"
     end
   end
-  #private :fetch
+
+  def <<(board)
+    size = { before: @boards.size,
+             after: @boards.delete_if { |b| b==board }.size }
+    @boards << board
+
+    if size[:before] - size[:after] > 0
+      bbs = @@bbs.fetch(@type_of_2ch, Simple2ch::BBS.new(@type_of_2ch))
+      bbs.boards.replace @boards
+    end
+  end
 end
 
