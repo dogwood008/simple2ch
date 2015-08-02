@@ -67,8 +67,7 @@ module Simple2ch
     def setting(param)
       unless @setting_txt
         @setting_txt = {}
-        parsed_url = @url
-        url = "http://#{@server_name}.#{open2ch? ? 'open':'' }2ch.#{tld}/#{@board_name}/SETTING.TXT"
+        url = Simple2ch.normalized_url(@url, :setting_txt)
         data = Simple2ch.fetch url
         data.each_line do |d|
           if (split = d.split('=')).size == 2

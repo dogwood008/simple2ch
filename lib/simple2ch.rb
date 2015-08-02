@@ -139,6 +139,18 @@ module Simple2ch
     end
   end
 
+  def normalized_url(url, option=nil)
+    hash = parse_url url
+    url = "http://#{hash[:server_name]}.#{hash[:openflag] ? 'open' : ''}2ch.#{hash[:tld]}/"
+    url << "#{hash[:board_name]}/" if hash[:board_name]
+    if option==:setting_txt
+      url << 'SETTING.TXT'
+    else
+      url << "#{hash[:thread_key]}/" if hash[:thread_key]
+      end
+    url
+  end
+
   def <<(board)
     size = { before: @boards.size,
              after: @boards.delete_if { |b| b==board }.size }
