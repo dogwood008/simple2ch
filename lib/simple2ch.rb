@@ -37,15 +37,14 @@ module Simple2ch
       File.dirname __dir__
     end
 
-
-    # titleに合致する板取得する
+    # titleに合致する板を取得する
     # @param [String] title タイトル
     # @return [Board] タイトルが合致した板 or nil
     def find(title)
       boards.find{|b|b.title==title}
     end
 
-    # titleに合致する板取得する
+    # titleに合致する板を取得する
     # @param [String] title タイトル
     # @return [Board] タイトルが合致した板 or nil
     alias_method :[], :find
