@@ -17,9 +17,9 @@ module Simple2ch
     # @option [Boolean] fetch_title 板の名前を自動取得するか
     def initialize(title, url, fetch_title:nil)
       @server_name = @board_name = nil
-      @url = validate_url url rescue raise URI::InvalidURIError
+      @url = validate_url url
       @title = if fetch_title
-                 (b=Simple2ch.boards(url).find{|bb| bb.url.to_s == @url.to_s}) &&  b.class!=Array ? b.title : nil
+                 bbs.boards.find{|b|b.url==@url}.title
                else
                  title
                end
@@ -89,6 +89,27 @@ module Simple2ch
       self.updated_at == board.updated_at
     end
 
+    # titleに合致するスレッドを取得する
+    # @param [String] title タイトル
+    # @return [Thre] タイトルが合致したスレッド or nil #TODO:Thre->Thread
+    # @return [Thread] タイトルが合致したスレッド or nil
+    def find(title)
+      threads.find{|b|b.title==title}
+    end
+
+    # titleに合致するスレッドを得する
+    # @param [String] title タイトル
+    # @return [Thre] タイトルが合致したスレッド or nil #TODO:Thre->Thread
+    # @return [Thread] タイトルが合致したスレッド or nil
+    alias_method :[], :find
+
+    # titleに合致する板を全て取得する
+    # @param [String] title タイトル
+    # @return [Array<Thre>] タイトルが合致したスレッドの配列 #TODO: Thre->Thread
+    def find_all(title)
+      threads.find_all { |b| b.title==title }
+    end
+
     private
     # URLが正しいかバリデーションする
     # @param [URI] url
@@ -96,15 +117,20 @@ module Simple2ch
     # @raise [URI::InvalidURIError] そもそもURLのフォーマットで無いときに発生
     def validate_url(url)
       sp_uri = URI.parse url
-      if sp_uri.host.index '2ch'
-        parsed_url = Simple2ch.parse_url(url.to_s)
-        @server_name = parsed_url[:server_name]
-        @board_name = parsed_url[:board_name]
-        @f_open2ch = !(parsed_url[:openflag].to_s.empty?)
-        @tld = parsed_url[:tld]
-        URI.parse("http://#{server_name}.#{parsed_url[:openflag]}2ch.#{@tld}/#{board_name}/")
+      if sp_uri
+        if sp_uri.host.index '2ch'
+          #parsed_url = Simple2ch.parse_url(url.to_s)
+          #@server_name = parsed_url[:server_name]
+          #@board_name = parsed_url[:board_name]
+          #@f_open2ch = !(parsed_url[:openflag].to_s.empty?)
+          #@tld = parsed_url[:tld]
+          #URI.parse("http://#{server_name}.#{parsed_url[:openflag]}2ch.#{@tld}/#{board_name}/")
+          URI.parse Simple2ch.normalized_url(url)
+        else
+          raise NotA2chUrlException, "Given URL :#{url}"
+        end
       else
-        raise NotA2chUrlException, "Given URL :#{url}"
+        raise URI::InvalidURIError
       end
     end
 
