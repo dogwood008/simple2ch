@@ -8,6 +8,8 @@ module Simple2ch
     attr_reader :server_name
     # @return [String] 板の名前（コンピュータ名）
     attr_reader :board_name
+    # @return [Time] 板オブジェクト更新日時
+    attr_reader :updated_at
 
 
     # @param [String] title 板の名前
@@ -15,13 +17,14 @@ module Simple2ch
     # @option [Boolean] fetch_title 板の名前を自動取得するか
     def initialize(title, url, fetch_title:nil)
       @server_name = @board_name = nil
-      @url = validate_url url
+      @url = validate_url url rescue raise URI::InvalidURIError
       @title = if fetch_title
                  (b=Simple2ch.boards(url).find{|bb| bb.url.to_s == @url.to_s}) &&  b.class!=Array ? b.title : nil
                else
                  title
                end
       @thres = []
+      @updated_at = Time.now
     end
 
     # 板に属する全てのスレッドを返す
@@ -42,8 +45,10 @@ module Simple2ch
     # Simple2ch::BBSオブジェクトを返す
     # @return [BBS]
     def bbs
-      # FIXME:
-      fail 'Please implement me. Simple2ch::Board#bbs'
+      @bbs ||= Simple2ch::BBS.new(type_of_2ch)
+      @bbs << self
+      @bbs
+      #fail 'Please implement me. Simple2ch::Board#bbs'
     end
 
     # おーぷん2chか否かを返す
@@ -80,6 +85,10 @@ module Simple2ch
       @tld
     end
 
+    def ==(board)
+      self.updated_at == board.updated_at
+    end
+
     private
     # URLが正しいかバリデーションする
     # @param [URI] url
@@ -108,6 +117,7 @@ module Simple2ch
       subject_txt.each_line do |line|
         @thres << Thre.parse(self, line)
       end
+      @updated_at = Time.now
       @thres
     end
   end

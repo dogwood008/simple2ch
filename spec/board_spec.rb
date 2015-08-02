@@ -31,11 +31,12 @@ describe Simple2ch::Board do
   end
 
   describe '#bbs' do
-    let(:url) { urls[:sc] }
+    let(:type_of_2ch) { :sc }
+    let(:url) { urls[type_of_2ch] }
     subject { board.bbs }
 
     it { is_expected.to be_a_kind_of Simple2ch::BBS }
-    its(:type_of_2ch) { is_expected.to == url }
+    its(:type_of_2ch) { is_expected.to eq type_of_2ch }
   end
 
   describe '#setting_txt' do
