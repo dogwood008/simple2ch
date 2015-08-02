@@ -2,6 +2,18 @@ require 'rspec'
 require 'spec_helper'
 
 describe Simple2ch::Board do
+  def open2ch_thread_data_example
+    source_url = 'http://viper.open2ch.net/news4vip/subback.html'
+    source = Simple2ch.fetch(source_url)
+    if source =~ Simple2ch::Regex::OPEN2CH_THREAD_DATA_EXAMPLE_REGEX
+      url = "http://viper.open2ch.net#{$1}"
+      title = $2
+      { url: url, title: title }
+    else
+      fail RuntimeError, "Could not fetch source url: #{source_url}"
+    end
+  end
+
   before(:all) do
     @sc = Simple2ch::BBS.new(:sc)
     @open = Simple2ch::BBS.new(:open)
@@ -34,10 +46,7 @@ describe Simple2ch::Board do
             url: 'http://viper.2ch.sc/test/read.cgi/news4vip/9990000001/',
             title: '★★★ ２ちゃんねる(sc)のご案内 ★★★'.force_encoding('utf-8')
         },
-        open: {
-            url: 'http://hayabusa.open2ch.net/test/read.cgi/news4vip/1438437345/',
-            title: 'お茶飲みたい'
-        }
+        open: open2ch_thread_data_example
     }
   end
 

@@ -93,7 +93,7 @@ module Simple2ch
     # @return [Thre] タイトルが合致したスレッド or nil #TODO:Thre->Thread
     # @return [Thread] タイトルが合致したスレッド or nil
     def find(title)
-      threads.find{|b|b.title==title}
+      threads.find{|t|t.title==title}
     end
 
     # titleに合致するスレッドを得する
@@ -118,11 +118,11 @@ module Simple2ch
       sp_uri = URI.parse url
       if sp_uri
         if sp_uri.host.index '2ch'
-          #parsed_url = Simple2ch.parse_url(url.to_s)
-          #@server_name = parsed_url[:server_name]
-          #@board_name = parsed_url[:board_name]
-          #@f_open2ch = !(parsed_url[:openflag].to_s.empty?)
-          #@tld = parsed_url[:tld]
+          parsed_url = Simple2ch.parse_url(url.to_s)
+          @server_name = parsed_url[:server_name]
+          @board_name = parsed_url[:board_name]
+          @f_open2ch = !(parsed_url[:openflag].to_s.empty?)
+          @tld = parsed_url[:tld]
           #URI.parse("http://#{server_name}.#{parsed_url[:openflag]}2ch.#{@tld}/#{board_name}/")
           URI.parse Simple2ch.normalized_url(url)
         else
