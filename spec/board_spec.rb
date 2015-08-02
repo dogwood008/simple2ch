@@ -12,11 +12,11 @@ describe Simple2ch::Board do
     {
         sc: {
             url: 'http://viper.2ch.sc/news4vip/',
-            title: 'ニュース速報(VIP)＠２ちゃんねる'
+            title: 'ニュー速VIP'
         },
         open: {
             url: 'http://viper.open2ch.net/news4vip/',
-            title: 'ニュース速報(VIP)＠２ちゃんねる'
+            title: 'ニュー速VIP'
         },
         not_a_2ch_format: {
             url: 'http://test.example.com/hoge/',
@@ -25,6 +25,18 @@ describe Simple2ch::Board do
         invalid_url: {
             url: 'http://^example.com', # carat in host is invalid
             title: nil
+        }
+    }
+  end
+  let(:threads) do
+    {
+        sc: {
+            url: 'http://viper.2ch.sc/test/read.cgi/news4vip/9990000001/',
+            title: '★★★ ２ちゃんねる(sc)のご案内 ★★★'.force_encoding('utf-8')
+        },
+        open: {
+            url: 'http://hayabusa.open2ch.net/test/read.cgi/news4vip/1438437345/',
+            title: 'お茶飲みたい'
         }
     }
   end
@@ -112,7 +124,6 @@ describe Simple2ch::Board do
     end
   end
 
-=begin
   describe '#find' do
     shared_examples '#find' do
       subject { board.find(title) }
@@ -123,18 +134,17 @@ describe Simple2ch::Board do
     end
     context 'when 2ch.sc' do
       include_examples '#find' do
-        let(:title) { boards[:sc][:title] }
-        let(:url) { boards[:sc][:url] }
-        let(:board) { Simple2ch::Board.new(nil, url, fetch_title: true) }
+        let(:title) { threads[:sc][:title] }
+        let(:url) { threads[:sc][:url] }
+        let(:board) { Simple2ch::Board.new(nil, boards[:sc][:url], fetch_title: true) }
       end
     end
     context 'when open2ch.net' do
       include_examples '#find' do
-        let(:title) { boards[:open][:title] }
-        let(:url) { boards[:open][:url] }
-        let(:board) { Simple2ch::Board.new(nil, url, fetch_title: true) }
+        let(:title) { threads[:open][:title] }
+        let(:url) { threads[:open][:url] }
+        let(:board) { Simple2ch::Board.new(nil, boards[:open][:url], fetch_title: true) }
       end
     end
   end
-=end
 end

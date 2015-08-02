@@ -2,6 +2,18 @@ require 'rspec'
 require 'spec_helper'
 
 describe Simple2ch::Thre do
+  let(:threads) do
+    {
+        sc: {
+            url: 'http://viper.2ch.sc/test/read.cgi/news4vip/9990000001/',
+            title: '★★★ ２ちゃんねる(sc)のご案内 ★★★'.force_encoding('utf-8')
+        },
+        open: {
+            url: 'http://hayabusa.open2ch.net/test/read.cgi/news4vip/1438437345/',
+            title: 'お茶飲みたい'
+        }
+    }
+  end
   shared_examples 'have specified reses' do
     subject { thre.reses(specified_reses) }
     it { is_expected.to be_a_kind_of Array }

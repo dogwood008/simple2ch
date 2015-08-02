@@ -29,7 +29,7 @@ module Simple2ch
       thread_data =~ /(\d{10})\.dat<>(.+) \((\d+)\)/
       hash = {}
       thread_key = $1
-      hash[:title] = $2
+      hash[:title] = $2.force_encoding('utf-8')
       hash[:num_of_response] = $3.to_i
       self.new board, thread_key, hash
     end
