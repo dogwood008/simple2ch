@@ -29,13 +29,30 @@ describe Simple2ch do
   end
 
   describe '#find' do
-    context 'when only a board' do
-      let(:title) { 'ニュー速VIP' }
-      let(:bbs) { @sc }
-      subject { bbs.find(title) }
-      it { should a_kind_of(Simple2ch::Board) }
-      it { expect(bbs[title]).to be_a_kind_of(Simple2ch::Board)}
-      its(:title) { should eq title }
+    shared_examples '#find' do
+      shared_examples '_#find' do
+        let(:title) { 'ニュー速VIP' }
+        it { should a_kind_of(Simple2ch::Board) }
+        its(:title) { should eq title }
+      end
+
+      include_examples '_#find' do
+        subject { bbs.find(title) }
+      end
+      include_examples '_#find' do
+        subject { bbs[title] }
+      end
+    end
+
+    context 'open2ch.net' do
+      include_examples '#find' do
+        let(:bbs) { @open }
+      end
+    end
+    context '2ch.sc' do
+      include_examples '#find' do
+        let(:bbs) { @sc }
+      end
     end
   end
   describe '#["search_word"]' do
