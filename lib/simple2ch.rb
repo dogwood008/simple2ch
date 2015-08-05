@@ -44,16 +44,23 @@ module Simple2ch
       boards.find{|b|b.title==title}
     end
 
-    # titleに合致する板を取得する
+    # titleを含むする板を取得する
     # @param [String] title タイトル
-    # @return [Board] タイトルが合致した板 or nil
+    # @return [Board] タイトルが含まれるた板 or nil
     alias_method :[], :find
+
+    # titleが含まれる板を取得する
+    # @param [String] title タイトル
+    # @return [Board] タイトルが含まれる板
+    def contain(title)
+      boards.find{|b|b.title.index title}
+    end
 
     # titleに合致する板を全て取得する
     # @param [String] title タイトル
     # @return [Array<Board>] タイトルが合致した板の配列
-    def find_all(title)
-      boards.find_all { |b| b.title==title }
+    def contain_all(title)
+      boards.find_all { |b| b.title.index title }
     end
 
     # bbsmenuのURLが渡されればセットして，板リストを返す

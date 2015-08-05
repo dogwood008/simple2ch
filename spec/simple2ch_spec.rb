@@ -55,6 +55,46 @@ describe Simple2ch do
       end
     end
   end
-  describe '#["search_word"]' do
+
+  describe '#contain' do
+    shared_examples '#contain_all' do
+      subject { bbs.contain(title) }
+      let(:title) { 'の' }
+      it { should a_kind_of(Simple2ch::Board) }
+      it { expect(subject.title.index(title)).to be_truthy }
+    end
+
+    context 'open2ch.net' do
+      include_examples '#contain_all' do
+        let(:bbs) { @open }
+      end
+    end
+    context '2ch.sc' do
+      include_examples '#contain_all' do
+        let(:bbs) { @sc }
+      end
+    end
+  end
+
+  describe '#contain_all' do
+    shared_examples '#contain_all' do
+      subject { bbs.contain_all(title) }
+      let(:title) { 'の' }
+      it { should a_kind_of(Array) }
+      its(:size) { should be > 0 }
+      its(:first) { should be_a_kind_of(Simple2ch::Board)}
+      it { expect(subject.last.title.index(title)).to be_truthy }
+    end
+
+    context 'open2ch.net' do
+      include_examples '#contain_all' do
+        let(:bbs) { @open }
+      end
+    end
+    context '2ch.sc' do
+      include_examples '#contain_all' do
+        let(:bbs) { @sc }
+      end
+    end
   end
 end
