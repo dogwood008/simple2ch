@@ -156,4 +156,46 @@ describe Simple2ch::Board do
       end
     end
   end
+
+  describe '#contain' do
+    shared_examples '#contain' do
+      subject { board.contain(title) }
+      let(:title) { 'の' }
+      it { should a_kind_of(Simple2ch::Thre) } #TODO: Thre->Thread
+      it { expect(subject.title.index(title)).to be_truthy }
+    end
+
+    context 'open2ch.net' do
+      include_examples '#contain' do
+        let(:board) { @open['ニュー速VIP'] }
+      end
+    end
+    context '2ch.sc' do
+      include_examples '#contain' do
+        let(:board) { @sc['ニュー速VIP'] }
+      end
+    end
+  end
+
+  describe '#contain_all' do
+    shared_examples '#contain_all' do
+      subject { board.contain_all(title) }
+      let(:title) { 'の' }
+      it { should a_kind_of(Array) }
+      its(:size) { should be > 0 }
+      its(:first) { should be_a_kind_of(Simple2ch::Thre) } #TODO: Thre->Thread
+      it { expect(subject.last.title.index(title)).to be_truthy }
+    end
+
+    context 'open2ch.net' do
+      include_examples '#contain_all' do
+        let(:board) { @open['ニュー速VIP'] }
+      end
+    end
+    context '2ch.sc' do
+      include_examples '#contain_all' do
+        let(:board) { @sc['ニュー速VIP'] }
+      end
+    end
+  end
 end

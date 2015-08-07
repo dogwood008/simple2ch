@@ -15,11 +15,11 @@ module Simple2ch
     # @param [String] title 板の名前
     # @param [String] url 板のURL
     # @option [Boolean] fetch_title 板の名前を自動取得するか
-    def initialize(title, url, fetch_title:nil)
+    def initialize(title, url, fetch_title: nil)
       @server_name = @board_name = nil
       @url = validate_url url
       @title = if fetch_title
-                 bbs.boards.find{|b|b.url==@url}.title
+                 bbs.boards.find { |b| b.url==@url }.title
                else
                  title
                end
@@ -93,7 +93,7 @@ module Simple2ch
     # @return [Thre] タイトルが合致したスレッド or nil #TODO:Thre->Thread
     # @return [Thread] タイトルが合致したスレッド or nil
     def find(title)
-      threads.find{|t|t.title==title}
+      threads.find { |t| t.title==title }
     end
 
     # titleに合致するスレッドを得する
@@ -102,11 +102,18 @@ module Simple2ch
     # @return [Thread] タイトルが合致したスレッド or nil
     alias_method :[], :find
 
-    # titleに合致する板を全て取得する
+    # titleが含まれるスレッドを取得する
+    # @param [String] title タイトル
+    # @return [Thre] タイトルが含まれるスレッド #TODO: Thre->Thread
+    def contain(title)
+      threads.find { |b| b.title.index title }
+    end
+
+    # titleに合致するスレッドを全て取得する
     # @param [String] title タイトル
     # @return [Array<Thre>] タイトルが合致したスレッドの配列 #TODO: Thre->Thread
-    def find_all(title)
-      threads.find_all { |b| b.title==title }
+    def contain_all(title)
+      threads.find_all { |b| b.title.index title }
     end
 
     private
