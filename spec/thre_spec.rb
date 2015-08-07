@@ -61,11 +61,6 @@ describe Simple2ch::Thre do
       its(:title){ is_expected.not_to be_empty }
       include_examples 'should be valid'
     end
-    context 'from 2ch.net URL' do
-      let(:url) {'http://peace.2ch.net/test/read.cgi/tech/1158807229/l50'}
-      let(:kako_log){ be_falsey }
-      include_examples 'create from URL'
-    end
     context 'from 2ch.sc URL' do
       let(:url) {'http://peace.2ch.sc/test/read.cgi/tech/1158807229/l50'}
       let(:kako_log){ be_falsey }
@@ -80,17 +75,12 @@ describe Simple2ch::Thre do
 
   describe 'should have a type of 2ch' do
     subject{ Simple2ch::Thre.new(board, thread_key) }
-    context '2ch.net' do
-      let!(:board){ Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.2ch.net/news4vip/' }
-      let(:thread_key){ board.thres[0].thread_key }
-      its(:type_of_2ch) { is_expected.to eq :net }
-    end
     context '2ch.sc' do
       let!(:board){ Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.2ch.sc/news4vip/' }
       let(:thread_key){ board.thres[0].thread_key }
       its(:type_of_2ch) { is_expected.to eq :sc }
     end
-    context '2ch.net' do
+    context 'open2ch.net' do
       let!(:board){ Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.open2ch.net/news4vip/' }
       let(:thread_key){ board.thres[0].thread_key }
       its(:type_of_2ch) { is_expected.to eq :open }
