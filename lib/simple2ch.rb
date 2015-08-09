@@ -41,7 +41,7 @@ module Simple2ch
     # @param [String] title タイトル
     # @return [Board] タイトルが合致した板 or nil
     def find(title)
-      boards.find{|b|b.title==title}
+      boards.find { |b| b.title==title }
     end
 
     # titleを含むする板を取得する
@@ -53,7 +53,7 @@ module Simple2ch
     # @param [String] title タイトル
     # @return [Board] タイトルが含まれる板
     def contain(title)
-      boards.find{|b|b.title.index title}
+      boards.find { |b| b.title.index title }
     end
 
     # titleに合致する板を全て取得する
@@ -79,9 +79,9 @@ module Simple2ch
         fail RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(prepared_bbsmenu_url))).empty?
         fail RuntimeError, "Failed to parse #{url}" if (scaned_data=data.scan(Regex::BOARD_EXTRACT_REGEX).uniq).empty?
 
-        scaned_data.map do |b|
-          Simple2ch::Board.new(b[4], "http://#{b[0]}.#{b[1]}2ch.#{b[2]}/#{b[3]}/")
-        end
+        scaned_data.map { |b|
+          Simple2ch::Board.new(b[4], "http://#{b[0]}.#{b[1]}2ch.#{b[2]}/#{b[3]}/") rescue nil
+        }.compact
       else
         @@bbs[type_of_2ch].boards
       end
@@ -127,25 +127,70 @@ module Simple2ch
   # @return [Array<String>] 結果(thread_key等が該当無しの場合，nilを返す)
   # @raise [NotA2chUrlException] 2chのURLでないURLが与えられた際に発生
   def parse_url(url)
+    # http://www.rubular.com/r/cQbzwkui6C
+    # http://www.rubular.com/r/TYNlRzmmWz
     # http://www.rubular.com/r/h63xdfmQIH
-    case url.to_s
-      when /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/test\/read.cgi\/(?<board_name>.+)\/(?<thread_key>[0-9]+)/,
-          /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(?<board_name>.+)\/subject\.txt/,
-          /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>.+)\//,
-          /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>\w+)/,
-          /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(.+)\/dat\/(?<thread_key>[0-9]+)\.dat/,
-          /http:\/\/(?:(?<server_name>.*)\.)?(?:(?<openflag>open)?)2ch\.(?<tld>sc|net)/
-        { server_name: ($~[:server_name] rescue nil),
-          board_name: ($~[:board_name] rescue nil),
-          openflag: ($~[:openflag] rescue nil),
-          tld: $~[:tld],
-          thread_key: ($~[:thread_key] rescue nil) }
-      else
-        raise NotA2chUrlException, "Given URL: #{url}"
+    [/^http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/test\/read\.cgi\/(?<board_name>.+)\/(?<thread_key>\d{10})\/?$/,
+     /^http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(?<board_name>(\w|)+)\/?$/,
+     /^http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(?<board_name>.+)\/subject\.txt$/,
+     /^http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>.+)\/$/,
+     /^http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>\w+)$/,
+     /^http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(.+)\/dat\/(?<thread_key>[0-9]+)\.dat$/,
+     /^http:\/\/(?:(?<server_name>.*)\.)?(?:(?<openflag>open)?)2ch\.(?<tld>sc|net)$/].each do |r|
+      if h = url.to_s.match(r) { |hash|
+              { server_name: (hash[:server_name] rescue nil),
+                board_name: (hash[:board_name] rescue nil),
+                openflag: (hash[:openflag] rescue nil),
+                tld: (hash[:tld] rescue nil),
+                thread_key: (hash[:thread_key] rescue nil) }
+      }
+        return h
+      end
     end
+    raise NotA2chUrlException, "Given URL: #{url}"
+  end
+
+  def self.parse_and_generate_url(url, type)
+    parsed_url = parse_url url
+    generated_url = "http://"
+    if [:bbs, :board, :thread, :subject].index(type)
+      generated_url << (parsed_url[:server_name] ? "#{parsed_url[:server_name]}." : '')
+      generated_url << "#{parsed_url[:openflag]}2ch.#{parsed_url[:tld]}/"
+    end
+    if [:board, :thread, :subject].index(type)
+      if parsed_url[:board_name] && !parsed_url[:board_name].empty?
+        case type
+          when :board, :thread
+            generated_url << parsed_url[:board_name] << '/'
+          when :setting
+            generated_url << 'SETTING.TXT'
+        end
+      else
+        fail "Board name is empty: #{url}"
+      end
+    end
+    if [:thread].index(type)
+      if parsed_url[:thread_key] && !parsed_url[:thread_key].empty?
+        generated_url << 'test/read.cgi/' << parsed_url[:thread_key] << '/'
+      else
+        fail "Thread key is empty: #{url}"
+      end
+    end
+    generated_url
   end
 
   def normalized_url(url, option=nil)
+    hash = parse_url url
+    type = if hash[:thread_key]
+             :thread
+           elsif :setting_txt
+             :setting
+           else
+             :board
+           end
+    #warn 'Deprecated method Simple2ch#normalized_url called.'
+    return self.parse_and_generate_url(url, type)
+
     hash = parse_url url
     url = "http://#{hash[:server_name]}.#{hash[:openflag] ? 'open' : ''}2ch.#{hash[:tld]}/"
     url << "#{hash[:board_name]}/" if hash[:board_name]
@@ -153,7 +198,7 @@ module Simple2ch
       url << 'SETTING.TXT'
     else
       url << "#{hash[:thread_key]}/" if hash[:thread_key]
-      end
+    end
     url
   end
 

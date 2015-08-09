@@ -16,9 +16,10 @@ module Simple2ch
     # @param [String] url 板のURL
     # @option [Boolean] fetch_title 板の名前を自動取得するか
     def initialize(title, url, fetch_title: nil)
+      fail NotA2chBoardUrlException if url=='http://info.2ch.sc/guide/subject.txt'
       @server_name = @board_name = nil
       @url = validate_url url
-      @title = if fetch_title
+      @title = if fetch_title || title.nil? || title.empty?
                  bbs.boards.find { |b| b.url==@url }.title
                else
                  title
@@ -122,28 +123,34 @@ module Simple2ch
     # @raise [Simple2ch::NotA2chUrlException] 2chのフォーマットで無いURLを渡したときに発生
     # @raise [URI::InvalidURIError] そもそもURLのフォーマットで無いときに発生
     def validate_url(url)
-      sp_uri = URI.parse url
-      if sp_uri
-        if sp_uri.host.index '2ch'
-          parsed_url = Simple2ch.parse_url(url.to_s)
-          @server_name = parsed_url[:server_name]
-          @board_name = parsed_url[:board_name]
-          @f_open2ch = !(parsed_url[:openflag].to_s.empty?)
-          @tld = parsed_url[:tld]
-          #URI.parse("http://#{server_name}.#{parsed_url[:openflag]}2ch.#{@tld}/#{board_name}/")
-          URI.parse Simple2ch.normalized_url(url)
-        else
-          raise NotA2chUrlException, "Given URL :#{url}"
-        end
-      else
-        raise URI::InvalidURIError
-      end
+      parsed_url = Simple2ch.parse_url(url)
+      @server_name = parsed_url[:server_name]
+      @board_name = parsed_url[:board_name]
+      @f_open2ch = !(parsed_url[:openflag].to_s.empty?)
+      @tld = parsed_url[:tld]
+      Simple2ch.parse_and_generate_url(url, :board)
+#      sp_uri = URI.parse url
+#      if sp_uri
+#        if sp_uri.host.index '2ch'
+#          parsed_url = Simple2ch.parse_url(url.to_s)
+#          @server_name = parsed_url[:server_name]
+#          @board_name = parsed_url[:board_name]
+#          @f_open2ch = !(parsed_url[:openflag].to_s.empty?)
+#          @tld = parsed_url[:tld]
+#          #URI.parse("http://#{server_name}.#{parsed_url[:openflag]}2ch.#{@tld}/#{board_name}/")
+#          URI.parse Simple2ch.normalized_url(url)
+#        else
+#          raise NotA2chUrlException, "Given URL :#{url}"
+#        end
+#      else
+#        raise URI::InvalidURIError
+#      end
     end
 
     # 板に属する全てのスレッドをsubject.txtから取得する
     # @return [Array<Thre>] 板に属する全てのスレッド
     def fetch_all_thres
-      subject_url = @url+'subject.txt'
+      subject_url = Simple2ch.parse_and_generate_url(@url, :board)+'subject.txt'
 
       subject_txt = Simple2ch::BBS.fetch(subject_url)
       subject_txt.each_line do |line|

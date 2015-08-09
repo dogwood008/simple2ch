@@ -2,18 +2,6 @@ require 'rspec'
 require 'spec_helper'
 
 describe Simple2ch::Board do
-  def open2ch_thread_data_example
-    source_url = 'http://viper.open2ch.net/news4vip/subback.html'
-    source = Simple2ch.fetch(source_url)
-    if source =~ Simple2ch::Regex::OPEN2CH_THREAD_DATA_EXAMPLE_REGEX
-      url = "http://viper.open2ch.net#{$1}"
-      title = $2
-      { url: url, title: title }
-    else
-      fail RuntimeError, "Could not fetch source url: #{source_url}"
-    end
-  end
-
   before(:all) do
     @sc = Simple2ch::BBS.new(:sc)
     @open = Simple2ch::BBS.new(:open)

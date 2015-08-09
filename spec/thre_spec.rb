@@ -2,16 +2,22 @@ require 'rspec'
 require 'spec_helper'
 
 describe Simple2ch::Thre do
+  def first_res_from_html(source_url)
+    source = Simple2ch.fetch(source_url)
+  end
+
+  before(:all) do
+    @sc = Simple2ch::BBS.new(:sc)
+    @open = Simple2ch::BBS.new(:open)
+  end
+
   let(:threads) do
     {
         sc: {
             url: 'http://viper.2ch.sc/test/read.cgi/news4vip/9990000001/',
             title: '★★★ ２ちゃんねる(sc)のご案内 ★★★'.force_encoding('utf-8')
         },
-        open: {
-            url: 'http://hayabusa.open2ch.net/test/read.cgi/news4vip/1438437345/',
-            title: 'お茶飲みたい'
-        }
+        open: open2ch_thread_data_example
     }
   end
   shared_examples 'have specified reses' do
@@ -49,6 +55,13 @@ describe Simple2ch::Thre do
       it { is_expected.to kako_log }
     end
 
+  end
+
+  describe '#new' do
+    subject { thread }
+    it {should be_a_kind_of Simple2ch::Thre}
+    it {should be_valid_responses }
+    let(:thread){ Simple2ch::Thre.create_from_url threads[:sc][:url] }
   end
 
   describe 'should be created from URL' do

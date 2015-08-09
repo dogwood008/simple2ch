@@ -16,6 +16,7 @@ module Simple2ch
       @thread_key = thread_key
       @title = title
       @num_of_response = num_of_response
+      @url = url(board: board, thread_key: thread_key)
       @reses = nil
       @f_kako_log = nil
       @received_anchors = nil
@@ -26,6 +27,7 @@ module Simple2ch
     # @param [String] thread_data 0000000000.dat<>スレッドタイトル (レス数)
     # @return [Thre] スレ
     def self.parse(board, thread_data)
+      thread_key, title =  thread_data.scan /(\d{10})\.dat<>(.+) \((\d+)\)/
       thread_data =~ /(\d{10})\.dat<>(.+) \((\d+)\)/
       hash = {}
       thread_key = $1
@@ -38,7 +40,7 @@ module Simple2ch
     # @param [String] url URL
     # @return [Thre] スレ
     def self.create_from_url(url)
-      board = Simple2ch::Board.new('', url, fetch_title: true)
+      board = Simple2ch::Board.new(nil, url)
       thread_key = Simple2ch.parse_url(url)[:thread_key]
       thre = board.thres.find{|t| t.thread_key == thread_key}
       unless thre
@@ -84,16 +86,23 @@ module Simple2ch
     end
 
     # 2chタイプ名の取得
-    # @return [Symbol] 2chタイプ名(:net, :sc, :open)
+    # @return [Symbol] 2chタイプ名(:sc, :open)
     def type_of_2ch
       @board ? @board.type_of_2ch : nil
     end
 
     # スレのURLを返す
     # @return [String] スレのURL
-    def url
-      tld = type_of_2ch == :sc ? :sc : :net
-      "http://#{@board.server_name}.#{type_of_2ch==:open ? 'open' : ''}2ch.#{tld}/test/read.cgi/#{@board.board_name}/#{@thread_key}/"
+    def url(board: nil, thread_key: nil, force_refresh: false)
+      if @url && !force_refresh
+        @url
+      else
+        if board
+          "#{board.url}#{thread_key}/"
+        else
+          fail "Not implemented."
+        end
+      end
     end
 
     # スレのdatURLを返す
