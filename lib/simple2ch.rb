@@ -91,13 +91,15 @@ module Simple2ch
   # HTTPでGETする
   # @param [URI] url URL
   # @return [String] 取得本文
-  def fetch(url)
-    encode = if url.to_s.index('subject.txt') || url.to_s.index('SETTING.TXT') || url.to_s.index('.dat') || url.to_s.index('bbsmenu')
-               'SHIFT_JIS'
-             else
-               'UTF-8'
-             end
-    Retryable.retryable(tries: 5, on: [OpenURI::HTTPError], sleep: 3) do
+  def fetch(url, encode=nil)
+    unless encode
+      encode = if url.to_s.index('subject.txt') || url.to_s.index('SETTING.TXT') || url.to_s.index('.dat') || url.to_s.index('bbsmenu')
+                 'SHIFT_JIS'
+               else
+                 'UTF-8'
+               end
+    end
+    Retryable.retryable(tries: 5, on: [OpenURI::HTTPError, SocketError], sleep: 3) do
       got_binary = OpenURI.open_uri(url, 'r:binary').read
       got_string = got_binary.force_encoding(encode).encode('utf-8', undef: :replace, invalid: :replace, replace: '〓')
     end
@@ -152,16 +154,46 @@ module Simple2ch
 
   def self.parse_and_generate_url(url, type)
     parsed_url = parse_url url
+    generate_url parsed_url, type
+  end
+  def self.generate_url(elements, type)
+    # bbs:     http://www.2ch.sc/, http://open2ch.net/
+    # board:   http://viper.2ch.sc/news4vip/, http://viper.open2ch.net/news4vip/
+    # dat:     http://viper.2ch.sc/news4vip/dat/9990000001.dat, http://viper.open2ch.net/news4vip/dat/1439127670.dat
+    # subject: http://viper.2ch.sc/news4vip/subject.txt, http://viper.open2ch.net/news4vip/subject.txt
+    # setting: http://viper.2ch.sc/news4vip/SETTING.TXT, http://viper.open2ch.net/news4vip/SETTING.TXT
+    # thread:  http://viper.2ch.sc/test/read.cgi/news4vip/9990000001/, http://viper.open2ch.net/test/read.cgi/news4vip/1439127670
+
     generated_url = "http://"
-    if [:bbs, :board, :thread, :subject].index(type)
-      generated_url << (parsed_url[:server_name] ? "#{parsed_url[:server_name]}." : '')
-      generated_url << "#{parsed_url[:openflag]}2ch.#{parsed_url[:tld]}/"
+    if [:bbs, :board, :thread, :subject, :setting].index(type)
+      generated_url << (elements[:server_name] ? "#{elements[:server_name]}." : '')
+      generated_url << "#{elements[:openflag]}2ch.#{elements[:tld]}/"
     end
-    if [:board, :thread, :subject].index(type)
-      if parsed_url[:board_name] && !parsed_url[:board_name].empty?
+
+    if [:board, :dat, :setting].index(type)
+      generated_url << "#{elements[:board_name]}/"
+    end
+    if type == :thread
+      #generated_url << "test/read.cgi/#{elements[:board_name]}/#{elements[:thread_key]}/"
+    end
+    if type == :dat
+      generated_url << "dat/#{elements[:thread_key]}.dat"
+    end
+    if type == :subject
+      generated_url #TODO:
+    end
+    if [:thread].index(type)
+      if elements[:thread_key] && !elements[:thread_key].empty?
+        generated_url << 'test/read.cgi/'
+      else
+        fail "Thread key is empty: #{url}"
+      end
+    end
+    if [:thread, :subject].index(type)
+      if elements[:board_name] && !elements[:board_name].empty?
         case type
-          when :board, :thread
-            generated_url << parsed_url[:board_name] << '/'
+          when :thread
+            generated_url << elements[:board_name] << '/'
           when :setting
             generated_url << 'SETTING.TXT'
         end
@@ -170,11 +202,7 @@ module Simple2ch
       end
     end
     if [:thread].index(type)
-      if parsed_url[:thread_key] && !parsed_url[:thread_key].empty?
-        generated_url << 'test/read.cgi/' << parsed_url[:thread_key] << '/'
-      else
-        fail "Thread key is empty: #{url}"
-      end
+       generated_url << elements[:thread_key] << '/'
     end
     generated_url
   end

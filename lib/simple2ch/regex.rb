@@ -7,7 +7,7 @@ module Simple2ch
     # http://www.rubular.com/r/tjZefqnhP2
     SC2CH_FIRST_RES_DATA_EXAMPLE_REGEX = /<dt>1 ：<font color=green><b>(.+)<\/b><\/font>：/
     # http://www.rubular.com/r/Mn3dPVrtXc
-    OPEN2CH_FIRST_RES_DATA_EXAMPLE_REEGEX = /^<dl><dt res=1><a class=num val=1 href=.\/1>1<\/a> ：<font color=#1c740d><b>(.+)<\/b>.+font color=red>主<\/font>/
+    OPEN2CH_FIRST_RES_DATA_EXAMPLE_REGEX = /^<dl><dt res=1><a class=num val=1 href=.\/1>1<\/a> ：<font color=#1c740d><b>(.+)<\/b>.+font color=red>主<\/font>/
 
     constants(true).each do |c|
       eval "#{c}.freeze"
