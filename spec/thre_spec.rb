@@ -11,6 +11,18 @@ describe Simple2ch::Thre do
     @open = Simple2ch::BBS.new(:open)
   end
 
+  let(:boards) do
+    {
+        sc: {
+            url: 'http://viper.2ch.sc/news4vip/',
+            title: 'ニュー速VIP'
+        },
+        open: {
+            url: 'http://viper.open2ch.net/news4vip/',
+            title: 'ニュー速VIP'
+        },
+    }
+  end
   let(:threads) do
     {
         sc: {
@@ -58,44 +70,76 @@ describe Simple2ch::Thre do
   end
 
   describe '#new' do
-    subject { thread }
-    it {should be_a_kind_of Simple2ch::Thre}
-    it {should be_valid_responses }
-    let(:thread){ Simple2ch::Thre.create_from_url threads[:sc][:url] }
+    shared_examples '#new' do
+      let(:thread_key) { Simple2ch.parse_url(threads[type_of_2ch][:url])[:thread_key] }
+      let(:thread) { Simple2ch::Thre.new board, thread_key }
+      let(:board) { Board.new nil, boards[type_of_2ch][:url] }
+      subject { thread }
+      it { should be_a_kind_of Simple2ch::Thre }
+      it { should be_valid_responses }
+    end
+    context '2ch.sc' do
+      include_examples '#new' do
+        let(:type_of_2ch) { :sc }
+      end
+    end
+    context 'open2ch.net' do
+      include_examples '#new' do
+        let(:type_of_2ch) { :open }
+      end
+    end
+  end
+
+  describe '#create_from_url' do
+    shared_examples '#create_from_url' do
+      subject { thread }
+      it { should be_a_kind_of Simple2ch::Thre }
+      it { should be_valid_responses }
+    end
+    context '2ch.sc' do
+      include_examples '#create_from_url' do
+        let(:thread) { Simple2ch::Thre.create_from_url threads[:sc][:url] }
+      end
+    end
+    context 'open2ch.net' do
+      include_examples '#create_from_url' do
+        let(:thread) { Simple2ch::Thre.create_from_url threads[:open][:url] }
+      end
+    end
   end
 
   describe 'should be created from URL' do
     shared_examples 'create from URL' do
       let(:thre) { Simple2ch::Thre.create_from_url(url) }
-      subject{ thre }
-      it{ is_expected.to be_a_kind_of Simple2ch::Thre }
+      subject { thre }
+      it { is_expected.to be_a_kind_of Simple2ch::Thre }
       its(:board) { is_expected.to be_a_kind_of Simple2ch::Board }
       its('board.title') { is_expected.not_to be_empty }
-      its(:title){ is_expected.not_to be_empty }
+      its(:title) { is_expected.not_to be_empty }
       include_examples 'should be valid'
     end
     context 'from 2ch.sc URL' do
-      let(:url) {'http://peace.2ch.sc/test/read.cgi/tech/1158807229/l50'}
-      let(:kako_log){ be_falsey }
+      let(:url) { 'http://peace.2ch.sc/test/read.cgi/tech/1158807229/l50' }
+      let(:kako_log) { be_falsey }
       include_examples 'create from URL'
     end
     context 'from open2ch.net URL' do
-      let(:url) {'http://toro.open2ch.net/test/read.cgi/tech/1371956681/l50'}
-      let(:kako_log){ be_falsey }
+      let(:url) { 'http://toro.open2ch.net/test/read.cgi/tech/1371956681/l50' }
+      let(:kako_log) { be_falsey }
       include_examples 'create from URL'
     end
   end
 
   describe 'should have a type of 2ch' do
-    subject{ Simple2ch::Thre.new(board, thread_key) }
+    subject { Simple2ch::Thre.new(board, thread_key) }
     context '2ch.sc' do
-      let!(:board){ Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.2ch.sc/news4vip/' }
-      let(:thread_key){ board.thres[0].thread_key }
+      let!(:board) { Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.2ch.sc/news4vip/' }
+      let(:thread_key) { board.thres[0].thread_key }
       its(:type_of_2ch) { is_expected.to eq :sc }
     end
     context 'open2ch.net' do
-      let!(:board){ Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.open2ch.net/news4vip/' }
-      let(:thread_key){ board.thres[0].thread_key }
+      let!(:board) { Simple2ch::Board.new 'ニュース速報(VIP)', 'http://viper.open2ch.net/news4vip/' }
+      let(:thread_key) { board.thres[0].thread_key }
       its(:type_of_2ch) { is_expected.to eq :open }
     end
   end

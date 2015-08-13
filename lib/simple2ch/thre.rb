@@ -50,10 +50,14 @@ module Simple2ch
       thre
     end
 
+    def reses(num_of_reses=nil)
+      warn '[Deprecated] Thre#reses was called.'
+      responses num_of_reses
+    end
     # Datを解析して、レスを返す
     # @param [Array<Fixnum>,Fixnum] num_of_reses 取得したいレス番号
     # @return [Array<Res>] レスの配列
-    def reses(num_of_reses=nil)
+    def responses(num_of_reses=nil)
       fetch_dat unless @reses
       case num_of_reses
         when Array
