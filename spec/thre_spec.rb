@@ -108,6 +108,27 @@ describe Simple2ch::Thre do
     end
   end
 
+  describe '#parse' do
+    shared_examples '#parse' do
+      let(:board) { Board.new nil, boards[type_of_2ch][:url] }
+      subject { Thre.parse board, thread_data }
+      it { should be_an_kind_of Simple2ch::Thre }
+      it { should be_valid_responses }
+    end
+    context '2ch.sc' do
+      include_examples '#parse' do
+        let(:type_of_2ch) { :sc }
+        let(:thread_data) { '9990000001.dat<>★★★ ２ちゃんねる(sc)のご案内 ★★★ (6)' }
+      end
+    end
+    context 'open2ch.net' do
+      include_examples '#parse' do
+        let(:type_of_2ch) { :open }
+        let(:thread_data) { '1439125834.dat<>面白い洋画ランキングベスト10作ってみた！ (52)' }
+      end
+    end
+  end
+
   describe 'should be created from URL' do
     shared_examples 'create from URL' do
       let(:thre) { Simple2ch::Thre.create_from_url(url) }
