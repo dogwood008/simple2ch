@@ -129,6 +129,15 @@ describe Simple2ch::Thre do
     end
   end
 
+  describe '#responses' do
+    let(:thread) { Thre.create_from_url threads[type_of_2ch][:url] }
+    subject { thread.responses }
+    let(:type_of_2ch) { :sc }
+    it { should be_a_kind_of Array }
+    its(:first) { should be_a_kind_of Simple2ch::Res }
+    its(:first) { should be_a_valid_response }
+  end
+
   describe 'should be created from URL' do
     shared_examples 'create from URL' do
       let(:thre) { Simple2ch::Thre.create_from_url(url) }
