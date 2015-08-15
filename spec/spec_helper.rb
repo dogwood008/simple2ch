@@ -25,6 +25,16 @@ RSpec::Matchers.define :be_valid_responses do
   end
 end
 
+RSpec::Matchers.define :be_a_valid_response do
+  match do |res|
+    res.is_a?(Simple2ch::Res) &&
+        res.res_num.is_a?(Integer) &&
+        res.author && # Not nil
+        res.date.is_a?(Time) &&
+        !res.contents.nil?
+  end
+end
+
 def open2ch_thread_data_example
   source_url = 'http://viper.open2ch.net/news4vip/subback.html'
   source = Simple2ch.fetch(source_url)
