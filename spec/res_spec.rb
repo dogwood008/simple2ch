@@ -42,15 +42,25 @@ describe Simple2ch::Res do
       it { replies.each { |r| expect(r).to be_a_valid_response } }
     end
     context 'when real data' do
-      let(:dat_url) { Simple2ch.parse_and_generate_url(threads[:sc][:url], :dat) }
-      let(:dat) { Simple2ch.fetch dat_url }
-      let(:replies) { dat.each_line.map.with_index(1) { |d, i| Res.parse(i, d) } }
-      it { replies.each { |r| expect(r).to be_a_valid_response } }
+      shared_examples '#parse' do
+        let(:thread_url) { threads[type_of_2ch][:url] }
+        let(:dat_url) { Simple2ch.parse_and_generate_url(thread_url, :dat) }
+        let(:dat) { Simple2ch.fetch dat_url }
+        let(:replies) { dat.each_line.map.with_index(1) { |d, i| Res.parse(i, d) } }
+        it { replies.each { |r| expect(r).to be_a_valid_response } }
+      end
+      context 'when 2ch.sc' do
+        include_examples '#parse' do
+          let(:type_of_2ch) { :sc }
+        end
+      end
+      context 'when open2ch.net' do
+        include_examples '#parse' do
+          let(:type_of_2ch) { :open }
+        end
+      end
     end
 
-  end
-
-  describe '#new' do
   end
 
   describe '#anchors' do
