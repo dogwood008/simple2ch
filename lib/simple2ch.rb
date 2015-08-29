@@ -165,7 +165,7 @@ module Simple2ch
     # thread:  http://viper.2ch.sc/test/read.cgi/news4vip/9990000001/, http://viper.open2ch.net/test/read.cgi/news4vip/1439127670
 
     generated_url = "http://"
-    if [:bbs, :board, :thread, :subject, :setting].index(type)
+    if [:bbs, :board, :dat, :subject, :setting, :thread].index(type)
       generated_url << (elements[:server_name] ? "#{elements[:server_name]}." : '')
       generated_url << "#{elements[:openflag]}2ch.#{elements[:tld]}/"
     end
