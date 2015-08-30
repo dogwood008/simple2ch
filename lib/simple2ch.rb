@@ -133,6 +133,7 @@ module Simple2ch
     # http://www.rubular.com/r/cQbzwkui6C
     # http://www.rubular.com/r/TYNlRzmmWz
     # http://www.rubular.com/r/h63xdfmQIH
+    uri = URI.parse url
     [/^http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/test\/read\.cgi\/(?<board_name>.+)\/(?<thread_key>\d{10})\/?$/,
      /^http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(?<board_name>(\w|)+)\/?$/,
      /^http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(?<board_name>.+)\/subject\.txt$/,
@@ -140,7 +141,7 @@ module Simple2ch
      /^http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>\w+)$/,
      /^http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(.+)\/dat\/(?<thread_key>[0-9]+)\.dat$/,
      /^http:\/\/(?:(?<server_name>.*)\.)?(?:(?<openflag>open)?)2ch\.(?<tld>sc|net)$/].each do |r|
-      if h = url.to_s.match(r) { |hash|
+      if h = uri.to_s.match(r) { |hash|
               { server_name: (hash[:server_name] rescue nil),
                 board_name: (hash[:board_name] rescue nil),
                 openflag: (hash[:openflag] rescue nil),
