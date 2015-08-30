@@ -16,7 +16,6 @@ module Simple2ch
     # @param [String] url 板のURL
     # @option [Boolean] fetch_title 板の名前を自動取得するか
     def initialize(title, url, fetch_title: nil)
-      fail NotA2chBoardUrlException if url=='http://info.2ch.sc/guide/subject.txt'
       @server_name = @board_name = nil
       @url = validate_url url
       @title = if fetch_title || title.nil? || title.empty?
@@ -68,7 +67,7 @@ module Simple2ch
     def setting(param)
       unless @setting_txt
         @setting_txt = {}
-        url = Simple2ch.normalized_url(@url, :setting_txt)
+        url = Simple2ch.parse_and_generate_url(@url, :setting)
         data = Simple2ch.fetch url
         data.each_line do |d|
           if (split = d.split('=')).size == 2

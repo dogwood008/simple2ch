@@ -190,7 +190,7 @@ module Simple2ch
         fail "Thread key is empty: #{url}"
       end
     end
-    if [:thread, :subject].index(type)
+    if [:thread, :subject, :setting].index(type)
       if elements[:board_name] && !elements[:board_name].empty?
         case type
           when :thread
