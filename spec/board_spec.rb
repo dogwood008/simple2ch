@@ -91,8 +91,8 @@ describe Simple2ch::Board do
   describe '#url' do
     shared_examples '#url' do
       subject { board.url }
-      it { is_expected.to be_a_kind_of(URI) }
-      it { is_expected.to eq URI.parse(url) }
+      it { is_expected.to be_a_kind_of(String) }
+      it { is_expected.to eq url }
     end
     include_examples '#url' do
       let(:url) { boards[:sc][:url] }
