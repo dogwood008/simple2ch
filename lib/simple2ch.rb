@@ -22,6 +22,7 @@ module Simple2ch
     @boards = {}
 
     def initialize(type_of_2ch)
+      @@bbs = {} unless defined? @@bbs
       @boards = {}
       case type_of_2ch
         when :sc, :open
@@ -77,7 +78,7 @@ module Simple2ch
 
         prepared_bbsmenu_url = bbsmenu_urls[type_of_2ch]
 
-        fail RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(prepared_bbsmenu_url))).empty?
+        fail RuntimeError, "Failed to fetch #{url}" if (data = Simple2ch.fetch(URI.parse(prepared_bbsmenu_url))).empty?
         fail RuntimeError, "Failed to parse #{url}" if (scaned_data=data.scan(Regex::BOARD_EXTRACT_REGEX).uniq).empty?
 
         scaned_data.map { |b|
@@ -92,7 +93,7 @@ module Simple2ch
   # HTTPでGETする
   # @param [URI] url URL
   # @return [String] 取得本文
-  def fetch(url, encode=nil)
+  def self.fetch(url, encode=nil)
     unless encode
       encode = if url.to_s.index('subject.txt') || url.to_s.index('SETTING.TXT') || url.to_s.index('.dat') || url.to_s.index('bbsmenu')
                  'SHIFT_JIS'
@@ -110,7 +111,7 @@ module Simple2ch
   # @param [String] url URL
   # @return [Symbol] :open or :net or :sc
   # @raise [NotA2chUrlException] 2chのURLでないURLが与えられた際に発生
-  def type_of_2ch(url)
+  def self.type_of_2ch(url)
     parsed_url = self.parse_url(url)
     openflag = parsed_url[:openflag]
     tld = parsed_url[:tld]
@@ -129,7 +130,7 @@ module Simple2ch
   # @param [String] url URL
   # @return [Array<String>] 結果(thread_key等が該当無しの場合，nilを返す)
   # @raise [NotA2chUrlException] 2chのURLでないURLが与えられた際に発生
-  def parse_url(url)
+  def self.parse_url(url)
     # http://www.rubular.com/r/cQbzwkui6C
     # http://www.rubular.com/r/TYNlRzmmWz
     # http://www.rubular.com/r/h63xdfmQIH
