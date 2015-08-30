@@ -8,6 +8,7 @@ module Simple2ch
   require 'simple2ch/res'
   require 'simple2ch/thre'
   require 'simple2ch/regex'
+  require 'socket'
   require 'open-uri'
   require 'time'
   require 'charwidth'
