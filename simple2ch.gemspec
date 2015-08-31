@@ -24,6 +24,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rspec"
   spec.add_development_dependency "rspec-core"
   spec.add_development_dependency 'rspec-its'
+  spec.add_development_dependency 'pry'
+  spec.add_development_dependency 'pry-stack_explorer'
 
   spec.required_ruby_version = '~> 2.0'
   spec.add_dependency 'charwidth', '~> 0.1.3'
