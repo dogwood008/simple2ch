@@ -2,6 +2,7 @@ require 'rubygems'
 require 'simple2ch'
 require 'rspec'
 require 'rspec/its'
+require 'vcr'
 include Simple2ch
 
 RSpec::Matchers.define :have_news4vip do
@@ -67,7 +68,8 @@ def fetch_first_res_from_html(source_url, type_of_2ch)
 end
 
 VCR.configure do |c|
+  c.allow_http_connections_when_no_cassette = true
   c.cassette_library_dir = 'spec/vcr'
   c.hook_into :webmock
-  c.allow_http_connections_when_no_cassette = true
+  c.configure_rspec_metadata!
 end
