@@ -26,13 +26,14 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec-its'
   spec.add_development_dependency 'pry'
   spec.add_development_dependency 'pry-stack_explorer'
+  spec.add_development_dependency 'vcr', '~> 3.0'
+  spec.add_development_dependency 'webmock', '~> 2.1'
 
   spec.required_ruby_version = '~> 2.0'
   spec.add_dependency 'charwidth', '~> 0.1.3'
   spec.add_dependency 'htmlentities', '~> 4.3.3'
   spec.add_dependency 'retryable', '~> 2.0.1'
-  spec.add_development_dependency 'vcr', '~> 3.0'
-  spec.add_development_dependency 'webmock', '~> 2.1'
+  spec.add_dependency 'bbs_2ch_url_validator', '~>0.1'
 
 #  spec.add_development_dependency 'spring'
 #  spec.add_development_dependency 'zeus'
