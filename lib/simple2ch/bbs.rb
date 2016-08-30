@@ -18,7 +18,7 @@ module Simple2ch
       case type_of_2ch
       when :sc, :open
         @type_of_2ch = type_of_2ch
-        @boards = get_boards_by_type_of_2ch @type_of_2ch
+        @boards = boards(@type_of_2ch)
       else
         fail RuntimeError, %Q{Invalid "type_of_2ch" given: #{type_of_2ch} (:sc or :open is correct.)}
       end
@@ -68,15 +68,16 @@ module Simple2ch
         }
 
         prepared_bbsmenu_url = bbsmenu_urls[type_of_2ch]
+        data = Simple2ch.fetch(URI.parse(prepared_bbsmenu_url))
+        fail "Failed to fetch #{url}" if data.empty?
+        scaned_data = data.scan(Regex::BOARD_EXTRACT_REGEX).uniq
+        fail "Failed to parse #{url}" if scaned_data.empty?
 
-        fail RuntimeError, "Failed to fetch #{url}" if (data = Simple2ch.fetch(URI.parse(prepared_bbsmenu_url))).empty?
-        fail RuntimeError, "Failed to parse #{url}" if (scaned_data=data.scan(Regex::BOARD_EXTRACT_REGEX).uniq).empty?
-
-        scaned_data.map { |b|
-          Simple2ch::Board.new(b[4], "http://#{b[0]}.#{b[1]}2ch.#{b[2]}/#{b[3]}/") rescue nil
+        @boards = scaned_data.map { |b|
+          Simple2ch::Board.new(b[4], "http://#{b[0]}.#{b[1]}2ch.#{b[2]}/#{b[3]}/")# rescue nil
         }.compact
       else
-        @@bbs[type_of_2ch].boards
+        @boards
       end
     end
 
