@@ -3,6 +3,7 @@ require 'singleton'
 
 module Simple2ch
   require_relative './simple2ch/simple2ch_exception'
+  require_relative './simple2ch/simple2ch_error'
   require_relative './simple2ch/board'
   require_relative './simple2ch/dat'
   require_relative './simple2ch/res'

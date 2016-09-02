@@ -119,7 +119,8 @@ module Simple2ch
     private
 
     def validate_url(url)
-      parsed = Bbs2chUrlValidator::URL.parse(url)
+      url_obj = URI.parse(url)
+      parsed = Bbs2chUrlValidator::URL.parse(url_obj.to_s)
       return parsed.built_url if parsed && !parsed.board_name.empty?
       fail NotA2chBoardUrlError
     end
