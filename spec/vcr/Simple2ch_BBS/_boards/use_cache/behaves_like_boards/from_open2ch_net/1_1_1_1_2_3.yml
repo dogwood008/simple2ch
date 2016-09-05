@@ -19,7 +19,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 05 Sep 2016 02:56:51 GMT
+      - Mon, 05 Sep 2016 02:56:50 GMT
       Content-Type:
       - text/html; charset=Shift_JIS
       Transfer-Encoding:
@@ -27,8 +27,8 @@ http_interactions:
       Connection:
       - keep-alive
       Set-Cookie:
-      - __cfduid=da5dff1fd1c5706bbd0805c41368ab83f1473044211; expires=Tue, 05-Sep-17
-        02:56:51 GMT; path=/; domain=.open2ch.net; HttpOnly
+      - __cfduid=dda3a4bde50ab66f8b0fcd98f6dfe57941473044210; expires=Tue, 05-Sep-17
+        02:56:50 GMT; path=/; domain=.open2ch.net; HttpOnly
       Last-Modified:
       - Mon, 05 Sep 2016 02:00:01 GMT
       Etag:
@@ -38,7 +38,7 @@ http_interactions:
       Server:
       - cloudflare-nginx
       Cf-Ray:
-      - 2dd669131d5c018d-NRT
+      - 2dd6690c43eb2e5d-NRT
     body:
       encoding: ASCII-8BIT
       string: !binary |-
@@ -1135,5 +1135,5 @@ http_interactions:
         YWlsdG86b3BlbjJjaEBzYXRvcnUubmV0PoOBgVuDizwvQT4KPGJyPjxicj48
         YnI+CjwvZm9udD4KPC9CT0RZPgo8L0hUTUw+Cg==
     http_version: 
-  recorded_at: Mon, 05 Sep 2016 02:56:51 GMT
+  recorded_at: Mon, 05 Sep 2016 02:56:50 GMT
 recorded_with: VCR 3.0.3

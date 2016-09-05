@@ -5,7 +5,7 @@ VCR.use_cassette 'bbs' do
     describe '#boards' do
       shared_examples '#boards' do |force_reload|
         shared_examples 'get board list from bbsmenu' do |bbs, type_of_2ch|
-          subject { bbs.boards(type_of_2ch, force_reload: force_reload) }
+          subject { bbs.boards(force_reload: force_reload) }
           it { expect(bbs.type_of_2ch).to eq type_of_2ch }
           it { is_expected.not_to be_empty }
           it { is_expected.to have_news4vip }
