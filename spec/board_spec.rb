@@ -1,7 +1,7 @@
 require 'rspec'
 require 'spec_helper'
 
-VCR.use_cassette 'bbs' do
+VCR.use_cassette 'board' do
   describe Simple2ch::Board, vcr: true do
     before(:all) do
       @sc = Simple2ch::BBS.new(:sc)
@@ -49,7 +49,7 @@ VCR.use_cassette 'bbs' do
 
       context 'should raise URI::InvalidURL if URL is invalid format' do
         subject { -> { Simple2ch::Board.new(title, boards[:invalid_url][:url]) } }
-        it { is_expected.to raise_error URI::InvalidURIError }
+        it { is_expected.to raise_error Simple2ch::NotA2chUrlError }
       end
     end
 
@@ -69,7 +69,7 @@ VCR.use_cassette 'bbs' do
 
     describe '#url' do
       shared_examples '#url' do
-        subject { board.url }
+        subject { board.url.to_s }
         it { is_expected.to be_a_kind_of(String) }
         it { is_expected.to eq url }
       end
@@ -97,72 +97,6 @@ VCR.use_cassette 'bbs' do
       end
       include_examples '#threads' do
         let(:url) { boards[:open][:url] }
-      end
-    end
-
-    describe '#find' do
-      shared_examples '#find' do
-        subject { board.find(title) }
-        it { should be_a_kind_of(Simple2ch::Thre) } #TODO: Thre -> Thread
-        it { expect(board[title].title).to eq title }
-        its(:title) { should eq title }
-        its(:url) { should eq url }
-      end
-      context 'when 2ch.sc' do
-        include_examples '#find' do
-          let(:title) { threads[:sc][:title] }
-          let(:url) { threads[:sc][:url] }
-          let(:board) { Simple2ch::Board.new(nil, boards[:sc][:url], fetch_title: true) }
-        end
-      end
-      context 'when open2ch.net' do
-        include_examples '#find' do
-          let(:title) { threads[:open][:title] }
-          let(:url) { threads[:open][:url] }
-          let(:board) { Simple2ch::Board.new(nil, boards[:open][:url], fetch_title: true) }
-        end
-      end
-    end
-
-    describe '#contain' do
-      shared_examples '#contain' do
-        subject { board.contain(title) }
-        let(:title) { 'の' }
-        it { should a_kind_of(Simple2ch::Thre) } #TODO: Thre->Thread
-        it { expect(subject.title.index(title)).to be_truthy }
-      end
-
-      context 'open2ch.net' do
-        include_examples '#contain' do
-          let(:board) { @open['ニュー速VIP'] }
-        end
-      end
-      context '2ch.sc' do
-        include_examples '#contain' do
-          let(:board) { @sc['ニュー速VIP'] }
-        end
-      end
-    end
-
-    describe '#contain_all' do
-      shared_examples '#contain_all' do
-        subject { board.contain_all(title) }
-        let(:title) { 'の' }
-        it { should a_kind_of(Array) }
-        its(:size) { should be > 0 }
-        its(:first) { should be_a_kind_of(Simple2ch::Thre) } #TODO: Thre->Thread
-        it { expect(subject.last.title.index(title)).to be_truthy }
-      end
-
-      context 'open2ch.net' do
-        include_examples '#contain_all' do
-          let(:board) { @open['ニュー速VIP'] }
-        end
-      end
-      context '2ch.sc' do
-        include_examples '#contain_all' do
-          let(:board) { @sc['ニュー速VIP'] }
-        end
       end
     end
   end
