@@ -102,9 +102,8 @@ module Simple2ch
         @url
       else
         if board
-          parsed_url = Simple2ch.parse_url(board.url)
-          parsed_url[:thread_key] = thread_key
-          Simple2ch.generate_url(parsed_url, :thread)
+          parsed_url = Bbs2chUrlValidator::URL.parse(board.url.built_url)
+          Simple2ch.generate_url(:thread, parsed_url, thread_key: thread_key)
         else
           fail "Not implemented."
         end
