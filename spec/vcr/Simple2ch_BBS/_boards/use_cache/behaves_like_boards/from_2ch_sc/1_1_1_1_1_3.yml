@@ -27,7 +27,7 @@ http_interactions:
       Connection:
       - keep-alive
       Set-Cookie:
-      - __cfduid=dcf0de23262eea353e52df754028307701473044210; expires=Tue, 05-Sep-17
+      - __cfduid=da2862711c89ad4f77ab3e2cb0a0428d21473044210; expires=Tue, 05-Sep-17
         02:56:50 GMT; path=/; domain=.2ch.sc; HttpOnly
       Last-Modified:
       - Mon, 07 Dec 2015 03:00:00 GMT
@@ -42,7 +42,7 @@ http_interactions:
       Server:
       - cloudflare-nginx
       Cf-Ray:
-      - 2dd6690e4913018d-NRT
+      - 2dd66909249a0b50-NRT
     body:
       encoding: ASCII-8BIT
       string: !binary |-
