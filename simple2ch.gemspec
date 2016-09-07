@@ -31,6 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'charwidth', '~> 0.1.3'
   spec.add_dependency 'htmlentities', '~> 4.3.3'
   spec.add_dependency 'retryable', '~> 2.0.1'
+  spec.add_development_dependency 'vcr', '~> 3.0'
 
 #  spec.add_development_dependency 'spring'
 #  spec.add_development_dependency 'zeus'
