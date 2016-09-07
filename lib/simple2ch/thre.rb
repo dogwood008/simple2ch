@@ -2,13 +2,10 @@ module Simple2ch
   class Thre
     # @return [String] スレッドキー(Unix time)
     attr_reader :thread_key
-    # @return [Board] 属する板
-    attr_reader :board
     # @return [Bbs2chUrlValidator::UrlInfo] URL
     attr_reader :url
 
-    # @param [Board] board スレッドが属する板情報
-    # @param [String] thread_key スレッドキー
+    # @param [Bbs2chUrlValidator::UrlInfo] URL
     # @param [String] title スレッド名
     def initialize(url, title: nil)
       @title = title
@@ -17,22 +14,23 @@ module Simple2ch
              else
                Bbs2chUrlValidator::URL.parse(url)
              end
-      raise NotAThreadUrlError if @url.thread_key.nil?
+      raise NotA2chThreadUrlError.new "url: #{url}, title: #{title}" if !@url || @url.thread_key.nil?
     end
 
     # 板オブジェクトとsubject.txtの1行データを渡すとスレオブジェクトを返す
-    # @param [Board] board スレッドが属する板情報
+    # @param [Bbs2chUrlValidator::UrlInfo] board_url スレッドが属する板情報
     # @param [String] thread_data 0000000000.dat<>スレッドタイトル (レス数)
     # @return [Thre] スレ
-    #def self.parse(board, thread_data)
-    #  thread_key, title =  thread_data.scan /(\d{10})\.dat<>(.+) \((\d+)\)/
-    #  thread_data =~ /(\d{10})\.dat<>(.+) \((\d+)\)/
-    #  hash = {}
-    #  thread_key = $1
-    #  hash[:title] = $2.force_encoding('utf-8')
-    #  hash[:num_of_response] = $3.to_i
-    #  self.new board, thread_key, hash
-    #end
+    def self.parse(board_url, thread_data)
+      thread_key, title =  thread_data.scan /(\d{10})\.dat<>(.+) \((\d+)\)/
+      thread_data.match(/(\d{10})\.dat<>(.+) \((\d+)\)/) do |m|
+        hash = {}
+        thread_key = m[1]
+        title = m[2].force_encoding('utf-8')
+        thread_url = Simple2ch.generate_url(:thread, board_url, thread_key: thread_key)
+        self.new(Bbs2chUrlValidator::URL.parse(thread_url), title: title)
+      end
+    end
 
     # Datを解析して、レスを返す
     # @param [Array<Fixnum>,Fixnum] num_of_responses 取得したいレス番号
@@ -97,7 +95,7 @@ module Simple2ch
     # @return [Hash]{ res_num<Fixnum> => res_nums<Array<Fixnum>> } レス番号のハッシュ
     def calc_received_anchors
       ret = {}
-      reses.each do |res|
+      responses.each do |res|
         res.anchors.each do |anchor|
           ret.store(anchor, ret.fetch(anchor, []).push(res.res_num))
         end
@@ -109,7 +107,7 @@ module Simple2ch
     # @return [Boolean] is_kako_log 過去ログか否か
     def fetch_dat
       dat = Dat.new(self)
-      @responses = dat.reses
+      @responses = dat.responses
       @title = dat.title
       @is_kako_log = dat.kako_log?
     end

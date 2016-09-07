@@ -65,12 +65,12 @@ module Simple2ch
     # thread:  http://viper.2ch.sc/test/read.cgi/news4vip/9990000001/, http://viper.open2ch.net/test/read.cgi/news4vip/1439127670
 
     generated_url = "http://"
-    domain = "#{url_obj.open? ? 'open' : ''}.#{url_obj.tld}"
+    domain = "#{url_obj.open? ? 'open' : ''}2ch.#{url_obj.tld}"
+    board_name = params[:board_name] ? params[:board_name] : url_obj.board_name
     case type
     when :bbs
       "http://www.#{domain}.#{url_obj.tld}/"
     when :board
-      board_name = params[:board_name] ? params[:board_name] : url_obj.board_name
       "http://#{url_obj.server_name}.#{domain}/#{board_name}/"
     when :dat
       url_obj.dat
@@ -80,7 +80,7 @@ module Simple2ch
       url_obj.setting
     when :thread
       thread_key = params[:thread_key] ? params[:thread_key] : url_obj.thread_key
-      "http://#{url_obj.server_name}.#{domain}/test/ready.cgi/#{board_name}/#{thread_key}/"
+      "http://#{url_obj.server_name}.#{domain}/test/read.cgi/#{board_name}/#{thread_key}/"
     end
   end
 
