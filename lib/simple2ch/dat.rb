@@ -32,7 +32,7 @@ module Simple2ch
     # datのURLを返す
     # @return [URI] datのURL
     def dat_url
-      @thre.board.url+'dat/'+(@thread_key+'.dat')
+      @thre.url.dat
     end
 
     # datファイルを取得する
