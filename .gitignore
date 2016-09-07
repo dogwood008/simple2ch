@@ -120,4 +120,3 @@ build/
 .rvmrc
 
 .bin
-spec/vcr
