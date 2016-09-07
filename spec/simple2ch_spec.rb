@@ -1,61 +1,100 @@
 require 'rspec'
 require 'spec_helper'
 
-RSpec::Matchers.define :have_news4vip do
-  match do |boards|
-    (news4vip = boards.find{|b| b.title == 'ニュー速VIP'}) && news4vip.url.to_s.index('news4vip')
-  end
-end
 
 describe Simple2ch do
-  describe 'should get board from board list' do
-    let(:board_list_url) { {net: 'http://menu.2ch.net/bbsmenu.html', sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/menu/pc_menu.html' } }
-    shared_examples 'get board list from bbsmenu' do
-      subject{ Simple2ch.boards(bbsmenu_url) }
-      it{ is_expected.not_to be_empty }
-      it{ is_expected.to have_news4vip}
+  before(:all) do
+    @sc = Simple2ch::BBS.new(:sc)
+    @open = Simple2ch::BBS.new(:open)
+  end
+
+  describe '#new' do
+    shared_examples '#new' do
+      subject { s2 }
+      it { should be_a_kind_of Simple2ch::BBS }
     end
 
-    context 'from 2ch.net' do
-      let(:bbsmenu_url) { board_list_url[:net] }
-      include_examples 'get board list from bbsmenu'
+    context '2ch.sc' do
+      include_examples '#new' do
+        let(:s2) { @sc }
+        let(:type_of_2ch) { :sc }
+      end
     end
-    context 'from 2ch.sc' do
-      let(:bbsmenu_url) { board_list_url[:sc] }
-      include_examples 'get board list from bbsmenu'
-    end
-    context 'from open2ch.net' do
-      let(:bbsmenu_url) { board_list_url[:open] }
-      include_examples 'get board list from bbsmenu'
+    context 'open2ch.net' do
+      include_examples '#new' do
+        let(:s2) { @open }
+        let(:type_of_2ch) { :open }
+      end
     end
   end
 
-  context 'should get reses from board url' do
-    before(:all) do
-      board_name = 'ニュー速VIP'
-      board_url = 'http://viper.2ch.sc/news4vip/'
-      @board = Board.new board_name, board_url
-      @threads= @board.thres
-      @res = @threads[0].reses[0]
-    end
-    it{ expect(@board.thres).to be_a_kind_of Array }
-    it do
-      #@threads = board.threads
-      expect(@board.thres.size).to be > 0
+  describe '#find' do
+    shared_examples '#find' do
+      shared_examples '_#find' do
+        let(:title) { 'ニュー速VIP' }
+        it { should a_kind_of(Simple2ch::Board) }
+        its(:title) { should eq title }
+      end
+
+      include_examples '_#find' do
+        subject { bbs.find(title) }
+      end
+      include_examples '_#find' do
+        subject { bbs[title] }
+      end
     end
 
-    it { expect(@threads[0]).to be_a_kind_of Thre }
-    it { expect(@threads[0].reses).to be_a_kind_of Array }
-
-    it do
-      #@res = @threads[0].reses[0]
-      expect(@res).to be_a_kind_of Res
+    context 'open2ch.net' do
+      include_examples '#find' do
+        let(:bbs) { @open }
+      end
     end
-    it { expect(@res.date).to be < Time.now }
-    it { expect(@res.author_id.size).to be > 0 }
-
+    context '2ch.sc' do
+      include_examples '#find' do
+        let(:bbs) { @sc }
+      end
+    end
   end
 
+  describe '#contain' do
+    shared_examples '#contain_all' do
+      subject { bbs.contain(title) }
+      let(:title) { 'の' }
+      it { should a_kind_of(Simple2ch::Board) }
+      it { expect(subject.title.index(title)).to be_truthy }
+    end
 
-#its(:reses){ is_expected.to be a_kind_of Array}
+    context 'open2ch.net' do
+      include_examples '#contain_all' do
+        let(:bbs) { @open }
+      end
+    end
+    context '2ch.sc' do
+      include_examples '#contain_all' do
+        let(:bbs) { @sc }
+      end
+    end
+  end
+
+  describe '#contain_all' do
+    shared_examples '#contain_all' do
+      subject { bbs.contain_all(title) }
+      let(:title) { 'の' }
+      it { should a_kind_of(Array) }
+      its(:size) { should be > 0 }
+      its(:first) { should be_a_kind_of(Simple2ch::Board)}
+      it { expect(subject.last.title.index(title)).to be_truthy }
+    end
+
+    context 'open2ch.net' do
+      include_examples '#contain_all' do
+        let(:bbs) { @open }
+      end
+    end
+    context '2ch.sc' do
+      include_examples '#contain_all' do
+        let(:bbs) { @sc }
+      end
+    end
+  end
 end

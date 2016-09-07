@@ -1,66 +1,37 @@
-require "simple2ch/version"
+require 'simple2ch/version'
+require 'singleton'
 
 module Simple2ch
-  DEBUG = false
-
-  require 'simple2ch/simple2ch_exception'
-  require 'simple2ch/board'
-  require 'simple2ch/dat'
-  require 'simple2ch/res'
-  require 'simple2ch/thre'
+  require_relative './simple2ch/simple2ch_exception'
+  require_relative './simple2ch/simple2ch_error'
+  require_relative './simple2ch/board'
+  require_relative './simple2ch/dat'
+  require_relative './simple2ch/res'
+  require_relative './simple2ch/thre'
+  require_relative './simple2ch/regex'
+  require_relative './simple2ch/bbs'
+  require 'socket'
   require 'open-uri'
   require 'time'
   require 'charwidth'
-  require 'pp' if DEBUG
+  require 'retryable'
+  require 'bbs_2ch_url_validator'
+  require 'pry'
 
-  def self.root
-    File.dirname __dir__
-  end
-
-  # Module variables
-  @@boards = {}
+  @@bbs = {}
 
   # HTTPでGETする
-  # @param [URI] url URL
+  # @param [URI or Bbs2chUrlValidator::UrlInfo or String] url URL
   # @return [String] 取得本文
-  def self.fetch(url)
-    encode = if url.to_s.index('subject.txt') || url.to_s.index('.dat') || url.to_s.index('bbsmenu')
-                    'SHIFT_JIS'
-                  else
-                    'UTF-8'
-                  end
-    OpenURI.open_uri(url, 'r:binary').read.force_encoding(encode).encode('utf-8', undef: :replace, invalid: :replace, replace: '〓')
-  end
-
-  # bbsmenuのURLが渡されればセットして，板リストを返す
-  # @param [String] bbsmenu_url bbs_menuのURL
-  # @option [Boolean] force_refresh キャッシュを利用せず板リストを再取得する
-  # @return [Array<Simple2ch::Board>] 板リスト
-  def self.boards(bbsmenu_url=nil, force_refresh:nil)
-    if bbsmenu_url
-      bbsmenu_urls = {
-        net: 'http://menu.2ch.net/bbsmenu.html', sc: 'http://2ch.sc/bbsmenu.html', open: 'http://open2ch.net/bbsmenu.html'
-      }
-      # http://www.rubular.com/r/u1TJbQAULD
-      board_extract_regex = /<A HREF=http:\/\/(?<subdomain>\w+).(?<openflag>open|)2ch.(?<tld>sc|net)\/(?<board_name>\w+)\/>(?<board_name_ja>.+)<\/A>/
-      type_of_2ch = self.type_of_2ch(bbsmenu_url)
-
-      if force_refresh || (boards=@@boards.fetch(type_of_2ch, [])).size == 0
-        prepared_bbsmenu_url = bbsmenu_urls[type_of_2ch]
-
-        data = nil
-        boards_array = []
-
-        raise RuntimeError, "Failed to fetch #{url}" if (data = fetch(URI.parse(prepared_bbsmenu_url))).empty?
-        raise RuntimeError, "Failed to parse #{url}" if (boards_array=data.scan(board_extract_regex).uniq).empty?
-
-        boards_array.each do |b|
-          boards << Simple2ch::Board.new(b[4],"http://#{b[0]}.#{b[1]}2ch.#{b[2]}/#{b[3]}/")
-        end
-        @@boards[type_of_2ch] = boards
-      end
+  def self.fetch(url, encode = nil)
+    url_obj = URI.parse(url.to_s)
+    encode ||= encoded_in_sjis?(url) ? 'sjis' : 'utf-8'
+    errors_to_retry = [OpenURI::HTTPError, SocketError]
+    Retryable.retryable(tries: 5, on: errors_to_retry, sleep: 3) do
+      OpenURI.open_uri(url_obj, "r:#{encode}")
+             .read
+             .encode('utf-8', undef: :replace, invalid: :replace, replace: '〓')
     end
-    @@boards[type_of_2ch]
   end
 
   # 2chのタイプを返す
@@ -68,41 +39,57 @@ module Simple2ch
   # @return [Symbol] :open or :net or :sc
   # @raise [NotA2chUrlException] 2chのURLでないURLが与えられた際に発生
   def self.type_of_2ch(url)
-    parsed_url = self.parse_url(url)
-    openflag = parsed_url[:openflag]
-    tld = parsed_url[:tld]
-    if openflag && tld=='net'
+    parsed_url = Bbs2chUrlValidator::URL.parse(url)
+    raise NotA2chUrlException, "Given URL: #{url}" unless parsed_url
+    case true
+    when parsed_url.is_open && parsed_url.tld == 'net'
       :open
-    elsif !openflag && tld=='net'
+    when !parsed_url.is_open && parsed_url.tld == 'net'
       :net
-    elsif !openflag && tld=='sc'
+    when !parsed_url.is_open && parsed_url.tld == 'sc'
       :sc
     else
+      binding.pry
       raise NotA2chUrlException, "Given URL: #{url}"
     end
   end
 
-  # URLを分解する
-  # @param [String] url URL
-  # @return [Array<String>] 結果(thread_key等が該当無しの場合，nilを返す)
-  # @raise [NotA2chUrlException] 2chのURLでないURLが与えられた際に発生
-  def self.parse_url(url)
-    # http://www.rubular.com/r/h63xdfmQIH
-    case url.to_s
-      when /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/test\/read.cgi\/(?<board_name>.+)\/(?<thread_key>[0-9]+)/,
-          /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(?<board_name>.+)\/subject\.txt/,
-          /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>.+)\//,
-          /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch\.(?<tld>net|sc)\/(?<board_name>\w+)/,
-          /http:\/\/(?<server_name>.+)\.(?<openflag>open)?2ch.(?<tld>net|sc)\/(.+)\/dat\/(?<thread_key>[0-9]+)\.dat/,
-          /http:\/\/(?:(?<server_name>.*)\.)?(?:(?<openflag>open)?)2ch\.(?<tld>sc|net)/
-        {server_name: ($~[:server_name] rescue nil),
-         board_name: ($~[:board_name] rescue nil),
-         openflag: ($~[:openflag] rescue nil),
-         tld: $~[:tld],
-         thread_key: ($~[:thread_key] rescue nil) }
-      else
-        raise NotA2chUrlException, "Given URL: #{url}"
+  # @param [Bbs2chUrlValidator::URL] url_obj
+  # @param [Hash] type
+  def self.generate_url(type, url_obj, params = {})
+    # bbs:     http://www.2ch.sc/, http://open2ch.net/
+    # board:   http://viper.2ch.sc/news4vip/, http://viper.open2ch.net/news4vip/
+    # dat:     http://viper.2ch.sc/news4vip/dat/9990000001.dat, http://viper.open2ch.net/news4vip/dat/1439127670.dat
+    # subject: http://viper.2ch.sc/news4vip/subject.txt, http://viper.open2ch.net/news4vip/subject.txt
+    # setting: http://viper.2ch.sc/news4vip/SETTING.TXT, http://viper.open2ch.net/news4vip/SETTING.TXT
+    # thread:  http://viper.2ch.sc/test/read.cgi/news4vip/9990000001/, http://viper.open2ch.net/test/read.cgi/news4vip/1439127670
+
+    generated_url = "http://"
+    domain = "#{url_obj.open? ? 'open' : ''}2ch.#{url_obj.tld}"
+    board_name = params[:board_name] ? params[:board_name] : url_obj.board_name
+    case type
+    when :bbs
+      "http://www.#{domain}.#{url_obj.tld}/"
+    when :board
+      "http://#{url_obj.server_name}.#{domain}/#{board_name}/"
+    when :dat
+      url_obj.dat
+    when :subject
+      url_obj.subject
+    when :setting
+      url_obj.setting
+    when :thread
+      thread_key = params[:thread_key] ? params[:thread_key] : url_obj.thread_key
+      "http://#{url_obj.server_name}.#{domain}/test/read.cgi/#{board_name}/#{thread_key}/"
     end
   end
-end
 
+  private
+
+  def encoded_in_sjis?(url)
+    url.to_s.include?('subject.txt') ||
+      url.to_s.include?('SETTING.TXT') ||
+      url.to_s.include?('.dat') ||
+      url.to_s.include?('bbsmenu')
+  end
+end

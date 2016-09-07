@@ -1,6 +1,6 @@
 module Simple2ch
   class Board
-    # @return [URI] 板のURL
+    # @return [Bbs2chUrlValidator::URL] 板のURL
     attr_reader :url
     # @return [String] 板のタイトル
     attr_reader :title
@@ -8,73 +8,54 @@ module Simple2ch
     attr_reader :server_name
     # @return [String] 板の名前（コンピュータ名）
     attr_reader :board_name
+    # @return [Time] 板オブジェクト更新日時
+    attr_reader :updated_at
 
 
     # @param [String] title 板の名前
     # @param [String] url 板のURL
     # @option [Boolean] fetch_title 板の名前を自動取得するか
-    def initialize(title, url, fetch_title:nil)
+    def initialize(title, url)
       @server_name = @board_name = nil
-      @url = validate_url url
-      @title = if fetch_title
-                 (b=Simple2ch.boards(url).find{|bb| bb.url.to_s == @url.to_s}) &&  b.class!=Array ? b.title : nil
-               else
-                 title
-               end
-      @thres = []
+      @url = validate_url(url)
+      @title = title
+      @updated_at = Time.now
     end
 
     # 板に属する全てのスレッドを返す
     # @return [Array<Thre>] 板に属する全てのスレッド
-    def thres
-      if @thres.size > 0
-        @thres
-      else
-        fetch_all_thres
-      end
+    def threads
+      @threads ||= fetch_all_threads
     end
 
-    # おーぷん2chか否かを返す
-    # @return [Boolean] おーぷん2chか否か
-    def open2ch?
-      @f_open2ch && true
-    end
-
-    # 2chタイプ名の取得
-    # @return [Symbol] 2chタイプ名(:net, :sc, :open)
-    def type_of_2ch
-      Simple2ch.type_of_2ch(@url.to_s)
+    def ==(other)
+      @url.to_s == other.url.to_s
     end
 
     private
-    # URLが正しいかバリデーションする
-    # @param [URI] url
-    # @raise [Simple2ch::NotA2chUrlException] 2chのフォーマットで無いURLを渡したときに発生
-    # @raise [URI::InvalidURIError] そもそもURLのフォーマットで無いときに発生
+
     def validate_url(url)
-      sp_uri = URI.parse url
-      if sp_uri.host.index '2ch'
-        parsed_url = Simple2ch.parse_url(url.to_s)
-        @server_name = parsed_url[:server_name]
-        @board_name = parsed_url[:board_name]
-        @f_open2ch = !(parsed_url[:openflag].to_s.empty?)
-        @tld = parsed_url[:tld]
-        URI.parse("http://#{server_name}.#{parsed_url[:openflag]}2ch.#{@tld}/#{board_name}/")
-      else
-        raise NotA2chUrlException, "Given URL :#{url}"
-      end
+      parsed = if url.instance_of?(Bbs2chUrlValidator::UrlInfo)
+                 url
+               else
+                 Bbs2chUrlValidator::URL.parse(url)
+               end
+      return parsed if parsed && !parsed.board_name.empty?
+      raise NotA2chBoardUrlError
     end
 
     # 板に属する全てのスレッドをsubject.txtから取得する
     # @return [Array<Thre>] 板に属する全てのスレッド
-    def fetch_all_thres
-      subject_url = @url+'subject.txt'
+    def fetch_all_threads
+      subject_url = @url.subject
 
       subject_txt = Simple2ch.fetch(subject_url)
+      @threads = []
       subject_txt.each_line do |line|
-        @thres << Thre.parse(self, line)
+        @threads << Thre.parse(@url, line)
       end
-      @thres
+      @updated_at = Time.now
+      @threads
     end
   end
 end

@@ -2,42 +2,65 @@ require 'rspec'
 require 'spec_helper'
 
 describe Simple2ch::Res do
-  let(:dat_data) { %q{以下、＼(^o^)／でVIPがお送りします<><>2014/09/04(木) 18:46:36.03 ID:wBAvTswZ0.net<> http://livedoor.blogimg.jp/hatima/imgs/b/c/bccae87d.jpg <br>  <br>  <br> ※二次創作ではなく、公式です <>古参よ、これが今の東方projectだ
+  before(:all) do
+    @sc = Simple2ch::BBS.new(:sc)
+    @open = Simple2ch::BBS.new(:open)
+  end
+
+  let(:boards) do
+    {
+        sc: {
+            url: 'http://viper.2ch.sc/news4vip/',
+            title: 'ニュー速VIP'
+        },
+        open: {
+            url: 'http://viper.open2ch.net/news4vip/',
+            title: 'ニュー速VIP'
+        },
+    }
+  end
+
+  let(:threads) do
+    {
+        sc: {
+            url: 'http://viper.2ch.sc/test/read.cgi/news4vip/9990000001/',
+            title: '★★★ ２ちゃんねる(sc)のご案内 ★★★'.force_encoding('utf-8')
+        },
+        open: open2ch_thread_data_example
+    }
+  end
+
+  describe '#parse' do
+    context 'when prepared dat' do
+      let(:dat_data) { %q{以下、＼(^o^)／でVIPがお送りします<><>2014/09/04(木) 18:46:36.03 ID:wBAvTswZ0.net<> http://livedoor.blogimg.jp/hatima/imgs/b/c/bccae87d.jpg <br>  <br>  <br> ※二次創作ではなく、公式です <>古参よ、これが今の東方projectだ
 以下、＼(^o^)／でVIPがお送りします<><>2014/09/04(木) 18:47:10.12 ID:X4fy/81O0.net<> うそつけ <>
 以下、＼(^o^)／でVIPがお送りします<><>2014/09/04(木) 18:47:14.08 ID:WDyAzc5v0.net<> 嘘乙 <>
 以下、＼(^o^)／でVIPがお送りします<><>2014/09/04(木) 18:47:19.71 ID:9QYJSuKn0.net<> 正直楽しみ <>
 以下、＼(^o^)／でVIPがお送りします<><>2014/09/04(木) 18:47:35.65 ID:rbjZvMWo0.net<> はてぃま <>
 以下、＼(^o^)／でVIPがお送りします<><>2014/09/04(木) 18:47:41.41 ID:bHgEtoQU0.net<> 思い切り二次創作じゃねえか <br> PS4でやるんだっけ <>} }
-  let(:res) { dat_data.split(/\n/).map.with_index(1) { |d, i| Simple2ch::Res.parse i, d } }
+      let(:replies) { dat_data.split(/\n/).map.with_index(1) { |d, i| Simple2ch::Res.parse i, d } }
+      it { replies.each { |r| expect(r).to be_a_valid_response } }
+    end
+    context 'when real data' do
+      shared_examples '#parse' do
+        let(:thread_url) { threads[type_of_2ch][:url] }
+        let(:dat_url) { Simple2ch.parse_and_generate_url(thread_url, :dat) }
+        let(:dat) { Simple2ch.fetch dat_url }
+        let(:replies) { dat.each_line.map.with_index(1) { |d, i| Res.parse(i, d) } }
+        it { replies.each { |r| expect(r).to be_a_valid_response } }
+      end
+      context 'when 2ch.sc' do
+        include_examples '#parse' do
+          let(:type_of_2ch) { :sc }
+        end
+      end
+      context 'when open2ch.net' do
+        include_examples '#parse' do
+          let(:type_of_2ch) { :open }
+        end
+      end
+    end
 
-  describe 'should have res number' do
-    subject { res[0].res_num }
-    it { is_expected.to be_a_kind_of(Numeric) }
-    it { is_expected.to be > 0 }
-  end
-
-  describe 'should have author' do
-    subject { res[0].author }
-    it { is_expected.to be_a_kind_of(String) }
-    it { is_expected.not_to be eq nil }
-  end
-
-  describe 'should have author_id' do
-    subject { res[0].author_id }
-    it { is_expected.to be_a_kind_of(String) }
-    it { is_expected.not_to be eq nil }
-  end
-
-  describe 'should have contents' do
-    subject { res[0].contents }
-    it { is_expected.to be_a_kind_of(String) }
-    it { is_expected.not_to be eq nil }
-  end
-
-  describe 'should have date' do
-    subject { res[0].date }
-    it { is_expected.to be_a_kind_of(Time) }
-    it { is_expected.not_to be eq nil }
   end
 
   describe '#anchors' do

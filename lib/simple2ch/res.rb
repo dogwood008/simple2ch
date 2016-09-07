@@ -81,6 +81,30 @@ module Simple2ch
       received_anchors.fetch(@res_num, [])
     end
 
+    # あぼーんレスか否か
+    # @return [Boolean] あぼーんならtrue
+    def abone?
+      @date=='あぼーん'
+    end
+
+
+    # レスの内容をテキスト情報で得る。&nbsp, &lt, &gt, <br>はそれぞれ「 」、「<」、「>」、「(改行)」に置換される。
+    # @return [String] テキスト情報でのレスの内容
+    def contents_text
+      require 'htmlentities'
+      anchor_regex = /<a href="\.\.\/test\/read.cgi\/.+\/\d{10}\/\d{1,4}" target="_blank">(>>\d{1,4})<\/a>/
+      @htmlentities ||= HTMLEntities.new
+      @htmlentities.decode(@contents).gsub('<br>', "\n").gsub(/<\/?b>/, '').gsub(anchor_regex, '\1')
+    end
+
+    # HTMLタグを取り除いた投稿者名
+    # @return <String> HTMLタグを取り除いた投稿者名
+    def res_author_text
+      require 'htmlentities'
+      @htmlentities ||= HTMLEntities.new
+      @htmlentities.decode(@author).gsub('<br>', "\n").gsub(/<\/?b>/, '')
+    end
+
     private
     # スレッドを取得する
     # @return [Thre] スレッド
@@ -103,7 +127,7 @@ module Simple2ch
     # @param [String] dat datのデータ1行
     # @raise [DatParseException] Datのパースに失敗したときに発生
     def self.parse_dat(dat)
-      split_date_and_id_regex = /(?<time>^\d{4}\/\d{2}\/\d{2}\(.\) ?\d{2}:\d{2}:\d{2}(\.\d{2})?)(?: ID:(?<author_id>\S+)$){0,1}/
+      split_date_and_id_regex = /(?<time>^\d{4}\/\d{2}\/\d{2}\(.\) ?\d{2}:\d{2}:\d{2}(\.\d{2,3})?)(?: ID:(?<author_id>(\S|.)+)$)?/
       ret = {}
       split = dat.split('<>')
       ret[:author] = split[0]
@@ -123,6 +147,8 @@ module Simple2ch
               date: 'あぼーん',
               author_id: 'あぼーん',
           }
+        elsif dat.index 'Over 1000 Thread'
+          # do nothing
         else
           raise DatParseException, "Data didn't match regex. Data:#{date_and_author_id}"
         end

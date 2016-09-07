@@ -1,3 +1,3 @@
 module Simple2ch
-  VERSION = "0.1.8"
+  VERSION = "1.0.0.alpha.#{Time.now.to_i}"
 end
