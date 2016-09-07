@@ -1,6 +1,6 @@
 module Simple2ch
   class Board
-    # @return [URI] 板のURL
+    # @return [Bbs2chUrlValidator::URL] 板のURL
     attr_reader :url
     # @return [String] 板のタイトル
     attr_reader :title
@@ -60,28 +60,7 @@ module Simple2ch
     # 2chタイプ名の取得
     # @return [Symbol] 2chタイプ名(:net, :sc, :open)
     def type_of_2ch
-      Simple2ch.type_of_2ch(@url.to_s)
-    end
-
-    # SETTING.TXTの情報を取得する
-    def setting(param)
-      unless @setting_txt
-        @setting_txt = {}
-        url = Simple2ch.parse_and_generate_url(@url, :setting)
-        data = Simple2ch.fetch url
-        data.each_line do |d|
-          if (split = d.split('=')).size == 2
-            @setting_txt[split[0].to_sym] = split[1].chomp
-          end
-        end
-      end
-      @setting_txt[param.to_sym]
-    end
-
-    # TLDを返す
-    # @return [Symbol] TLD. :net or :sc
-    def tld
-      @tld
+      Simple2ch.type_of_2ch(@url.built_url)
     end
 
     def ==(board)
@@ -121,14 +100,14 @@ module Simple2ch
     def validate_url(url)
       url_obj = URI.parse(url)
       parsed = Bbs2chUrlValidator::URL.parse(url_obj.to_s)
-      return parsed.built_url if parsed && !parsed.board_name.empty?
+      return parsed if parsed && !parsed.board_name.empty?
       fail NotA2chBoardUrlError
     end
 
     # 板に属する全てのスレッドをsubject.txtから取得する
     # @return [Array<Thre>] 板に属する全てのスレッド
     def fetch_all_thres
-      subject_url = Simple2ch.parse_and_generate_url(@url, :board)+'subject.txt'
+      subject_url = @url.subject
 
       subject_txt = Simple2ch.fetch(subject_url)
       subject_txt.each_line do |line|

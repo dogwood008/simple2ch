@@ -13,8 +13,7 @@ module Simple2ch
     @boards = {}
 
     def initialize(type_of_2ch)
-      @@bbs = {} unless defined? @@bbs
-      @boards = {}
+      @boards = []
       case type_of_2ch
       when :sc, :open
         @type_of_2ch = type_of_2ch
@@ -22,7 +21,6 @@ module Simple2ch
       else
         fail RuntimeError, %Q{Invalid "type_of_2ch" given: #{type_of_2ch} (:sc or :open is correct.)}
       end
-      @@bbs[type_of_2ch] = self
       @updated_at = Time.now
     end
 
@@ -86,6 +84,7 @@ module Simple2ch
     def <<(board)
       size = { before: @boards.size,
                after: @boards.delete_if { |b| b==board }.size }
+      binding.pry
       @boards << board
 
       if size[:before] - size[:after] > 0

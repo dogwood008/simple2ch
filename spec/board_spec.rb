@@ -53,19 +53,6 @@ VCR.use_cassette 'bbs' do
       end
     end
 
-    describe '#setting_txt' do
-      shared_examples '#setting_txt' do
-        subject { board.setting :BBS_TITLE }
-        it { is_expected.to eq title }
-      end
-      include_examples '#setting_txt' do
-        let(:url) { boards[:sc][:url] }
-      end
-      include_examples '#setting_txt' do
-        let(:url) { boards[:open][:url] }
-      end
-    end
-
     describe '#title' do
       shared_examples '#title' do
         subject { board.title }
@@ -102,8 +89,8 @@ VCR.use_cassette 'bbs' do
         it { subject.each { |t| expect(t).to be_a_kind_of(Simple2ch::Thre) } } #TODO Thre->Thread
         it { expect(board.threads.size).to be > 0 }
         it { expect(board.title).to be_a_kind_of String }
-        it { expect(board.title).to be == title }
-        it { expect(board.url.to_s).to be == url }
+        it { expect(board.title).to eq title }
+        it { expect(board.url.built_url).to eq url }
       end
       include_examples '#threads' do
         let(:url) { boards[:sc][:url] }
