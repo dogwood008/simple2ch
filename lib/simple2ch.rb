@@ -21,13 +21,14 @@ module Simple2ch
   @@bbs = {}
 
   # HTTPでGETする
-  # @param [URI] url URL
+  # @param [URI or Bbs2chUrlValidator::UrlInfo or String] url URL
   # @return [String] 取得本文
   def self.fetch(url, encode = nil)
+    url_obj = URI.parse(url.to_s)
     encode ||= encoded_in_sjis?(url) ? 'sjis' : 'utf-8'
     errors_to_retry = [OpenURI::HTTPError, SocketError]
     Retryable.retryable(tries: 5, on: errors_to_retry, sleep: 3) do
-      OpenURI.open_uri(url, "r:#{encode}")
+      OpenURI.open_uri(url_obj, "r:#{encode}")
              .read
              .encode('utf-8', undef: :replace, invalid: :replace, replace: '〓')
     end
