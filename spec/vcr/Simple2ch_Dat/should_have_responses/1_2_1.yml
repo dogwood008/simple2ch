@@ -26,9 +26,7 @@ http_interactions:
       - '12017'
       Connection:
       - keep-alive
-      Set-Cookie:
-      - __cfduid=d8f912e30e595fed1bdd5fd156d473c381473214847; expires=Thu, 07-Sep-17
-        02:20:47 GMT; path=/; domain=.2ch.sc; HttpOnly
+      Set-Cookie: ''
       Last-Modified:
       - Thu, 04 Sep 2014 07:05:53 GMT
       Etag:
@@ -41,8 +39,7 @@ http_interactions:
       - Accept-Encoding
       Server:
       - cloudflare-nginx
-      Cf-Ray:
-      - 2de6aefb698d0449-NRT
+      Cf-Ray: ''
     body:
       encoding: ASCII-8BIT
       string: !binary |-

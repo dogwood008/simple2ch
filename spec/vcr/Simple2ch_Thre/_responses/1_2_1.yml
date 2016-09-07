@@ -26,15 +26,12 @@ http_interactions:
       - chunked
       Connection:
       - keep-alive
-      Set-Cookie:
-      - __cfduid=dc03de879849357e4fed60ed82c9f93291473209017; expires=Thu, 07-Sep-17
-        00:43:37 GMT; path=/; domain=.open2ch.net; HttpOnly
+      Set-Cookie: ''
       Location:
       - http://hayabusa.open2ch.net/news4vip/subback.html
       Server:
       - cloudflare-nginx
-      Cf-Ray:
-      - 2de620a635ca018f-NRT
+      Cf-Ray: ''
     body:
       encoding: UTF-8
       string: |
@@ -75,17 +72,12 @@ http_interactions:
       - chunked
       Connection:
       - keep-alive
-      Set-Cookie:
-      - __cfduid=ddd2327400a0c3654c1a70a862186ee3b1473209017; expires=Thu, 07-Sep-17
-        00:43:37 GMT; path=/; domain=.open2ch.net; HttpOnly
-      - a=bc2aae893fc3782d2461a35ed4027a40; domain=.open2ch.net; path=/; expires=Thu,
-        07-Sep-2017 00:43:37 GMT
+      Set-Cookie: ''
       Vary:
       - Accept-Encoding
       Server:
       - cloudflare-nginx
-      Cf-Ray:
-      - 2de620a76350045b-NRT
+      Cf-Ray: ''
     body:
       encoding: ASCII-8BIT
       string: !binary |-
@@ -1462,9 +1454,7 @@ http_interactions:
       - chunked
       Connection:
       - keep-alive
-      Set-Cookie:
-      - __cfduid=d2bb30396d39ed9ee63e05537bb80cfce1473209017; expires=Thu, 07-Sep-17
-        00:43:37 GMT; path=/; domain=.2ch.sc; HttpOnly
+      Set-Cookie: ''
       Last-Modified:
       - Wed, 24 Dec 2014 14:00:05 GMT
       Etag:
@@ -1475,8 +1465,7 @@ http_interactions:
       - max-age=5
       Server:
       - cloudflare-nginx
-      Cf-Ray:
-      - 2de620a8aa441335-NRT
+      Cf-Ray: ''
     body:
       encoding: ASCII-8BIT
       string: !binary |-
