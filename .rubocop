@@ -1,0 +1,24 @@
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  TargetRubyVersion: 2.3
+  Includes:
+    - Gemfile
+    - Rakefile
+  Excludes:
+    - bin/**
+    - vendor/**
+    - .bundle/**
+
+SymbolArray:
+  Enabled: true
+
+CollectionMethods:
+  PreferredMethods:
+    collect: 'map'
+    inject: 'reduce'
+    detect: 'find'
+    find_all: 'select'
+
+SpaceInsideHashLiteralBraces:
+  EnforcedStyleIsWithSpaces: false
