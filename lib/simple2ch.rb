@@ -14,23 +14,20 @@ module Simple2ch
   require 'time'
   require 'charwidth'
   require 'retryable'
+  require 'bbs_2ch_url_validator'
 
   @@bbs = {}
 
   # HTTPでGETする
   # @param [URI] url URL
   # @return [String] 取得本文
-  def self.fetch(url, encode=nil)
-    unless encode
-      encode = if url.to_s.index('subject.txt') || url.to_s.index('SETTING.TXT') || url.to_s.index('.dat') || url.to_s.index('bbsmenu')
-                 'SHIFT_JIS'
-               else
-                 'UTF-8'
-               end
-    end
-    Retryable.retryable(tries: 5, on: [OpenURI::HTTPError, SocketError], sleep: 3) do
-      got_binary = OpenURI.open_uri(url, 'r:binary').read
-      got_string = got_binary.force_encoding(encode).encode('utf-8', undef: :replace, invalid: :replace, replace: '〓')
+  def self.fetch(url, encode = nil)
+    encode ||= encoded_in_sjis?(url) ? 'sjis' : 'utf-8'
+    errors_to_retry = [OpenURI::HTTPError, SocketError]
+    Retryable.retryable(tries: 5, on: errors_to_retry, sleep: 3) do
+      OpenURI.open_uri(url, "r:#{encode}")
+             .read
+             .encode('utf-8', undef: :replace, invalid: :replace, replace: '〓')
     end
   end
 
@@ -51,5 +48,14 @@ module Simple2ch
     else
       raise NotA2chUrlException, "Given URL: #{url}"
     end
+  end
+
+  private
+
+  def encoded_in_sjis?(url)
+    url.to_s.include?('subject.txt') ||
+      url.to_s.include?('SETTING.TXT') ||
+      url.to_s.include?('.dat') ||
+      url.to_s.include?('bbsmenu')
   end
 end
