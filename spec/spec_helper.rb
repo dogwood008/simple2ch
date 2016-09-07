@@ -15,13 +15,13 @@ RSpec::Matchers.define :be_valid_responses do
   match do |thread|
     first_res = fetch_first_res_from_html(thread.url, thread.type_of_2ch)
     case thread.type_of_2ch
-      when :sc
-        first_res == '２ちゃんねる ★'
-      when :open
-        author = thread.responses.first.author
-        author == first_res
-      else
-        fail "Invalid type_of_2ch was given: #{thread.type_of_2ch}"
+    when :sc
+      first_res == '２ちゃんねる ★'
+    when :open
+      author = thread.responses.first.author
+      author == first_res
+    else
+      raise "Invalid type_of_2ch was given: #{thread.type_of_2ch}"
     end
   end
 end
@@ -49,16 +49,17 @@ def open2ch_thread_data_example
 end
 
 def fetch_first_res_from_html(source_url, type_of_2ch)
+  url = URI.parse(source_url.to_s)
   case type_of_2ch
     when :sc
-      source = Simple2ch.fetch source_url, 'SHIFT_JIS'
+      source = Simple2ch.fetch url, 'SHIFT_JIS'
       if source =~ Simple2ch::Regex::SC2CH_FIRST_RES_DATA_EXAMPLE_REGEX
         $1
       else
         nil
       end
     when :open
-      source = Simple2ch.fetch source_url, 'UTF-8'
+      source = Simple2ch.fetch url, 'UTF-8'
       if source =~ Simple2ch::Regex::OPEN2CH_FIRST_RES_DATA_EXAMPLE_REGEX
         $1
       else
