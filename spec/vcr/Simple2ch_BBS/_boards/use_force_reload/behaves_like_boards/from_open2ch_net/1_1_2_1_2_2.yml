@@ -26,7 +26,9 @@ http_interactions:
       - chunked
       Connection:
       - keep-alive
-      Set-Cookie: ''
+      Set-Cookie:
+      - __cfduid=d6bb072e557d25f626e5959f5915f1c1c1473089878; expires=Tue, 05-Sep-17
+        15:37:58 GMT; path=/; domain=.open2ch.net; HttpOnly
       Last-Modified:
       - Mon, 05 Sep 2016 15:00:02 GMT
       Etag:
@@ -35,7 +37,8 @@ http_interactions:
       - Accept-Encoding
       Server:
       - cloudflare-nginx
-      Cf-Ray: ''
+      Cf-Ray:
+      - 2ddac3ffaf0c133b-NRT
     body:
       encoding: ASCII-8BIT
       string: !binary |-

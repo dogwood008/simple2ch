@@ -26,12 +26,15 @@ http_interactions:
       - chunked
       Connection:
       - keep-alive
-      Set-Cookie: ''
+      Set-Cookie:
+      - __cfduid=dd1917b93b93e5e07b5df86456899935a1473209016; expires=Thu, 07-Sep-17
+        00:43:36 GMT; path=/; domain=.open2ch.net; HttpOnly
       Location:
       - http://hayabusa.open2ch.net/news4vip/subback.html
       Server:
       - cloudflare-nginx
-      Cf-Ray: ''
+      Cf-Ray:
+      - 2de620a155bd2e03-NRT
     body:
       encoding: UTF-8
       string: |
@@ -72,12 +75,17 @@ http_interactions:
       - chunked
       Connection:
       - keep-alive
-      Set-Cookie: ''
+      Set-Cookie:
+      - __cfduid=ddbdffed1c10ee35fb89bb8cd27f43fc11473209016; expires=Thu, 07-Sep-17
+        00:43:36 GMT; path=/; domain=.open2ch.net; HttpOnly
+      - a=9b6fd8518ffc81e6944ebd8657caa251; domain=.open2ch.net; path=/; expires=Thu,
+        07-Sep-2017 00:43:36 GMT
       Vary:
       - Accept-Encoding
       Server:
       - cloudflare-nginx
-      Cf-Ray: ''
+      Cf-Ray:
+      - 2de620a29551133b-NRT
     body:
       encoding: ASCII-8BIT
       string: !binary |-
@@ -1454,12 +1462,15 @@ http_interactions:
       - chunked
       Connection:
       - keep-alive
-      Set-Cookie: ''
+      Set-Cookie:
+      - __cfduid=d628f9208098e0ff2d57ac83e616180d91473209016; expires=Thu, 07-Sep-17
+        00:43:36 GMT; path=/; domain=.open2ch.net; HttpOnly
       Location:
       - http://hayabusa.open2ch.net//test/read.cgi/news4vip/1473208926/
       Server:
       - cloudflare-nginx
-      Cf-Ray: ''
+      Cf-Ray:
+      - 2de620a43cb32e39-NRT
     body:
       encoding: UTF-8
       string: |
@@ -1500,12 +1511,17 @@ http_interactions:
       - chunked
       Connection:
       - keep-alive
-      Set-Cookie: ''
+      Set-Cookie:
+      - __cfduid=d3e2017a296dc48e933f56233c1228ee61473209017; expires=Thu, 07-Sep-17
+        00:43:37 GMT; path=/; domain=.open2ch.net; HttpOnly
+      - a=ed1e0bdc1d0d58a782beef334ab2956a; domain=.open2ch.net; path=/; expires=Thu,
+        07-Sep-2017 00:43:37 GMT
       Vary:
       - Accept-Encoding
       Server:
       - cloudflare-nginx
-      Cf-Ray: ''
+      Cf-Ray:
+      - 2de620a4d5a91335-NRT
     body:
       encoding: ASCII-8BIT
       string: !binary |-
@@ -1994,14 +2010,17 @@ http_interactions:
       - chunked
       Connection:
       - keep-alive
-      Set-Cookie: ''
+      Set-Cookie:
+      - __cfduid=d958388fc24f8b039016451f68007140b1473209017; expires=Thu, 07-Sep-17
+        00:43:37 GMT; path=/; domain=.open2ch.net; HttpOnly
       Last-Modified:
       - Wed, 07 Sep 2016 00:43:34 GMT
       Etag:
       - W/"c5b59f-252-53be034030b0c;5363049f26197"
       Server:
       - cloudflare-nginx
-      Cf-Ray: ''
+      Cf-Ray:
+      - 2de620a59cff018b-NRT
     body:
       encoding: ASCII-8BIT
       string: !binary |-
