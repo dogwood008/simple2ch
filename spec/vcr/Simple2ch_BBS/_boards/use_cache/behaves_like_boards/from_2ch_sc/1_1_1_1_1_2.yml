@@ -19,7 +19,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 05 Sep 2016 02:56:49 GMT
+      - Mon, 05 Sep 2016 15:37:58 GMT
       Content-Type:
       - text/html; charset=shift_jis
       Content-Length:
@@ -27,8 +27,8 @@ http_interactions:
       Connection:
       - keep-alive
       Set-Cookie:
-      - __cfduid=d7c911fbff91d4240e19a488a3064a7dc1473044209; expires=Tue, 05-Sep-17
-        02:56:49 GMT; path=/; domain=.2ch.sc; HttpOnly
+      - __cfduid=d3a79d78b11891549aecf653534578b501473089878; expires=Tue, 05-Sep-17
+        15:37:58 GMT; path=/; domain=.2ch.sc; HttpOnly
       Last-Modified:
       - Mon, 07 Dec 2015 03:00:00 GMT
       Etag:
@@ -42,7 +42,7 @@ http_interactions:
       Server:
       - cloudflare-nginx
       Cf-Ray:
-      - 2dd66907cb4d018b-NRT
+      - 2ddac3f9ecf10443-NRT
     body:
       encoding: ASCII-8BIT
       string: !binary |-
@@ -1116,5 +1116,5 @@ http_interactions:
         RVQ9X2JsYW5rPoNYg4yDYoNojJ+N9TwvQT4KCjxicj48YnI+PGJyPo1YkFaT
         +jE1LzEyLzA3Cjwvc21hbGw+CjwvQk9EWT48L0hUTUw+Cg==
     http_version: 
-  recorded_at: Mon, 05 Sep 2016 02:56:49 GMT
+  recorded_at: Mon, 05 Sep 2016 15:37:58 GMT
 recorded_with: VCR 3.0.3
