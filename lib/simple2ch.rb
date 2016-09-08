@@ -54,9 +54,9 @@ module Simple2ch
     end
   end
 
-  # @param [Bbs2chUrlValidator::URL] url_obj
+  # @param [Object] url
   # @param [Hash] type
-  def self.generate_url(type, url_obj, params = {})
+  def self.generate_url(type, url, params = {})
     # bbs:     http://www.2ch.sc/, http://open2ch.net/
     # board:   http://viper.2ch.sc/news4vip/, http://viper.open2ch.net/news4vip/
     # dat:     http://viper.2ch.sc/news4vip/dat/9990000001.dat, http://viper.open2ch.net/news4vip/dat/1439127670.dat
@@ -64,7 +64,7 @@ module Simple2ch
     # setting: http://viper.2ch.sc/news4vip/SETTING.TXT, http://viper.open2ch.net/news4vip/SETTING.TXT
     # thread:  http://viper.2ch.sc/test/read.cgi/news4vip/9990000001/, http://viper.open2ch.net/test/read.cgi/news4vip/1439127670
 
-    generated_url = "http://"
+    url_obj = Bbs2chUrlValidator::URL.parse(url.to_s)
     domain = "#{url_obj.open? ? 'open' : ''}2ch.#{url_obj.tld}"
     board_name = params[:board_name] ? params[:board_name] : url_obj.board_name
     case type
