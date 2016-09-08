@@ -39,16 +39,16 @@ VCR.use_cassette 'board' do
       }
     end
 
-    let(:board) { Simple2ch::Board.new(title, url) }
+    let(:board) { Simple2ch::Board.new(url, title: title) }
 
     describe '#new' do
       context 'should raise NotA2chUrlException if URL is not a 2ch format' do
-        subject { -> { Simple2ch::Board.new(title, boards[:not_a_2ch_format][:url]) } }
+        subject { -> { Simple2ch::Board.new(boards[:not_a_2ch_format][:url], title: title) } }
         it { is_expected.to raise_error Simple2ch::NotA2chUrlError }
       end
 
       context 'should raise URI::InvalidURL if URL is invalid format' do
-        subject { -> { Simple2ch::Board.new(title, boards[:invalid_url][:url]) } }
+        subject { -> { Simple2ch::Board.new(boards[:invalid_url][:url], title: title) } }
         it { is_expected.to raise_error Simple2ch::NotA2chUrlError }
       end
     end
@@ -83,7 +83,7 @@ VCR.use_cassette 'board' do
 
     describe '#threads' do
       shared_examples '#threads' do
-        let(:board) { Simple2ch::Board.new(title, url) }
+        let(:board) { Simple2ch::Board.new(url, title: title) }
         subject { board.threads }
         it { is_expected.to be_a_kind_of(Array) }
         it { subject.each { |t| expect(t).to be_a_kind_of(Simple2ch::Thread) } }

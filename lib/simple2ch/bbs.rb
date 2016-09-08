@@ -46,7 +46,7 @@ module Simple2ch
       raise "Failed to parse #{bbsmenu_url}" if scaned_data.empty?
 
       boards = scaned_data.map do |b|
-        Simple2ch::Board.new(b[4], "http://#{b[0]}.#{b[1]}2ch.#{b[2]}/#{b[3]}/")
+        Simple2ch::Board.new("http://#{b[0]}.#{b[1]}2ch.#{b[2]}/#{b[3]}/", title: b[4])
       end
       boards.compact
     end

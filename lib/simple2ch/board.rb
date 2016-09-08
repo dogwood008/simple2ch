@@ -4,10 +4,6 @@ module Simple2ch
     attr_reader :url
     # @return [String] 板のタイトル
     attr_reader :title
-    # @return [String] サーバ名
-    attr_reader :server_name
-    # @return [String] 板の名前（コンピュータ名）
-    attr_reader :board_name
     # @return [Time] 板オブジェクト更新日時
     attr_reader :updated_at
 
@@ -15,8 +11,7 @@ module Simple2ch
     # @param [String] title 板の名前
     # @param [String] url 板のURL
     # @option [Boolean] fetch_title 板の名前を自動取得するか
-    def initialize(title, url)
-      @server_name = @board_name = nil
+    def initialize(url, title: nil)
       @url = validate_url(url)
       @title = title
       @updated_at = Time.now
