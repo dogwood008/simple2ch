@@ -1,5 +1,5 @@
 module Simple2ch
-  class Res
+  class Response
     # @return [Fixnum] レス番号
     attr_reader :res_num
     # @return [String] 投稿者名

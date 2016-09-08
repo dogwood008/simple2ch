@@ -4,7 +4,7 @@ require 'spec_helper'
 VCR.use_cassette 'dat' do
   describe Simple2ch::Dat, vcr: true do
     #let(:dat_data) { '1409796283.dat<>Ｃ言語の勉強始めたんだがな (144)' }
-    let(:thre) { Simple2ch::Thre.new('http://viper.2ch.sc/test/read.cgi/news4vip/1409796283/') }
+    let(:thre) { Simple2ch::Thread.new('http://viper.2ch.sc/test/read.cgi/news4vip/1409796283/') }
     let(:thread_key) { '1409796283' }
     let(:dat) { Simple2ch::Dat.new thre }
 
@@ -21,7 +21,7 @@ VCR.use_cassette 'dat' do
       it { expect(dat.kako_log?).to be == true }
       it do
         subject.each do |r|
-          expect(r).to be_a_kind_of(Simple2ch::Res)
+          expect(r).to be_a_kind_of(Simple2ch::Response)
         end
       end
     end

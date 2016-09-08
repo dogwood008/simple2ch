@@ -1,8 +1,8 @@
 require 'rspec'
 require 'spec_helper'
 
-VCR.use_cassette 'threads' do
-  describe Simple2ch::Thre, vcr: true do  
+VCR.use_cassette 'thread' do
+  describe Simple2ch::Thread, vcr: true do  
     def first_res_from_html(source_url)
       source = Simple2ch.fetch(source_url)
     end
@@ -38,10 +38,10 @@ VCR.use_cassette 'threads' do
       shared_examples '#new' do
         let(:url) { threads[type_of_2ch][:url] }
         let(:thread_key) { Bbs2chUrlValidator::URL.parse(url).thread_key }
-        let(:thread) { Simple2ch::Thre.new(url) }
+        let(:thread) { Simple2ch::Thread.new(url) }
         let(:board) { Board.new nil, boards[type_of_2ch][:url] }
         subject { thread }
-        it { should be_a_kind_of Simple2ch::Thre }
+        it { should be_a_kind_of Simple2ch::Thread }
         it { should be_valid_responses }
       end
       context '2ch.sc' do
@@ -57,16 +57,16 @@ VCR.use_cassette 'threads' do
     end
 
     describe '#responses' do
-      let(:thread) { Thre.new(threads[type_of_2ch][:url]) }
+      let(:thread) {Simple2ch::Thread.new(threads[type_of_2ch][:url]) }
       subject { thread.responses }
       let(:type_of_2ch) { :sc }
       it { should be_a_kind_of Array }
-      its(:first) { should be_a_kind_of Simple2ch::Res }
+      its(:first) { should be_a_kind_of Simple2ch::Response }
       its(:first) { should be_a_valid_response }
     end
 
     describe '#title' do
-      let(:thread) { Thre.new(threads[type_of_2ch][:url]) }
+      let(:thread) {Simple2ch::Thread.new(threads[type_of_2ch][:url]) }
       subject { thread.title }
       let(:type_of_2ch) { :sc }
       it { should be_a_kind_of String }

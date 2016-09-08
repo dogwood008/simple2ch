@@ -2,7 +2,7 @@ require 'rspec'
 require 'spec_helper'
 
 VCR.use_cassette 'response' do
-  describe Simple2ch::Res, vcr: true do
+  describe Simple2ch::Response, vcr: true do
     before(:all) do
       @sc = Simple2ch::BBS.new(:sc)
       @open = Simple2ch::BBS.new(:open)
@@ -39,7 +39,7 @@ VCR.use_cassette 'response' do
 以下、＼(^o^)／でVIPがお送りします<><>2014/09/04(木) 18:47:19.71 ID:9QYJSuKn0.net<> 正直楽しみ <>
 以下、＼(^o^)／でVIPがお送りします<><>2014/09/04(木) 18:47:35.65 ID:rbjZvMWo0.net<> はてぃま <>
 以下、＼(^o^)／でVIPがお送りします<><>2014/09/04(木) 18:47:41.41 ID:bHgEtoQU0.net<> 思い切り二次創作じゃねえか <br> PS4でやるんだっけ <>} }
-        let(:replies) { dat_data.split(/\n/).map.with_index(1) { |d, i| Simple2ch::Res.parse i, d } }
+        let(:replies) { dat_data.split(/\n/).map.with_index(1) { |d, i| Simple2ch::Response.parse i, d } }
         it { replies.each { |r| expect(r).to be_a_valid_response } }
       end
       context 'when real data' do
@@ -47,7 +47,7 @@ VCR.use_cassette 'response' do
           let(:thread_url) { threads[type_of_2ch][:url] }
           let(:dat_url) { Simple2ch.generate_url(:dat, thread_url) }
           let(:dat) { Simple2ch.fetch(dat_url) }
-          let(:replies) { dat.each_line.map.with_index(1) { |d, i| Res.parse(i, d) } }
+          let(:replies) { dat.each_line.map.with_index(1) { |d, i| Simple2ch::Response.parse(i, d) } }
           it { replies.each { |r| expect(r).to be_a_valid_response } }
         end
         context 'when 2ch.sc' do
@@ -67,7 +67,7 @@ VCR.use_cassette 'response' do
     describe '#anchors' do
       shared_examples('have valid anchors') do
         let(:res_num) { 100 }
-        subject { Res.new(res_num, contents: contents) }
+        subject { Simple2ch::Response.new(res_num, contents: contents) }
 
         describe 'that\'s anchored res is valid' do
           its(:anchors) { is_expected.to be_a_kind_of Array }
@@ -122,7 +122,7 @@ VCR.use_cassette 'response' do
         let(:board_name) { 'プログラム技術' }
         let(:url) { 'http://toro.2ch.sc/tech/' }
         let(:thread_key) { '1382307475' }
-        let(:thre) { Thre.new(Simple2ch.generate_url(:thread, url, thread_key: thread_key)) }
+        let(:thre) { Simple2ch::Thread.new(Simple2ch.generate_url(:thread, url, thread_key: thread_key)) }
         subject { thre.responses }
         it { is_expected.to be_a_kind_of Array }
       end

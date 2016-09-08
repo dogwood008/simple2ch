@@ -52,7 +52,7 @@ module Simple2ch
       subject_txt = Simple2ch.fetch(subject_url)
       @threads = []
       subject_txt.each_line do |line|
-        @threads << Thre.parse(@url, line)
+        @threads << Simple2ch::Thread.parse(@url, line)
       end
       @updated_at = Time.now
       @threads

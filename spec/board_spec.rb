@@ -86,7 +86,7 @@ VCR.use_cassette 'board' do
         let(:board) { Simple2ch::Board.new(title, url) }
         subject { board.threads }
         it { is_expected.to be_a_kind_of(Array) }
-        it { subject.each { |t| expect(t).to be_a_kind_of(Simple2ch::Thre) } } #TODO Thre->Thread
+        it { subject.each { |t| expect(t).to be_a_kind_of(Simple2ch::Thread) } }
         it { expect(board.threads.size).to be > 0 }
         it { expect(board.title).to be_a_kind_of String }
         it { expect(board.title).to eq title }

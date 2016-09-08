@@ -28,7 +28,7 @@ end
 
 RSpec::Matchers.define :be_a_valid_response do
   match do |res|
-    res.is_a?(Simple2ch::Res) &&
+    res.is_a?(Simple2ch::Response) &&
         res.res_num.is_a?(Integer) &&
         res.author && # Not nil
         res.date.is_a?(Time) &&

@@ -1,5 +1,5 @@
 module Simple2ch
-  class Thre
+  class Thread
     # @return [String] スレッドキー(Unix time)
     attr_reader :thread_key
     # @return [Bbs2chUrlValidator::UrlInfo] URL

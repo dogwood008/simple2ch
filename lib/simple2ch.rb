@@ -5,8 +5,8 @@ module Simple2ch
   require_relative './simple2ch/simple2ch_error'
   require_relative './simple2ch/board'
   require_relative './simple2ch/dat'
-  require_relative './simple2ch/res'
-  require_relative './simple2ch/thre'
+  require_relative './simple2ch/response'
+  require_relative './simple2ch/thread'
   require_relative './simple2ch/regex'
   require_relative './simple2ch/bbs'
   require 'socket'
@@ -16,8 +16,6 @@ module Simple2ch
   require 'retryable'
   require 'bbs_2ch_url_validator'
   require 'pry'
-
-  @@bbs = {}
 
   # HTTPでGETする
   # @param [URI or Bbs2chUrlValidator::UrlInfo or String] url URL
