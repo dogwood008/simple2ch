@@ -55,7 +55,7 @@ module Simple2ch
             title = l.split('<>').pop
             @title = title unless @title
           end
-          @responses << Res.parse(res_num, l, @thre)
+          @responses << Res.parse(res_num, l)
         rescue KakoLogError
           @is_kako_log = true
         end

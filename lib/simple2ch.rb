@@ -85,7 +85,7 @@ module Simple2ch
 
   private
 
-  def encoded_in_sjis?(url)
+  def self.encoded_in_sjis?(url)
     url.to_s.include?('subject.txt') ||
       url.to_s.include?('SETTING.TXT') ||
       url.to_s.include?('.dat') ||
