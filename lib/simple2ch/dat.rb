@@ -56,7 +56,7 @@ module Simple2ch
             @title = title unless @title
           end
           @responses << Res.parse(res_num, l, @thre)
-        rescue KakoLogException
+        rescue KakoLogError
           @is_kako_log = true
         end
       end

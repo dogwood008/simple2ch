@@ -38,14 +38,14 @@ module Simple2ch
     # @param [Fixnum] res_num レス番号
     # @param [String] contents datのデータ1行
     # @return [Res] 新規Resオブジェクト
-    # @raise [KakoLogException] 過去ログ情報をパースしようとした際に発生
+    # @raise [KakoLogError] 過去ログ情報をパースしようとした際に発生
     def self.parse(res_num, contents, thre=nil)
       unless contents.strip == KAKO_LOG_INFO
         hash = parse_dat(contents)
         hash[:thre] = thre if thre
         return self.new(res_num, hash)
       else
-        raise KakoLogException
+        raise KakoLogError
       end
     end
 
@@ -112,7 +112,7 @@ module Simple2ch
       if @thre
         @thre
       else
-        raise NoThreGivenException
+        raise NoThreGivenError
       end
     end
 
@@ -125,7 +125,7 @@ module Simple2ch
 
     # Datの1行から各項目を分離して、Resオブジェクトを返すメソッドの実体
     # @param [String] dat datのデータ1行
-    # @raise [DatParseException] Datのパースに失敗したときに発生
+    # @raise [DatParseError] Datのパースに失敗したときに発生
     def self.parse_dat(dat)
       split_date_and_id_regex = /(?<time>^\d{4}\/\d{2}\/\d{2}\(.\) ?\d{2}:\d{2}:\d{2}(\.\d{2,3})?)(?: ID:(?<author_id>(\S|.)+)$)?/
       ret = {}
@@ -150,7 +150,7 @@ module Simple2ch
         elsif dat.index 'Over 1000 Thread'
           # do nothing
         else
-          raise DatParseException, "Data didn't match regex. Data:#{date_and_author_id}"
+          raise DatParseError, "Data didn't match regex. Data:#{date_and_author_id}"
         end
       end
 

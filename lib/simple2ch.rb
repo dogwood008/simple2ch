@@ -2,7 +2,6 @@ require 'simple2ch/version'
 require 'singleton'
 
 module Simple2ch
-  require_relative './simple2ch/simple2ch_exception'
   require_relative './simple2ch/simple2ch_error'
   require_relative './simple2ch/board'
   require_relative './simple2ch/dat'
@@ -37,10 +36,10 @@ module Simple2ch
   # 2chのタイプを返す
   # @param [String] url URL
   # @return [Symbol] :open or :net or :sc
-  # @raise [NotA2chUrlException] 2chのURLでないURLが与えられた際に発生
+  # @raise [NotA2chUrlError] 2chのURLでないURLが与えられた際に発生
   def self.type_of_2ch(url)
     parsed_url = Bbs2chUrlValidator::URL.parse(url)
-    raise NotA2chUrlException, "Given URL: #{url}" unless parsed_url
+    raise NotA2chUrlError, "Given URL: #{url}" unless parsed_url
     case true
     when parsed_url.is_open && parsed_url.tld == 'net'
       :open
@@ -50,7 +49,7 @@ module Simple2ch
       :sc
     else
       binding.pry
-      raise NotA2chUrlException, "Given URL: #{url}"
+      raise NotA2chUrlError, "Given URL: #{url}"
     end
   end
 
