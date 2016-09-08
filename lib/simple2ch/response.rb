@@ -13,9 +13,8 @@ module Simple2ch
     # @return [String] 内容
     attr_reader :contents
 
-    KAKO_LOG_INFO = '過去ログ ★<><>[過去ログ]<><em>■ このスレッドは過去ログ倉庫に格納されています</em><>'
+    KAKO_LOG_INFO = '過去ログ ★<><>[過去ログ]<><em>■ このスレッドは過去ログ倉庫に格納されています</em><>'.freeze
 
-    #
     # @param [Fixnum] res_num レス番号
     # @param [String] author 投稿者名
     # @param [String] author_id ID
@@ -37,44 +36,37 @@ module Simple2ch
     # @return [Res] 新規Resオブジェクト
     # @raise [KakoLogError] 過去ログ情報をパースしようとした際に発生
     def self.parse(res_num, contents)
-      unless contents.strip == KAKO_LOG_INFO
-        hash = parse_dat(contents)
-        return self.new(res_num, hash)
-      else
-        raise KakoLogError
-      end
+      raise KakoLogError if contents.strip == KAKO_LOG_INFO
+      hash = parse_dat(contents)
+      self.new(res_num, hash)
     end
 
     # アンカーを抽出する　荒らしの場合は空配列を返す
     # @return [Array<Fixnum>] 昇順ソート済みアンカー、荒らしの場合は空配列
     def anchors
       arashi_removal_regex = /(?:\d{1,4}(?:\]*>)?(?:>|\[＞,+-\]){1,2}){9}/
-      unless self.contents =~ arashi_removal_regex
-        splitter_regex = '[,、， 　]'
-        digit_regex = '(?:\d|[０-９])+'
-        hyphen_regex = '[−ｰー\-〜~〜]'
-        extracted = self.contents.scan /&gt;((?:#{digit_regex}(?:#{splitter_regex}|#{hyphen_regex})*)+)/
-        anchors = extracted.flatten.to_s.gsub(/[\"\[\]]/,'').split(/#{splitter_regex}/)
-        anchors.delete('')
-        anchors.map! do |a|
-          if a =~ /(#{digit_regex})#{hyphen_regex}(#{digit_regex})/
-            (Range.new parseInt($1), parseInt($2)).to_a
-          else
-            parseInt(a)
-          end
+      return [] if self.contents =~ arashi_removal_regex
+      splitter_regex = '[,、， 　]'
+      digit_regex = '(?:\d|[０-９])+'
+      hyphen_regex = '[−ｰー\-〜~〜]'
+      extracted = self.contents.scan /&gt;((?:#{digit_regex}(?:#{splitter_regex}|#{hyphen_regex})*)+)/
+      anchors = extracted.flatten.to_s.gsub(/[\"\[\]]/, '').split(/#{splitter_regex}/)
+      anchors.delete('')
+      anchors.map! do |a|
+        if a =~ /(#{digit_regex})#{hyphen_regex}(#{digit_regex})/
+          (Range.new parseInt($1), parseInt($2)).to_a
+        else
+          parseInt(a)
         end
-        anchors.flatten.uniq.sort
-      else
-        []
       end
+      anchors.flatten.uniq.sort
     end
 
     # あぼーんレスか否か
     # @return [Boolean] あぼーんならtrue
     def abone?
-      @date=='あぼーん'
+      @date == 'あぼーん'
     end
-
 
     # レスの内容をテキスト情報で得る。&nbsp, &lt, &gt, <br>はそれぞれ「 」、「<」、「>」、「(改行)」に置換される。
     # @return [String] テキスト情報でのレスの内容
@@ -119,13 +111,7 @@ module Simple2ch
         ret[:author_id] = $~[:author_id]
       else
         if dat.index 'あぼーん'
-          {
-              author: 'あぼーん',
-              mail: 'あぼーん',
-              contents: 'あぼーん',
-              date: 'あぼーん',
-              author_id: 'あぼーん',
-          }
+          return a_bone_data
         elsif dat.index 'Over 1000 Thread'
           # do nothing
         else
@@ -135,5 +121,15 @@ module Simple2ch
 
       ret
     end
+  end
+
+  def a_bone_data
+    {
+      author: 'あぼーん',
+      mail: 'あぼーん',
+      contents: 'あぼーん',
+      date: 'あぼーん',
+      author_id: 'あぼーん',
+    }
   end
 end
