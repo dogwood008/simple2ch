@@ -52,7 +52,7 @@ module Simple2ch
         res_num += 1
         begin
           if res_num==1
-            title = l.split('<>').pop
+            title = l.split('<>').pop.chomp
             @title = title unless @title
           end
           @responses << Response.parse(res_num, l)
