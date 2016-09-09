@@ -1,48 +1,76 @@
 require 'rubygems'
-#uncomment the following line to use spork with the debugger
-#require 'spork/ext/ruby-debug'
-require 'rubygems'
 require 'simple2ch'
 require 'rspec'
 require 'rspec/its'
+require 'vcr'
 include Simple2ch
 
-# カスタムマッチャを書きたかったらここに。
-#RSpec::Matchers.define :my_matcher do |expected|
-#  match do |actual|
-#    true
-#  end
-#end
+RSpec::Matchers.define :have_news4vip do
+  match do |boards|
+    !boards.nil? && (news4vip = boards.find { |b| b.title == 'ニュー速VIP' }) && news4vip.url.to_s.index('news4vip')
+  end
+end
 
-# --- Instructions ---
-# Sort the contents of this file into a Spork.prefork and a Spork.each_run
-# block.
-#
-# The Spork.prefork block is run only once when the spork server is started.
-# You typically want to place most of your (slow) initializer code in here, in
-# particular, require'ing any 3rd-party gems that you don't normally modify
-# during development.
-#
-# The Spork.each_run block is run each time you run your specs.  In case you
-# need to load files that tend to change during development, require them here.
-# With Rails, your application modules are loaded automatically, so sometimes
-# this block can remain empty.
-#
-# Note: You can modify files loaded *from* the Spork.each_run block without
-# restarting the spork server.  However, this file itself will not be reloaded,
-# so if you change any of the code inside the each_run block, you still need to
-# restart the server.  In general, if you have non-trivial code in this file,
-# it's advisable to move it into a separate file so you can easily edit it
-# without restarting spork.  (For example, with RSpec, you could move
-# non-trivial code into a file spec/support/my_helper.rb, making sure that the
-# spec/support/* files are require'd from inside the each_run block.)
-#
-# Any code that is left outside the two blocks will be run during preforking
-# *and* during each_run -- that's probably not what you want.
-#
-# These instructions should self-destruct in 10 seconds.  If they don't, feel
-# free to delete them.
+RSpec::Matchers.define :be_valid_responses do
+  match do |thread|
+    first_res = fetch_first_res_from_html(thread.url, thread.type_of_2ch)
+    case thread.type_of_2ch
+    when :sc
+      first_res == '２ちゃんねる ★'
+    when :open
+      author = thread.responses.first.author
+      author == first_res
+    else
+      raise "Invalid type_of_2ch was given: #{thread.type_of_2ch}"
+    end
+  end
+end
 
+RSpec::Matchers.define :be_a_valid_response do
+  match do |res|
+    res.is_a?(Simple2ch::Response) &&
+        res.res_num.is_a?(Integer) &&
+        res.author && # Not nil
+        res.date.is_a?(Time) &&
+        !res.contents.nil?
+  end
+end
 
+def open2ch_thread_data_example
+  source_url = 'http://viper.open2ch.net/news4vip/subback.html'
+  source = Simple2ch.fetch(source_url)
+  if source =~ Simple2ch::Regex::OPEN2CH_THREAD_DATA_EXAMPLE_REGEX
+    url = "http://viper.open2ch.net#{$1}"
+    title = $2
+    { url: url, title: title }
+  else
+    fail RuntimeError, "Could not fetch source url: #{source_url}"
+  end
+end
 
+def fetch_first_res_from_html(source_url, type_of_2ch)
+  url = URI.parse(source_url.to_s)
+  case type_of_2ch
+    when :sc
+      source = Simple2ch.fetch url, 'SHIFT_JIS'
+      if source =~ Simple2ch::Regex::SC2CH_FIRST_RES_DATA_EXAMPLE_REGEX
+        $1
+      else
+        nil
+      end
+    when :open
+      source = Simple2ch.fetch url, 'UTF-8'
+      if source =~ Simple2ch::Regex::OPEN2CH_FIRST_RES_DATA_EXAMPLE_REGEX
+        $1
+      else
+        nil
+      end
+  end
+end
 
+VCR.configure do |c|
+  c.allow_http_connections_when_no_cassette = true
+  c.cassette_library_dir = 'spec/vcr'
+  c.hook_into :webmock
+  c.configure_rspec_metadata!
+end
