@@ -20,15 +20,13 @@ module Simple2ch
     # 板オブジェクトとsubject.txtの1行データを渡すとスレオブジェクトを返す
     # @param [Bbs2chUrlValidator::UrlInfo] board_url スレッドが属する板情報
     # @param [String] thread_data 0000000000.dat<>スレッドタイトル (レス数)
-    # @return [Thre] スレ
+    # @return [Simple2ch::Thread] スレ
     def self.parse(board_url, thread_data)
-      thread_key, title =  thread_data.scan /(\d{10})\.dat<>(.+) \((\d+)\)/
       thread_data.match(/(\d{10})\.dat<>(.+) \((\d+)\)/) do |m|
-        hash = {}
         thread_key = m[1]
-        title = m[2].force_encoding('utf-8')
+        title = m[2].force_encoding('utf-8').chomp
         thread_url = Simple2ch.generate_url(:thread, board_url, thread_key: thread_key)
-        self.new(Bbs2chUrlValidator::URL.parse(thread_url), title: title)
+        self.new(thread_url, title: title)
       end
     end
 
