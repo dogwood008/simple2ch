@@ -4,7 +4,7 @@
 Ruby用の2chの簡易リーダーです。
 
 ![gem version](https://badge.fury.io/rb/simple2ch.svg)
-[リファレンス](http://dogwood008.github.io/simple2ch/)
+[リファレンス](http://www.rubydoc.info/gems/simple2ch/)
 
 ## 更新内容
 
